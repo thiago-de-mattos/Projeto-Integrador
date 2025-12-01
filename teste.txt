@@ -14,3 +14,11 @@ fix/oque estou corrigindo
 bug/correção bug
 teste/escrevendo-teste
 doc/documentação readme
+
+feat/ oque-estou-criando
+fix/ o-que-estou-criando
+bug/correção-bug
+test/escrevendo-teste
+doc/documentação-readme
+
+feat/iniciando-django
