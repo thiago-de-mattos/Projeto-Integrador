@@ -8,3 +8,9 @@ Thiago e Ana clara Amor inseparavel
 
 
 vitor fes bulin cmg
+
+feat/oque eu estou criando
+fix/oque estou corrigindo
+bug/correção bug
+teste/escrevendo-teste
+doc/documentação readme
