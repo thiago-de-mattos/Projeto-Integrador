@@ -1,0 +1,121 @@
+📌 GUIA DE BOAS PRÁTICAS — BRANCHES E COMMITS
+(Padrão recomendado para equipes)
+==================================================
+1. NOMES DE BRANCHES
+
+Sempre usar o formato:
+
+<tipo>/<descricao-curta>
+
+TIPOS MAIS USADOS:
+
+feature/ → nova funcionalidade
+
+fix/ → correção de bug
+
+hotfix/ → correção urgente em produção
+
+refactor/ → refatoração de código
+
+chore/ → manutenção (configs, dependências)
+
+test/ → criação/edição de testes
+
+docs/ → documentação
+
+EXEMPLOS:
+
+feature/cadastro-usuarios
+fix/login-nao-redireciona
+refactor/melhorar-modelo-pedido
+docs/atualizar-readme
+
+REGRAS IMPORTANTES:
+
+Usar nomes curtos, sem acentos e sem espaços.
+
+Nunca trabalhar diretamente na main.
+
+Sempre atualizar a main antes de criar uma branch:
+
+git checkout main
+git pull
+git checkout -b feature/minha-feature
+
+==================================================
+2. COMMITS — PADRÃO
+
+Usaremos o padrão Conventional Commits.
+
+Formato:
+
+<tipo>: mensagem curta
+
+TIPOS DE COMMITS:
+
+feat: nova funcionalidade
+
+fix: correção de bug
+
+refactor: mudanças internas sem alterar comportamento
+
+chore: manutenção, dependências, configs
+
+docs: documentação
+
+test: testes
+
+style: formatação (indentação, ponto e vírgula, lint)
+
+perf: melhoria de performance
+
+build: coisas de build (Docker, CI/CD)
+
+wip: trabalho em andamento (não fazer merge desse commit)
+
+EXEMPLOS BONS:
+feat: implementar cadastro de usuários
+fix: corrigir validação no serializer
+refactor: reorganizar views em módulos
+docs: adicionar seção de instalação
+chore: atualizar dependências
+
+==================================================
+3. SOBRE OS COMMITS
+
+Commit deve ser pequeno e focado em uma única coisa.
+
+Mensagens curtas e claras (até 60–70 caracteres).
+
+Evitar commits genéricos como "arrumei tudo".
+
+Se precisar detalhar, usar corpo do commit:
+
+feat: implementar autenticação JWT
+
+- adicionar geração de token
+- criar middleware
+- atualizar testes
+
+==================================================
+4. COMO EVITAR CONFLITOS
+
+Antes de commitar ou fazer push:
+
+git pull origin main
+
+
+Se já estiver em sua branch, use:
+
+git pull origin main --rebase
+
+
+Isso evita sobrescrever trabalho de outras pessoas.
+
+==================================================
+5. REGRA DE OURO DO GRUPO
+
+Nunca fazer push direto para a main.
+Sempre criar PR (Pull Request) ou MR (Merge Request).
+
+==================================================
