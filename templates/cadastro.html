@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="titulo">Cadastro</h2>
+            
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+            
+        <form action="{% url 'cadastro' %}" method="POST">
+            
+            {% csrf_token %}
+            <input type="text" placeholder="Digite seu nome..." name="username" value="{{ request.POST.username }}">
+            <input type="email" placeholder="Digite seu email..." name="email" value="{{ request.POST.email }}">
+            <input type="password" placeholder="Digite sua senha..." name="senha">
+            <input type="submit" value="CADASTRAR">
+        </form>
+            
+        <div class="link">
+            <p>Já tem conta? <a href="{% url 'login' %}">Faça login aqui</a></p>
+        </div>
+    </div>
+{% endblock %}
