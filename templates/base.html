@@ -10,9 +10,16 @@
 </head>
 
 <body>
-    <header>
-        <nav>
-            <a href="{% url 'home' %}">Home</a> ||
+    <header></header>
+
+        
+            
+        
+    <main>
+        {% block content %}
+       
+        {% endblock %}
+    </main>
 
         <p>© 2025 - Meu Site Incrível</p>
     </footer>
