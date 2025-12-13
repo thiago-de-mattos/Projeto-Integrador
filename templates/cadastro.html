@@ -16,9 +16,7 @@
         <form action="{% url 'cadastro' %}" method="POST">
             
             {% csrf_token %}
-            <input type="text" placeholder="Digite seu nome..." name="username" value="{{ request.POST.username }}">
-            <input type="email" placeholder="Digite seu email..." name="email" value="{{ request.POST.email }}">
-            <input type="password" placeholder="Digite sua senha..." name="senha">
+            {{ form.as_p }}
             <input type="submit" value="CADASTRAR">
         </form>
             
