@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "accounts",
+    "rolepermissions",
 ]
 
 MIDDLEWARE = [
@@ -117,3 +118,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+
+
+#indicação do local dos niveis de usuario 
+
+ROLEPERMISSIONS_MODULE = "integrator_project.permicoes"
