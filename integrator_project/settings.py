@@ -127,3 +127,8 @@ ROLEPERMISSIONS_MODULE = "integrator_project.permicoes"
 
 #Modelo de usuário
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+#Redirecionamentos
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
