@@ -3,6 +3,7 @@ from . import views
 from .views import Teste
 
 urlpatterns = [
+    path('', views.login_view, name='login'),
     path('login/',
          views.login_view,
          name='login'),
