@@ -3,6 +3,9 @@ from . import views
 from .views import Teste
 
 urlpatterns = [
+    path('login/',
+         views.login_view,
+         name='login'),
     path(
         'home/',
         views.home,
@@ -11,9 +14,6 @@ urlpatterns = [
     path('cadastro/',
          views.cadastro,
          name='cadastro'),
-    path('',
-         views.login,
-         name='login'),
 #Usuario de teste    
     path("teste/", Teste, 
          name="usuario_teste"),
