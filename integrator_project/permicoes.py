@@ -5,3 +5,7 @@ class Gerente(AbstractUserRole):
 
 class Programador(AbstractUserRole):
     available_permissions = {'Ver_banco':True, 'Alterar_codigo':True}
+
+class Diretoria(AbstractUserRole):
+    available_permissions = {'visualizar_tudo': True, 'editar_tudo': True}
+
