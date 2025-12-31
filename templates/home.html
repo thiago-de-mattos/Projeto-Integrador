@@ -1,6 +1,45 @@
 {% extends 'base.html' %}
-{% block content %}
-<h1>Olá, {{ user.username }}! Seja Bem Vindo {{ permicoes }}</h1>
+{% load static %}
 
+{% block title %}Home - AC Jogos{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <section class="welcome-header">
+        <h1>Olá, {{ user.username }}!</h1>
+        <p>Você está logado como: <strong>{{ permicoes }}</strong></p>
+    </section>
+
+    <hr>
+
+    <div class="card-grid">
+        <div class="card-stat">
+            <h3>Empresas</h3>
+            <p class="stat-desc">Cadastradas no sistema:</p>
+            <p class="stat-number">{{ total_contas }}</p>
+        </div>
+
+        <div class="card-stat">
+            <h3>Projetos</h3>
+            <p class="stat-desc">Jogos em desenvolvimento:</p>
+            <p class="stat-number">0</p>
+        </div>
+    </div>
+
+    <div class="actions-section" style="margin-top: 30px; background: #fff; padding: 20px; border-radius: 10px;">
+        <h3>Ações Disponíveis</h3>
+        <div class="button-group">
+            
+            {% if permicoes == "Diretoria" %}
+                <a href="{% url 'visao_diretoria' %}" class="btn-primary">
+                    Visualizar Painel da Diretoria
+                </a>
+            {% endif %}
+
+            <a href="{% url 'cadastro' %}" class="btn-outline">Cadastrar Novo Perfil</a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
