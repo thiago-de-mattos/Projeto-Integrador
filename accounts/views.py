@@ -68,8 +68,15 @@ def home(request):
     except:
         permicoes_limpa = ""
     
+    contagem = Accounts.objects.count() 
     
-    return render(request, "home.html", {'username': request.user.username, 'permicoes':permicoes_limpa}) 
+    context = {
+        'username': request.user.username, 
+        'permicoes': permicoes_limpa,
+        'total_contas': contagem
+    }
+    
+    return render(request, "home.html", context) 
     
 
 #Usuario de teste para permissoes
@@ -95,11 +102,18 @@ def Teste(request):
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
     """ Busca todos os registros no banco de dados e permite ver e editar tudo. """
-    todas_contas = Accounts.objects.all()
+    contas = Accounts.objects.all()
+
+    try:
+        permicoes = list(get_user_roles(request.user))
+        permicoes_limpa = permicoes[0].get_name().replace('_','').title()
+    except:
+        permicoes_limpa = ""
     
     context = {
-        'contas': todas_contas,
-        'username': request.user.username
-    }
+        'contas': contas,
+        'username': request.user.username,
+        'permicoes': permicoes_limpa
+        }
     
     return render(request, 'visao_diretoria.html', context)

@@ -66,8 +66,11 @@ h1 {
 }
 
 .titulo{
-    color: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-align: center;
+    font-weight: bold;
 }
 
 form input[type="text"],
@@ -133,4 +136,101 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+
+/* estilizando para tabelas mais profissionais */
+
+.tabela-dados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tabela-dados th, .tabela-dados td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-dados th {
+    background-color: #6AB04C;
+    color: white;
+}
+
+.tabela-dados tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* melhoria para o feedback de erros */
+.alert {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Barra de Navegação */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #BADC58;
+}
+
+/* Botões de Ação na Home */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    color: white !important;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #f1f1f1;
+    color: #333 !important;
+    border: 1px solid #ddd;
+}
+
+.btn-logout {
+    background-color: #eb4d4b;
+    color: white !important;
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
