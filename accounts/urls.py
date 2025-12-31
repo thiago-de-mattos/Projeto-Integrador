@@ -18,4 +18,8 @@ urlpatterns = [
 #Usuario de teste    
     path("teste/", Teste, 
          name="usuario_teste"),
+         
+    path('diretoria/', 
+         views.visao_diretoria, 
+         name='visao_diretoria'),
 ]

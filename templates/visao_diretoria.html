@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h2>Painel de Controle - Diretoria</h2>
+<p>Olá, {{ username }}. Aqui você pode visualizar todos os registros do sistema.</p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Empresa</th>
+            <th>Cargo</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for conta in contas %}
+        <tr>
+            <td>{{ conta.nome }}</td>
+            <td>{{ conta.empresa }}</td>
+            <td>{{ conta.cargo }}</td>
+            <td>
+                <a href="#">Editar</a> | 
+                <a href="#" style="color: red;">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum registro encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

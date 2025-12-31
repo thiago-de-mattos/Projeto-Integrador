@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import get_user_roles
+from rolepermissions.decorators import has_role_decorator
+from .models import Accounts
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -82,9 +84,22 @@ def Teste(request):
         user.is_superuser = False
         user.save()
         
+        assign_role(user, 'diretoria')
         #assign_role(user, "gerente")
         
         return HttpResponse("Usuario de teste criado")
     else:
         return HttpResponse("Usuario de teste ja criado")
     
+@login_required(login_url="login")
+@has_role_decorator('diretoria')
+def visao_diretoria(request):
+    """ Busca todos os registros no banco de dados e permite ver e editar tudo. """
+    todas_contas = Accounts.objects.all()
+    
+    context = {
+        'contas': todas_contas,
+        'username': request.user.username
+    }
+    
+    return render(request, 'visao_diretoria.html', context)
