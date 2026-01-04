@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="titulo">Editar Empresa: {{ empresa.nome }}</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {{ form.nome.label_tag }}
+            {{ form.nome }}
+            {{ form.nome.errors }}
+            <br>
+            
+            {{ form.razao.label_tag }}
+            {{ form.razao }}
+            {{ form.razao.errors }}
+            <br>
+            
+            {{ form.cnpj.label_tag }}
+            {{ form.cnpj }}
+            {{ form.cnpj.errors }}
+            <br>
+            
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {{ form.email.errors }}
+            <br>
+            
+            {{ form.telefone.label_tag }}
+            {{ form.telefone }}
+            {{ form.telefone.errors }}
+            <br>
+            
+            {{ form.site.label_tag }}
+            {{ form.site }}
+            {{ form.site.errors }}
+            <br>
+            
+            {{ form.endereco.label_tag }}
+            {{ form.endereco }}
+            {{ form.endereco.errors }}
+            <br>
+            
+            {{ form.cep.label_tag }}
+            {{ form.cep }}
+            {{ form.cep.errors }}
+            <br>
+            
+            {{ form.numero.label_tag }}
+            {{ form.numero }}
+            {{ form.numero.errors }}
+            <br>
+            
+            {{ form.complemento.label_tag }}
+            {{ form.complemento }}
+            {{ form.complemento.errors }}
+            <br>
+
+            <h2>Dados do Responsável</h2>
+            {{ form.nome_responsavel.label_tag }}
+            {{ form.nome_responsavel }}
+            {{ form.nome_responsavel.errors }}
+            <br>
+            
+            {{ form.razao_responsavel.label_tag }}
+            {{ form.razao_responsavel }}
+            {{ form.razao_responsavel.errors }}
+            <br>
+            
+            {{ form.cpf_responsavel.label_tag }}
+            {{ form.cpf_responsavel }}
+            {{ form.cpf_responsavel.errors }}
+            <br>
+            
+            {{ form.email_responsavel.label_tag }}
+            {{ form.email_responsavel }}
+            {{ form.email_responsavel.errors }}
+            <br>
+            
+            {{ form.telefone_responsavel.label_tag }}
+            {{ form.telefone_responsavel }}
+            {{ form.telefone_responsavel.errors }}
+            <br>
+            
+            {{ form.nick_responsavel.label_tag }}
+            {{ form.nick_responsavel }}
+            {{ form.nick_responsavel.errors }}
+            <br>
+            
+            {{ form.endereco_responsavel.label_tag }}
+            {{ form.endereco_responsavel }}
+            {{ form.endereco_responsavel.errors }}
+            <br>
+            
+            {{ form.cep_responsavel.label_tag }}
+            {{ form.cep_responsavel }}
+            {{ form.cep_responsavel.errors }}
+            <br>
+            
+            {{ form.numero_responsavel.label_tag }}
+            {{ form.numero_responsavel }}
+            {{ form.numero_responsavel.errors }}
+            <br>
+            
+            {{ form.complemento_responsavel.label_tag }}
+            {{ form.complemento_responsavel }}
+            {{ form.complemento_responsavel.errors }}
+            
+            <button type="submit">Salvar Alterações</button>
+            <a href="{% url 'listagem_empresas' %}">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

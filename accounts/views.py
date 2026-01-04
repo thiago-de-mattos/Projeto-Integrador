@@ -9,6 +9,8 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
+from .forms import EmpresaForm,ProjetosForm
+from .models import Empresas
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -81,7 +83,7 @@ def home(request):
 
 #Usuario de teste para permissoes
 
-def Teste(request):
+def Teste_Diretoria(request):
     username = "Vitor"
     password = "123456789"
     user, created = CustomUser.objects.get_or_create(username=username)
@@ -117,3 +119,69 @@ def visao_diretoria(request):
         }
     
     return render(request, 'visao_diretoria.html', context)
+
+def cadastro_empresas(request):
+    if request.method=='POST':
+        form=EmpresaForm(request.POST)
+        if form.is_valid():
+            empresa=form.save()
+            
+            messages.success(request,f"Empresa {empresa.nome} cadastrada")
+            return redirect('empresas')
+        else:
+            messages.error(request,'Corrija os erros abaixo')
+    else:
+        form=EmpresaForm()
+    
+    return render(request,'empresas.html',{'form':form})
+
+@login_required(login_url="login")
+def listagem_empresas(request):
+    empresas=Empresas.objects.all()
+    
+    context = {
+        'empresas':empresas
+    }
+    return render(request,'listagem_empresas.html',context)
+
+
+@login_required(login_url="login")
+def editar_empresas(request,pk):
+    empresas=get_object_or_404(Empresas,pk=pk)
+    
+    if request.method=='POST':
+        form=EmpresaForm(request.POST,instance=empresas)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request,f'Empresa {empresas.nome} Atualizada com sucesso')
+            return redirect('listagem_empresas')
+        else:
+            messages.error(request,"Corrija os Erros")
+    else:
+        form=EmpresaForm(instance=empresas)
+        
+    context={
+        'form':form,
+        'empresas':empresas
+    }
+    return render(request,'editar_empresas.html',context)
+
+
+
+
+def cadastro_projetos(request):
+        if request.method=='POST':
+            form=ProjetosForm(request.POST)
+            if form.is_valid():
+                projetos=form.save()
+            
+                messages.success(request,f"Projetos {projetos.nome} cadastrada")
+                return redirect('projetos')
+            else:
+                messages.error(request,'Corrija os erros abaixo')
+        else:
+            form=ProjetosForm()
+    
+        return render(request,'projetos.html',{'form':form})
+    
