@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-lista">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="titulo">Lista de Empresas</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
+        <br><br>
+        
+        {% if empresas %}
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Razão</th>
+                        <th>CNPJ</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Site</th>
+                        <th>endereço</th>
+                        <th>Cep</th>
+                        <th>Número</th>
+                        <th>Complemento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empresa in empresas %}
+                        <tr>
+                            <td>{{ empresa.nome }}</td>
+                            <td>{{ empresa.razao }}</td>
+                            <td>{{ empresa.cnpj }}</td>
+                            <td>{{ empresa.email }}</td>
+                            <td>{{ empresa.telefone }}</td>
+                            <td>{{ empresa.site }}</td>
+                            <td>{{ empresa.endereco }}</td>
+                            <td>{{ empresa.cep }}</td>
+                            <td>{{ empresa.numero }}</td>
+                            <td>{{ empresa.complemento }}</td>
+                            <td>
+                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>nome</th>
+                        <th>cpf</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Site</th>
+                        <th>endereço</th>
+                        <th>Cep</th>
+                        <th>Número</th>
+                        <th>Complemento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empresa in empresas %}
+                        <tr>
+                            <td>{{ empresa.nome_responsavel }}</td>
+                            <td>{{ empresa.cpf_responsavel  }}</td>
+                            <td>{{ empresa.email_responsavel  }}</td>
+                            <td>{{ empresa.telefone_responsavel  }}</td>
+                            <td>{{ empresa.nick_responsavel  }}</td>
+                            <td>{{ empresa.endereco_responsavel  }}</td>
+                            <td>{{ empresa.cep_responsavel  }}</td>
+                            <td>{{ empresa.numero_responsavel  }}</td>
+                            <td>{{ empresa.complemento_responsavel  }}</td>
+                            <td>
+                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Nenhuma empresa cadastrada ainda.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -10,7 +10,22 @@
 </head>
 
 <body>
-    <header></header>
+    <header>
+        <nav class="navbar">
+            <a href="{% url 'home' %}" class="logo" style="color: white; font-weight: bold; text-decoration: none; font-size: 1.2rem;">AC JOGOS</a>
+            <div class="menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'home' %}">Início</a>
+                    {% if "Diretoria" in permicoes %}
+                        <a href="{% url 'visao_diretoria' %}">Painel Direção</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="btn-logout">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Entrar</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
     
     <main>
         {% block content %}

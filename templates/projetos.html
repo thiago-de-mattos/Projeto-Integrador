@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="titulo">Cadastro de Projetos</h2>
+            
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+            
+        <form action="{% url 'projetos' %}" method="post">
+            {% csrf_token %}
+            {{ form.nome.label_tag }}
+            {{ form.nome }}
+            {{ form.nome.errors }}
+            <br>
+            {{ form.descricao.label_tag }}
+            {{ form.descricao }}
+            {{ form.descricao.errors }}
+            <br>
+            {{ form.status.label_tag }}
+            {{ form.status }}
+            {{ form.status.errors }}
+            <br>
+            {{ form.equipe.label_tag }}
+            {{ form.equipe }}
+            {{ form.equipe.errors }}
+            <br>
+            {{ form.links.label_tag }}
+            {{ form.links }}
+            {{ form.links.errors }}
+            <br>
+
+            <button type="submit">Enviar</button>
+        </form>
+            
+
+    </div>
+{% endblock %}
