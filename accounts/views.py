@@ -10,7 +10,7 @@ from rolepermissions.checkers import get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm,ProjetosForm
-from .models import Empresas
+from .models import Empresa
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):

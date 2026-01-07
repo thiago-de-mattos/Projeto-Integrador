@@ -1,10 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresas,Projetos
+from .models import Empresa, Projeto
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
-        model=Empresas
+        model=Empresa
         fields="__all__"
         
         campos={
@@ -34,7 +34,7 @@ class EmpresaForm(forms.ModelForm):
         
 class ProjetosForm(forms.ModelForm):
     class Meta:
-        model=Projetos
+        model=Projeto
         fields='__all__'
         campos={
             'nome':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
