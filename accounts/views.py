@@ -6,11 +6,13 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from rolepermissions.roles import assign_role
-from rolepermissions.checkers import get_user_roles
+from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
-from .forms import EmpresaForm,ProjetosForm
-from .models import Empresa
+from .forms import EmpresaForm,ProjetosForm, ProfileForm
+from .models import Empresa, Profile
+from django.http import HttpResponseForbidden
+
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -120,24 +122,35 @@ def visao_diretoria(request):
     
     return render(request, 'visao_diretoria.html', context)
 
-def cadastro_empresas(request):
-    if request.method=='POST':
-        form=EmpresaForm(request.POST)
+@login_required(login_url= "login")
+def cadastro_empresa(request):
+    if request.method == 'POST':
+        form = EmpresaForm(request.POST, request.FILES)
         if form.is_valid():
-            empresa=form.save()
+            empresa = form.save()
             
-            messages.success(request,f"Empresa {empresa.nome} cadastrada")
-            return redirect('empresas')
+            perfil, _ = Profile.objects.get_or_create(user=request.user)
+            perfil.empresa = empresa
+            perfil.save()
+            
+            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastra e vinculada no usuario")
+            return redirect('listagem_empresas')
         else:
-            messages.error(request,'Corrija os erros abaixo')
+            print("FORM ERRORS:", form.errors)
+            messages.error(request, f"Erro no formulário: {form.errors}")
     else:
-        form=EmpresaForm()
+        form = EmpresaForm()
+    return render(request, 'empresas.html', {'form': form})
     
-    return render(request,'empresas.html',{'form':form})
-
 @login_required(login_url="login")
 def listagem_empresas(request):
-    empresas=Empresas.objects.all()
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if perfil.empresa_id:
+        empresas = Empresa.objects.filter(id=perfil.empresa_id)
+    else:
+        empresas = Empresa.objects.none()
+
     
     context = {
         'empresas':empresas
@@ -146,42 +159,82 @@ def listagem_empresas(request):
 
 
 @login_required(login_url="login")
-def editar_empresas(request,pk):
-    empresas=get_object_or_404(Empresas,pk=pk)
-    
-    if request.method=='POST':
-        form=EmpresaForm(request.POST,instance=empresas)
-        
+def editar_empresas(request, pk):
+    empresa = get_object_or_404(Empresa, pk=pk)
+
+    # diretoria pode editar qualquer uma
+    if has_role(request.user, "diretoria"):
+        permitido = True
+    else:
+        perfil, _ = Profile.objects.get_or_create(user=request.user)
+        permitido = (perfil.empresa_id == empresa.id)
+
+    if not permitido:
+        return HttpResponseForbidden("Você não pode editar essa empresa.")
+
+    if request.method == "POST":
+        form = EmpresaForm(request.POST, request.FILES, instance=empresa)
         if form.is_valid():
             form.save()
-            messages.success(request,f'Empresa {empresas.nome} Atualizada com sucesso')
-            return redirect('listagem_empresas')
+            messages.success(request, "Empresa atualizada com sucesso.")
+            return redirect("listagem_empresas")
         else:
-            messages.error(request,"Corrija os Erros")
+            messages.error(request, f"Erro no formulário: {form.errors}")
     else:
-        form=EmpresaForm(instance=empresas)
-        
-    context={
-        'form':form,
-        'empresas':empresas
-    }
-    return render(request,'editar_empresas.html',context)
+        form = EmpresaForm(instance=empresa)
 
+    return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
 
-
-
+@login_required(login_url="login")
 def cadastro_projetos(request):
-        if request.method=='POST':
-            form=ProjetosForm(request.POST)
-            if form.is_valid():
-                projetos=form.save()
-            
-                messages.success(request,f"Projetos {projetos.nome} cadastrada")
-                return redirect('projetos')
-            else:
-                messages.error(request,'Corrija os erros abaixo')
+    if request.method == 'POST':
+        form = ProjetosForm(request.POST)
+        if form.is_valid():
+            projetos = form.save()
+            messages.success(request, f"Projeto {projetos} cadastrado")
+            return redirect('projetos')
         else:
-            form=ProjetosForm()
-    
-        return render(request,'projetos.html',{'form':form})
-    
+            messages.error(request, 'Corrija os erros abaixo')
+    else:
+        form = ProjetosForm()
+
+    return render(request, 'projetos.html', {'form': form})
+
+@login_required(login_url="login")
+def editar_meu_perfil(request):
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado com sucesso.")
+            return redirect("home")
+        else:
+            messages.error(request, f"Erro no formulário: {form.errors}")
+    else:
+        form = ProfileForm(instance=perfil)
+
+    return render(request, "editar_perfil.html", {"form": form, "perfil": perfil})
+
+@login_required(login_url="login")
+def editar_minha_empresa(request):
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if not perfil.empresa_id:
+        return HttpResponseForbidden("Você não tem empresa vinculada ao seu usuário.")
+
+    empresa = get_object_or_404(Empresa, pk=perfil.empresa_id)
+
+    if request.method == "POST":
+        form = EmpresaForm(request.POST, request.FILES, instance=empresa)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Empresa atualizada com sucesso.")
+            return redirect("home")
+        else:
+            messages.error(request, f"Erro no formulário: {form.errors}")
+    else:
+        form = EmpresaForm(instance=empresa)
+
+    return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
