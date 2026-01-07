@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Editar Empresa: {{ empresa.nome }}</h2>
+        <h2 class="titulo">Editar Empresa: {{ empresa.nome_fantasia }}</h2>
         
         {% if messages %}
             {% for message in messages %}
@@ -13,7 +13,7 @@
             {% endfor %}
         {% endif %}
         
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
             {{ form.nome.label_tag }}
