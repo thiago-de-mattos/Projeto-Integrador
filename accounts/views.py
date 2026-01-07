@@ -82,4 +82,24 @@ def Teste(request):
     else:
         return HttpResponse("Usuario de teste ja criado")
     
-    
+@login_required(login_url="/auth/login/")
+def editar_perfil(request):
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
+        
+        if not username:
+            messages.error(request, "O username nao pode estar vazio")
+            return redirect("editar_perfil")
+        
+        if User.objects.exclude(id=request.user.id).filter(username=username).exists():
+            messages.error(request, "Esse username ja esta em uso")
+            return redirect("editar_perfil")
+        
+        request.user.username = username
+        request.user.email = email
+        request.user.save()
+        
+        messages.success(request, "Perfil atualizado")
+        return redirect("home")
+    return render(request, "editar_perfil.html", {"user": request.user})
