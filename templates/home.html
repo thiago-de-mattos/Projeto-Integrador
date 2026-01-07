@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1>Olá, {{ user.username }}! Seja Bem Vindo {{ permicoes }}</h1>
+<main>
+  <div class="container">
+    <h1 class="titulo">Olá, {{ user.username }}! Seja Bem Vindo {{ permicoes }}</h1>
 
-
+    <div class="link">
+      <a href="{% url 'editar_perfil' %}">Editar meu perfil</a>
+    </div>
+  </div>
+</main>
 {% endblock %}
