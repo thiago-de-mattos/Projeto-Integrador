@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Accounts(models.Model):
     nome = models.CharField(max_length=200, verbose_name='Nome')
@@ -192,7 +192,7 @@ class Profissional(models.Model):
         message='CPF inválido. Use o formato: 000.000.000-00'
     )
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuário')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuário')
     nome_completo = models.CharField('Nome completo', max_length=150)
     cpf = models.CharField('CPF', max_length=14, unique=True, validators=[cpf_validator])
     email = models.EmailField('E-mail', unique=True)
@@ -450,7 +450,7 @@ class Profile(models.Model):
         ('PODER_PUBLICO', 'Poder Público'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuário')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuário')
     tipo_usuario = models.CharField('Tipo de usuário', max_length=15, choices=TIPO_USUARIO_CHOICES)
     empresa = models.ForeignKey(
         Empresa, 
