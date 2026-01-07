@@ -51,21 +51,21 @@ class Empresa(models.Model):
         message='CNPJ inválido. Use o formato: 00.000.000/0000-00'
     )
     
-    razao_social = models.CharField('Razão social', max_length=200)
-    nome_fantasia = models.CharField('Nome fantasia', max_length=150)
+    razao_social = models.CharField('Razão social', max_length=200, blank= True, null = True)
+    nome_fantasia = models.CharField('Nome fantasia', max_length=150, blank= True, null = True)
     cnpj = models.CharField('CNPJ', max_length=18, unique=True, validators=[cnpj_validator])
     
     email = models.EmailField('E-mail')
-    telefone = models.CharField('Telefone', max_length=20)
+    telefone = models.CharField('Telefone', max_length=20, blank = True)
     site = models.URLField('Site', blank=True)
     
-    endereco_completo = models.CharField('Endereço', max_length=255)
-    cidade = models.CharField('Cidade', max_length=100)
-    estado = models.CharField('Estado', max_length=2, default='RJ')
-    cep = models.CharField('CEP', max_length=10)
+    endereco_completo = models.CharField('Endereço', max_length=255, blank= True, null = True)
+    cidade = models.CharField('Cidade', max_length=100, blank=True)
+    estado = models.CharField('Estado', max_length=2, default='RJ', blank= True, null = True)
+    cep = models.CharField('CEP', max_length=10, blank=True)
     
-    tipo_empresa = models.CharField('Tipo', max_length=20, choices=TIPO_CHOICES)
-    porte_empresa = models.CharField('Porte', max_length=10, choices=PORTE_CHOICES)
+    tipo_empresa = models.CharField('Tipo', max_length=20, choices=TIPO_CHOICES, blank=True)
+    porte_empresa = models.CharField('Porte', max_length=10, choices=PORTE_CHOICES, blank = True)
     
     arranjo_produtivo = models.ForeignKey(
         ArranjosProdutivo, 
@@ -77,7 +77,7 @@ class Empresa(models.Model):
     
     logo = models.ImageField('Logo', upload_to='empresas/logos/', blank=True, null=True)
     
-    data_fundacao = models.DateField('Data de fundação')
+    data_fundacao = models.DateField('Data de fundação', blank=True, null=True)
     associada_acjogos = models.BooleanField('Associada à ACJOGOS-RJ', default=False)
     data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
     data_atualizacao = models.DateTimeField('Atualizado em', auto_now=True)
