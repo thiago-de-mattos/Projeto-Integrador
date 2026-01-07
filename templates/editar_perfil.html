@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Perfil</title>
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      &nbsp;|&nbsp;
+      <a href="{% url 'editar_perfil' %}">Editar perfil</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1 class="titulo">Editar Perfil</h1>
+
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'success' %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% else %}
+            <div class="alert alert-error">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'editar_perfil' %}">
+        {% csrf_token %}
+
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value="{{ user.username }}"
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="E-mail"
+          value="{{ user.email }}"
+        />
+
+        <input
+          type="text"
+          name="first_name"
+          placeholder="Nome"
+          value="{{ user.first_name }}"
+        />
+
+        <input
+          type="text"
+          name="last_name"
+          placeholder="Sobrenome"
+          value="{{ user.last_name }}"
+        />
+
+        <input type="submit" value="Salvar alterações" />
+      </form>
+
+      <div class="link">
+        <a href="{% url 'home' %}">Cancelar e voltar</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <small>Projeto Integrador</small>
+  </footer>
+
+</body>
+</html>
