@@ -17,4 +17,6 @@ urlpatterns = [
 #Usuario de teste    
     path("teste/", Teste, 
          name="usuario_teste"),
+    
+    path("perfil/editar/", views.editar_perfil, name="editar_perfil"),
 ]
