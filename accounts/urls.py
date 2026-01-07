@@ -34,7 +34,7 @@ urlpatterns = [
          name='logout'),
     
     path('empresas/',
-         views.cadastro_empresas,
+         views.cadastro_empresa,
          name='empresas'),
     
     path('projetos/',
@@ -43,4 +43,7 @@ urlpatterns = [
     
     path('empresas/listar',views.listagem_empresas,name='listagem_empresas'),
     path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
+    path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
+    path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
+
 ]
