@@ -13,7 +13,7 @@
             {% endfor %}
         {% endif %}
             
-        <form action="{% url 'empresas' %}" method="post">
+        <form action="{% url 'empresas' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h2>Dados Jurídicos</h2>
             {{ form.nome.label_tag }}
