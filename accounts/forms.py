@@ -1,13 +1,14 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto
+from .models import Empresa, Projeto, Profile
+
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
         model=Empresa
         fields="__all__"
         
-        campos={
+        widgets={
             'nome':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
             'razao':forms.TextInput(attrs={'placeholder':'Digite a razão social'}),
             'cnpj':forms.TextInput(attrs={'placeholder':'Digite o CNPJ'}),
@@ -36,12 +37,16 @@ class ProjetosForm(forms.ModelForm):
     class Meta:
         model=Projeto
         fields='__all__'
-        campos={
+        widgets={
             'nome':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
             'descricao':forms.Textarea(attrs={'placeholder':'Digite o nome da empresa'}),
-            'status':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
+            'status':forms.Select(),
             'equipe':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
             'links':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
             
         }
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["telefone_contato", "foto_perfil"]
