@@ -9,15 +9,15 @@ class EmpresaForm(forms.ModelForm):
         fields="__all__"
         
         widgets={
-            'nome':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
-            'razao':forms.TextInput(attrs={'placeholder':'Digite a razão social'}),
+            'nome_fantasia':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
+            'razao_social':forms.TextInput(attrs={'placeholder':'Digite a razão social'}),
             'cnpj':forms.TextInput(attrs={'placeholder':'Digite o CNPJ'}),
             'email':forms.EmailInput(attrs={'placeholder':'Digite o email da empresa'}),
             'telefone':forms.TextInput(attrs={'placeholder':'Digite o telefone da empresa'}),
-            'site':forms.URLInput(attrs={'placeholder':'Digite o site da empresa'}),
-            'endereco':forms.TextInput(attrs={'placeholder':'Digite o endereço da empresa'}),
+            'site':forms.TextInput(attrs={'placeholder':'Digite o site da empresa'}),
+            'endereco_completo':forms.TextInput(attrs={'placeholder':'Digite o endereço da empresa'}),
             'cep':forms.TextInput(attrs={'placeholder':'Digite o CEP da empresa'}),
-            'numero':forms.TextInput(attrs={'placeholder':'Digite o número da empresa'}),
+            'cidade':forms.TextInput(attrs={'placeholder':'Digite a cidade da empresa'}),
             'complemento':forms.TextInput(attrs={'placeholder':'Digite o complemento da empresa'}),
             
             'nome_responsavel':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
