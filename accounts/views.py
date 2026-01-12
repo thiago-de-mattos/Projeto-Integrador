@@ -10,7 +10,7 @@ from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm,ProjetosForm, ProfileForm
-from .models import Empresa, Profile
+from .models import Empresa, Profile, DadosAnuaisEmpresa
 from django.http import HttpResponseForbidden
 
 
@@ -238,3 +238,20 @@ def editar_minha_empresa(request):
         form = EmpresaForm(instance=empresa)
 
     return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
+
+@login_required(login_url="login")
+
+def estatistica(request):
+    dados = DadosAnuaisEmpresa.objects.all()
+    
+    if dados.empresa_id:
+        empresas = Empresa.objects.filter(id=DadosAnuaisEmpresa.empresa_id)
+    else:
+        empresas = Empresa.objects.none()
+
+    context = {
+        'empresas': empresas,
+        'dados': dados,
+    }
+    
+    return render(request, 'estatistica.html', context)
