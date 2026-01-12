@@ -16,14 +16,14 @@
         <form action="{% url 'empresas' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h2>Dados Jurídicos</h2>
-            {{ form.nome.label_tag }}
-            {{ form.nome }}
-            {{ form.nome.errors }}
+            {{ form.nome_fantasia.label_tag }}
+            {{ form.nome_fantasia }}
+            {{ form.nome_fantasia.errors }}
             <br>
             
-            {{ form.razao.label_tag }}
-            {{ form.razao }}
-            {{ form.razao.errors }}
+            {{ form.razao_social.label_tag }}
+            {{ form.razao_social }}
+            {{ form.razao_social.errors }}
             <br>
             
             {{ form.cnpj.label_tag }}
@@ -46,9 +46,9 @@
             {{ form.site.errors }}
             <br>
             
-            {{ form.endereco.label_tag }}
-            {{ form.endereco }}
-            {{ form.endereco.errors }}
+            {{ form.endereco_completo.label_tag }}
+            {{ form.endereco_completo }}
+            {{ form.endereco_completo.errors }}
             <br>
             
             {{ form.cep.label_tag }}
@@ -56,9 +56,9 @@
             {{ form.cep.errors }}
             <br>
             
-            {{ form.numero.label_tag }}
-            {{ form.numero }}
-            {{ form.numero.errors }}
+            {{ form.cidade.label_tag }}
+            {{ form.cidade }}
+            {{ form.cidade.errors }}
             <br>
             
             {{ form.complemento.label_tag }}
