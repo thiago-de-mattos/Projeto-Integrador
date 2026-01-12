@@ -1,5 +1,4 @@
 📌 GUIA DE BOAS PRÁTICAS — BRANCHES E COMMITS
-(Padrão recomendado para equipes)
 ==================================================
 1. NOMES DE BRANCHES
 
