@@ -255,3 +255,8 @@ def estatistica(request):
     }
     
     return render(request, 'estatistica.html', context)
+
+
+def vitrine(request):
+    return render(request,'vitrine.html')
+
