@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="titulo">Estatística</h1>
+            <ul></ul>
+                {% for dado in dados %}
+                    <li>{Ano: { dado.ano }} - Faturamento: {{ dado.faturamento_anual }}</li>
+                    <li>Investimento recebido: {{ dado.investimento_recebido }}</li>
+                    <li>Número de funcionários: {{ dado.numero_funcionarios }}</li>
+                    <li>Jogos lançados: {{ dado.jogos_lancados }}</li>
+                    <li>Jogos em desenvolvimento: {{ dado.jogos_em_desenvolvimento }}</li>
+                    <li>Plataformas principais: {{ dado.plataformas_principais }}</li>
+                    <li>Mercado principal: {{ dado.mercado_principal }}</li>
+                    <li>Data de preenchimento: {{ dado.data_preenchimento }}</li>
+                {% endfor %}
+            </ul>
+    </div>
+
+{% endblock %}

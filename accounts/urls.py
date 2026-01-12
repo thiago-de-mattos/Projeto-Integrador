@@ -45,5 +45,6 @@ urlpatterns = [
     path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
     path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
     path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
+    path('empresa/estatistica/', views.estatistica, name='estatistica'),
 
 ]
