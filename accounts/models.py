@@ -51,8 +51,8 @@ class Empresa(models.Model):
         message='CNPJ inválido. Use o formato: 00.000.000/0000-00'
     )
     
-    razao_social = models.CharField('Razão social', max_length=200, blank= True, null = True)
     nome_fantasia = models.CharField('Nome fantasia', max_length=150, blank= True, null = True)
+    razao_social = models.CharField('Razão social', max_length=200, blank= True, null = True)
     cnpj = models.CharField('CNPJ', max_length=18, unique=True, validators=[cnpj_validator])
     
     email = models.EmailField('E-mail')
