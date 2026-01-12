@@ -255,3 +255,17 @@ footer a:hover {
     display: flex;
     flex-direction: column;
 }
+
+.botao{
+    text-decoration: none;
+}
+
+.nav-bar{
+    display: flex;
+
+}
+
+.carrossel{
+    display: flex;
+    gap: 10px;
+}
