@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <nav class="nav-bar">
+        <h1>Vitrine</h1>
+
+        <a href="{% url 'login' %}" class="botao">
+            <button class="botao">Login</button>
+
+        </a>
+
+        <a href="{% url 'cadastro' %}" class="botao">
+            <button class="botao">Cadastrar</button>
+
+        </a>
+        
+    </nav>
+    <h2>Veja alguns dos nossos jogos</h2>
+    <div class="carrossel">
+        <img src="{% static 'image/jogo_1.png' %}" alt="" width="250">
+        <img src="{% static 'image/jogo_2.png' %}" alt=""width="250">
+        <img src="{% static 'image/jogo_3.png' %}" alt=""width="250">
+    </div>
+    <section>
+        <h2>Veja algumas das nossas empresas parceiras</h2>
+    </section>
+
+    <section>
+        <h2>Veja o que a nossa empresa oferece</h2>
+    </section>
+</body>
+</html>
