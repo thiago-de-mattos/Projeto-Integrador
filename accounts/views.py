@@ -10,7 +10,7 @@ from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm,ProjetosForm, ProfileForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa
+from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto
 from django.http import HttpResponseForbidden
 
 
@@ -70,14 +70,18 @@ def home(request):
         permicoes = list(get_user_roles(request.user))
         permicoes_limpa = permicoes[0].get_name().replace('_','').title()
     except:
-        permicoes_limpa = ""
+        permicoes_limpa = "Visitante"
     
     contagem = Accounts.objects.count() 
-    
+    total_empresas = Empresa.objects.count()
+    total_projetos = Projeto.objects.count()
+
     context = {
         'username': request.user.username, 
         'permicoes': permicoes_limpa,
-        'total_contas': contagem
+        'total_contas': contagem,
+        'total_empresas': total_empresas,
+        'total_projetos': total_projetos,
     }
     
     return render(request, "home.html", context) 
