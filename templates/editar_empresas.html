@@ -16,7 +16,7 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
-                        {{ form.nome_fantasia.label_tag }}
+            {{ form.nome_fantasia.label_tag }}
             {{ form.nome_fantasia }}
             {{ form.nome_fantasia.errors }}
             <br>
