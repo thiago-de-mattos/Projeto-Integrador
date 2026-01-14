@@ -1,39 +1,67 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 </head>
+
 <body>
     <nav class="nav-bar">
-        <h1>Vitrine</h1>
+        <img src="{% static 'image/logo.png' %}" alt="" width="60" <div class="nav-button">
+        <div class="nav-button">
+            <ul class="lista">
+                <li><button class="btn-primary-lista">Jogos</button></li>
+                <li><button class="btn-primary-lista">Empresas</button></li>
+                <li><button class="btn-primary-lista">Sobre</button></li>
+            </ul>
+            
 
-        <a href="{% url 'login' %}" class="botao">
-            <button class="botao">Login</button>
+            <div class="botoes">
+                <a href="{% url 'login' %}" class="botao">
+                    <button class="btn-primary">Login</button>
 
-        </a>
+                </a>
 
-        <a href="{% url 'cadastro' %}" class="botao">
-            <button class="botao">Cadastrar</button>
-
-        </a>
-        
+                <a href="{% url 'cadastro' %}" class="botao">
+                    <button class="btn-primary">Cadastrar</button></a>
+            </div>
+        </div>
     </nav>
-    <h2>Veja alguns dos nossos jogos</h2>
-    <div class="carrossel">
-        <img src="{% static 'image/jogo_1.png' %}" alt="" width="250">
-        <img src="{% static 'image/jogo_2.png' %}" alt=""width="250">
-        <img src="{% static 'image/jogo_3.png' %}" alt=""width="250">
-    </div>
-    <section>
-        <h2>Veja algumas das nossas empresas parceiras</h2>
-    </section>
 
-    <section>
-        <h2>Veja o que a nossa empresa oferece</h2>
-    </section>
+
+    <hr>
+    <main class="conteudo">
+        <div class="container-vitrine">
+
+            <h2>Objetivo da AC-Jogos</h2>
+            <p>O principal objetivo da associação é promover discussões sobre os rumos da indústria de jogos, 
+                compartilhar boas práticas e incentivar a formação profissional. Além disso, busca dar visibilidade 
+                aos jogos produzidos no Rio de Janeiro.</p>
+        </div>
+
+        <h2>Veja os jogos mais populares das empresas parceiras</h2>
+        <div class="carrossel">
+            <img src="{% static 'image/jogo_1.png' %}" alt="" width="250">
+            <img src="{% static 'image/jogo_2.png' %}" alt="" width="250">
+            <img src="{% static 'image/jogo_3.png' %}" alt="" width="250">
+        </div>
+        <h2>Empresas Parceiras</h2>
+        <p>Foto das Empresas</p>
+        <div class="centro">
+
+            <div class="container-vitrine">
+                <h2>Sobre Nós</h2>
+                <p>Contamos com mais de 60 empresas localizadas em todo o Brasil e estúdios e +3 mil funcionários</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        &copy; Todos os Direitos Reservados a AC-Jogos
+    </footer>
 </body>
+
 </html>
