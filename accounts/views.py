@@ -9,7 +9,7 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
-from .forms import EmpresaForm,ProjetosForm, ProfileForm
+from .forms import EmpresaForm ,EstudioForm ,ProjetosForm, ProfileForm
 from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto
 from django.http import HttpResponseForbidden
 
@@ -90,7 +90,7 @@ def home(request):
 #Usuario de teste para permissoes
 
 def Teste_Diretoria(request):
-    username = "Vitor"
+    username = "Teste"
     password = "123456789"
     user, created = CustomUser.objects.get_or_create(username=username)
     if created:
@@ -102,9 +102,9 @@ def Teste_Diretoria(request):
         assign_role(user, 'diretoria')
         #assign_role(user, "gerente")
         
-        return HttpResponse("Usuario de teste criado")
+        return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
     else:
-        return HttpResponse("Usuario de teste ja criado")
+        return HttpResponse("Usuario de teste ja criado Usuario:Teste Senha:123456789")
     
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
@@ -145,28 +145,48 @@ def cadastro_empresa(request):
     else:
         form = EmpresaForm()
     return render(request, 'empresas.html', {'form': form})
-    
+
+
+#estudios
+@login_required(login_url= "login")
+def cadastro_estudio(request):
+    if request.method == 'POST':
+        form = EstudioForm(request.POST, request.FILES)
+        if form.is_valid():
+            estudio = form.save()
+            
+            perfil, _ = Profile.objects.get_or_create(user=request.user)
+            perfil.estudio = estudio
+            perfil.save()
+            
+            messages.success(request, f"Empresa {estudio.nome_fantasia} cadastra e vinculada no usuario")
+            return redirect('listagem_empresas')
+        else:
+            print("FORM ERRORS:", form.errors)
+            messages.error(request, f"Erro no formulário: {form.errors}")
+    else:
+        form = EstudioForm()
+    return render(request, 'empresas.html', {'form': form})
+
+
 @login_required(login_url="login")
 def listagem_empresas(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
-
     if perfil.empresa_id:
         empresas = Empresa.objects.filter(id=perfil.empresa_id)
     else:
         empresas = Empresa.objects.none()
-
-    
     context = {
-        'empresas':empresas
+        'empresas':empresas,
     }
     return render(request,'listagem_empresas.html',context)
+
 
 
 @login_required(login_url="login")
 def editar_empresas(request, pk):
     empresa = get_object_or_404(Empresa, pk=pk)
 
-    # diretoria pode editar qualquer uma
     if has_role(request.user, "diretoria"):
         permitido = True
     else:
