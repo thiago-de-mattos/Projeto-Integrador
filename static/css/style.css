@@ -281,10 +281,6 @@ footer a:hover {
     text-decoration: none;
 }
 
-.nav-bar{
-    display: flex;
-
-}
 
 .carrossel{
     display: flex;
@@ -334,3 +330,59 @@ form .helptext {
 }
 
 
+.nav-button{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content:space-between
+}
+
+li{
+    list-style-type: none;
+}
+
+.lista{
+    display: flex;
+    gap: 20px;
+
+}
+
+.btn-primary-lista {
+    background: linear-gradient(135deg, #39bdb2 0%, #d5e452 100%);
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+hr{
+    margin-top: 5px;
+    border-color: rgb(55, 172, 55)
+}
+
+.nav-bar{
+    display: flex; 
+}
+
+.container-vitrine {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+.conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
