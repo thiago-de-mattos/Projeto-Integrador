@@ -33,6 +33,35 @@ class EmpresaForm(forms.ModelForm):
             'numero_responsavel':forms.TextInput(attrs={'placeholder':'Digite o número da empresa'}),
             'complemento_responsavel':forms.TextInput(attrs={'placeholder':'Digite o complemento da empresa'}),
             }
+
+class EstudioForm(forms.ModelForm):
+    class Meta:
+        model=Empresa
+        fields="__all__"
+        
+        widgets={
+            'nome_fantasia':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
+            'razao_social':forms.TextInput(attrs={'placeholder':'Digite a razão social'}),
+            'cnpj':forms.TextInput(attrs={'placeholder':'Digite o CNPJ'}),
+            'email':forms.EmailInput(attrs={'placeholder':'Digite o email da empresa'}),
+            'telefone':forms.TextInput(attrs={'placeholder':'Digite o telefone da empresa'}),
+            'site':forms.TextInput(attrs={'placeholder':'Digite o site da empresa'}),
+            'endereco_completo':forms.TextInput(attrs={'placeholder':'Digite o endereço da empresa'}),
+            'cep':forms.TextInput(attrs={'placeholder':'Digite o CEP da empresa'}),
+            'cidade':forms.TextInput(attrs={'placeholder':'Digite a cidade da empresa'}),
+            'complemento':forms.TextInput(attrs={'placeholder':'Digite o complemento da empresa'}),
+            
+            'nome_responsavel':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
+            'razao_responsavel':forms.TextInput(attrs={'placeholder':'Digite a razão social'}),
+            'cpf_responsavel':forms.TextInput(attrs={'placeholder':'Digite o CNPJ'}),
+            'email_responsavel':forms.EmailInput(attrs={'placeholder':'Digite o email da empresa'}),
+            'telefone_responsavel':forms.TextInput(attrs={'placeholder':'Digite o telefone da empresa'}),
+            'nick_responsavel':forms.URLInput(attrs={'placeholder':'Digite o site da empresa'}),
+            'endereco_responsavel':forms.TextInput(attrs={'placeholder':'Digite o endereço da empresa'}),
+            'cep_responsavel':forms.TextInput(attrs={'placeholder':'Digite o CEP da empresa'}),
+            'numero_responsavel':forms.TextInput(attrs={'placeholder':'Digite o número da empresa'}),
+            'complemento_responsavel':forms.TextInput(attrs={'placeholder':'Digite o complemento da empresa'}),
+            }
         
         
 class ProjetosForm(forms.ModelForm):
