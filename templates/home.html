@@ -5,11 +5,35 @@
 
 {% block content %}
 
-<div class="dashboard-container">
-    <section class="welcome-header">
+
+
+<div class="dashboard-container", style="text-align: center;">
+
+    <div style="text-align: center;">
+        <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" alt="Logomarca da AC Jogos" width="100" height="100">
+    </div>
+
+    <section class="titulo-diretoria">
         <h1>Olá, {{ user.username }}!</h1>
-        <p>Você está logado como: <strong>{{ permicoes }}</strong></p>
     </section>
+
+    <p style="margin-bottom: 30px;">Você está logado como: <strong>{{ permicoes }}</strong></p>
+
+    <hr>
+    {% if permicoes == "Diretoria" %}
+    <div class="actions-section" style="background: #fff; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
+        <h3>Ações Disponíveis:</h3>
+        <div class="button-group">
+            
+                <a href="{% url 'visao_diretoria' %}" class="btn-primary">
+                    Visualizar Painel da Diretoria
+                </a>
+
+                <a href="{% url 'cadastro' %}" class="btn-outline">Cadastrar Novo Perfil</a>
+            {% endif %}
+
+        </div>
+    </div>
 
     <hr>
 
@@ -24,20 +48,6 @@
             <h3>Projetos</h3>
             <p class="stat-desc">Jogos em desenvolvimento:</p>
             <p class="stat-number">{{ total_projetos }}</p>
-        </div>
-    </div>
-
-    <div class="actions-section" style="margin-top: 30px; background: #fff; padding: 20px; border-radius: 10px;">
-        <h3>Ações Disponíveis</h3>
-        <div class="button-group">
-            
-            {% if permicoes == "Diretoria" %}
-                <a href="{% url 'visao_diretoria' %}" class="btn-primary">
-                    Visualizar Painel da Diretoria
-                </a>
-            {% endif %}
-
-            <a href="{% url 'cadastro' %}" class="btn-outline">Cadastrar Novo Perfil</a>
         </div>
     </div>
 </div>
