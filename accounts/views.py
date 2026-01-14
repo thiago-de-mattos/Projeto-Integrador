@@ -10,7 +10,7 @@ from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm,ProjetosForm, ProfileForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto
+from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Profissional, StatusEmpresa, Projeto
 from django.http import HttpResponseForbidden
 
 
@@ -246,20 +246,30 @@ def editar_minha_empresa(request):
 @login_required(login_url="login")
 
 def estatistica(request):
-    dados = DadosAnuaisEmpresa.objects.all()
     
-    if dados.empresa_id:
-        empresas = Empresa.objects.filter(id=DadosAnuaisEmpresa.empresa_id)
-    else:
-        empresas = Empresa.objects.none()
-
+    total_empresas = Empresa.objects.count()
+    empresas_ativas = Empresa.objects.filter(status_historico__status='Ativa').count()
+    projetos_empresa = Projeto.objects.count()
+    jogos_lancados = Projeto.objects.filter(status='Lancado').count()
+   
     context = {
-        'empresas': empresas,
-        'dados': dados,
+        'total_empresas': total_empresas,
+        'empresas_ativas': empresas_ativas,
+        'projetos_empresa': projetos_empresa,
+        'jogos_lancados': jogos_lancados, 
     }
     
     return render(request, 'estatistica.html', context)
 
+def estatisticas_detalhadas(request):
+    dados = DadosAnuaisEmpresa.objects.all()
+    profissionais_empresa = Profissional.objects.count()
+     
+    context = {
+        'dados': dados,
+        'profissionais_empresa': profissionais_empresa,
+    }
+    return render(request, 'estatisticas_detalhadas.html', context)
 
 def vitrine(request):
     return render(request,'vitrine.html')
