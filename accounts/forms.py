@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto, Profile
+from .models import Empresa, Projeto, Profile, Estudios
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -32,6 +32,23 @@ class EmpresaForm(forms.ModelForm):
             'cep_responsavel':forms.TextInput(attrs={'placeholder':'Digite o CEP da empresa'}),
             'numero_responsavel':forms.TextInput(attrs={'placeholder':'Digite o número da empresa'}),
             'complemento_responsavel':forms.TextInput(attrs={'placeholder':'Digite o complemento da empresa'}),
+            }
+
+class EstudioForm(forms.ModelForm):
+    class Meta:
+        model = Estudios
+        fields = [
+            'nome_do_estudio',
+            'email',
+            'telefone',
+            'endereco',
+        ]
+
+        widgets={
+            'nome_do_estudio':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
+            'email':forms.EmailInput(attrs={'placeholder':'Digite o email da empresa'}),
+            'telefone':forms.TextInput(attrs={'placeholder':'Digite o telefone da empresa'}),
+            'endereco':forms.TextInput(attrs={'placeholder':'Digite o endereco da empresa'}),
             }
         
         

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="titulo">Cadastro do Estudio</h2>
+            
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+            
+        <form action="{% url 'estudios' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Dados do Estudio</h2>
+            {{ form.nome_do_estudio.label_tag }}
+            {{ form.nome_do_estudio }}
+            {{ form.nome_do_estudio.errors }}
+            <br>
+
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {{ form.email.errors }}
+            <br>
+            
+            {{ form.telefone.label_tag }}
+            {{ form.telefone }}
+            {{ form.telefone.errors }}
+            <br>
+            
+            {{ form.endereco.label_tag }}
+            {{ form.endereco }}
+            {{ form.endereco.errors }}
+            <br>
+            
+            <button type="submit">Enviar</button>
+        </form>
+            
+
+    </div>
+{% endblock %}

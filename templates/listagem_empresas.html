@@ -1,22 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-lista">
-        <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Lista de Empresas</h2>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        
-        <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
-        <br><br>
-        
-        {% if empresas %}
+<div class="container-lista">
+    <h1 class="titulo">AC Jogos</h1>
+    <h2 class="titulo">Lista de Empresas</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <br>
+    <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
+    <a href="{% url 'estudios' %}" class="btn btn-primary">Novo Estúdio</a>
+    <br><br>
+
+    <!-- EMPRESAS -->
+    {% if empresas %}
+        <button type="button" onclick="toggleDiv('conteudo_empresas')" class="btn btn-secondary">
+            Mostrar Empresas / Ocultar Empresas
+        </button>
+
+        <div id="conteudo_empresas" style="display:none; margin-top:15px;">
             <table border="1" cellpadding="10">
                 <thead>
                     <tr>
@@ -26,67 +34,120 @@
                         <th>Email</th>
                         <th>Telefone</th>
                         <th>Site</th>
-                        <th>endereço</th>
+                        <th>Endereço</th>
                         <th>Cep</th>
-                        <th>Número</th>
+                        <th>Cidade</th>
                         <th>Complemento</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for empresa in empresas %}
                         <tr>
-                            <td>{{ empresa.nome }}</td>
-                            <td>{{ empresa.razao }}</td>
+                            <td>{{ empresa.nome_fantasia }}</td>
+                            <td>{{ empresa.razao_social }}</td>
                             <td>{{ empresa.cnpj }}</td>
                             <td>{{ empresa.email }}</td>
                             <td>{{ empresa.telefone }}</td>
                             <td>{{ empresa.site }}</td>
-                            <td>{{ empresa.endereco }}</td>
+                            <td>{{ empresa.endereco_completo }}</td>
                             <td>{{ empresa.cep }}</td>
-                            <td>{{ empresa.numero }}</td>
+                            <td>{{ empresa.cidade }}</td>
                             <td>{{ empresa.complemento }}</td>
                             <td>
-                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
+                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            <br>
+
             <table border="1" cellpadding="10">
                 <thead>
                     <tr>
-                        <th>nome</th>
-                        <th>cpf</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
                         <th>Email</th>
                         <th>Telefone</th>
-                        <th>Site</th>
-                        <th>endereço</th>
+                        <th>Nick</th>
+                        <th>Endereço</th>
                         <th>Cep</th>
                         <th>Número</th>
                         <th>Complemento</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for empresa in empresas %}
                         <tr>
                             <td>{{ empresa.nome_responsavel }}</td>
-                            <td>{{ empresa.cpf_responsavel  }}</td>
-                            <td>{{ empresa.email_responsavel  }}</td>
-                            <td>{{ empresa.telefone_responsavel  }}</td>
-                            <td>{{ empresa.nick_responsavel  }}</td>
-                            <td>{{ empresa.endereco_responsavel  }}</td>
-                            <td>{{ empresa.cep_responsavel  }}</td>
-                            <td>{{ empresa.numero_responsavel  }}</td>
-                            <td>{{ empresa.complemento_responsavel  }}</td>
+                            <td>{{ empresa.cpf_responsavel }}</td>
+                            <td>{{ empresa.email_responsavel }}</td>
+                            <td>{{ empresa.telefone_responsavel }}</td>
+                            <td>{{ empresa.nick_responsavel }}</td>
+                            <td>{{ empresa.endereco_responsavel }}</td>
+                            <td>{{ empresa.cep_responsavel }}</td>
+                            <td>{{ empresa.numero_responsavel }}</td>
+                            <td>{{ empresa.complemento_responsavel }}</td>
                             <td>
-                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
+                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        {% else %}
-            <p>Nenhuma empresa cadastrada ainda.</p>
-        {% endif %}
+        </div>
+    {% else %}
+        <p>Nenhuma empresa cadastrada ainda.</p>
+    {% endif %}
+
+    <hr>
+
+<!-- ESTÚDIOS -->
+<br>
+{% if estudios %}
+    <button type="button" onclick="toggleDiv('conteudo_estudios')" class="btn btn-secondary">
+        Mostrar Estúdios / Ocultar Estúdios
+    </button>
+
+    <div id="conteudo_estudios" style="display:none; margin-top:15px;">
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Nome do Estúdio</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Endereço</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudio in estudios %}
+                    <tr>
+                        <td>{{ estudio.nome_do_estudio }}</td>
+                        <td>{{ estudio.email }}</td>
+                        <td>{{ estudio.telefone }}</td>
+                        <td>{{ estudio.endereco }}</td>
+                        <td>
+                            <a href="{% url 'editar_estudios' estudio.id %}">Editar estúdio</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+{% else %}
+    <p>Nenhum estúdio cadastrado ainda.</p>
+{% endif %}
+
+</div>
+
+<script>
+function toggleDiv(id) {
+    const div = document.getElementById(id);
+    div.style.display = (div.style.display === 'none' || div.style.display === '') ? 'block' : 'none';
+}
+</script>
 {% endblock %}
