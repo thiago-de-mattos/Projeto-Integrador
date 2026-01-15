@@ -9,8 +9,8 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
-from .forms import EmpresaForm,ProjetosForm, ProfileForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto
+from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm
+from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios
 from django.http import HttpResponseForbidden
 
 
@@ -147,40 +147,77 @@ def cadastro_empresa(request):
     return render(request, 'empresas.html', {'form': form})
 
 
-#estudios
-@login_required(login_url= "login")
-def cadastro_estudio(request):
-    if request.method == 'POST':
-        form = EstudioForm(request.POST, request.FILES)
-        if form.is_valid():
-            estudio = form.save()
-            
-            perfil, _ = Profile.objects.get_or_create(user=request.user)
-            perfil.estudio = estudio
-            perfil.save()
-            
-            messages.success(request, f"Empresa {estudio.nome_fantasia} cadastra e vinculada no usuario")
-            return redirect('listagem_empresas')
-        else:
-            print("FORM ERRORS:", form.errors)
-            messages.error(request, f"Erro no formulário: {form.errors}")
-    else:
-        form = EstudioForm()
-    return render(request, 'empresas.html', {'form': form})
-
-
 @login_required(login_url="login")
 def listagem_empresas(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
+
     if perfil.empresa_id:
         empresas = Empresa.objects.filter(id=perfil.empresa_id)
+        estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
     else:
         empresas = Empresa.objects.none()
-    context = {
-        'empresas':empresas,
-    }
-    return render(request,'listagem_empresas.html',context)
+        estudios = Estudios.objects.none()
 
+    return render(request, 'listagem_empresas.html', {
+        'empresas': empresas,
+        'estudios': estudios,
+    })
+
+@login_required(login_url="login")
+def cadastro_estudio(request):
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if not perfil.empresa_id:
+        messages.error(request, "Cadastre uma empresa antes de criar um estúdio.")
+        return redirect('empresas')
+
+    if request.method == 'POST':
+        form = EstudioForm(request.POST)
+        if form.is_valid():
+            estudio = form.save(commit=False)
+            estudio.empresa_id = perfil.empresa_id
+
+            estudio.save()
+            messages.success(
+                request,
+                f'Estúdio {estudio.nome_do_estudio} cadastrado com sucesso!'
+            )
+            return redirect('listagem_empresas')
+    else:
+        form = EstudioForm()
+
+    return render(request, 'estudios.html', {'form': form})
+
+
+@login_required(login_url="login")
+def editar_estudios(request, pk):
+    estudio = get_object_or_404(Estudios, pk=pk)
+
+    if has_role(request.user, "diretoria"):
+        permitido = True
+    else:
+        perfil, _ = Profile.objects.get_or_create(user=request.user)
+        permitido = (perfil.empresa_id == estudio.empresa_id)
+
+    if not permitido:
+        return HttpResponseForbidden("Você não pode editar este estúdio.")
+
+    if request.method == "POST":
+        form = EstudioForm(request.POST, instance=estudio)
+        if form.is_valid():
+            estudio_editado = form.save(commit=False)
+            estudio_editado.empresa = estudio.empresa
+
+            estudio_editado.save()
+            messages.success(request, "Estúdio atualizado com sucesso.")
+            return redirect("listagem_empresas")
+    else:
+        form = EstudioForm(instance=estudio)
+
+    return render(request, "editar_estudios.html", {
+        "form": form,
+        "estudio": estudio
+    })
 
 
 @login_required(login_url="login")
