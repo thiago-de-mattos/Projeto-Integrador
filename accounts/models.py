@@ -7,6 +7,7 @@ class Accounts(models.Model):
     nome = models.CharField(max_length=200, verbose_name='Nome')
     cargo = models.CharField(max_length=200, verbose_name='Cargo')
     empresa = models.CharField(max_length=200, verbose_name='Empresa')
+    estudios = models.CharField(max_length=200, blank=True, verbose_name='Estudios')
 
 class CustomUser(AbstractUser):
     pass
@@ -90,6 +91,30 @@ class Empresa(models.Model):
         verbose_name_plural = 'Empresas'
         ordering = ['nome_fantasia']
 
+
+
+class Estudios(models.Model):
+    empresa = models.ForeignKey(
+        Empresa,
+        on_delete=models.CASCADE,
+        related_name='estudios',
+        null=True,
+        blank=True
+    )
+
+    nome_do_estudio = models.CharField('Nome do estúdio', max_length=150)
+    email = models.EmailField('E-mail')
+    telefone = models.CharField('Telefone', max_length=20, blank=True)
+
+    endereco = models.CharField('Endereço', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.nome_do_estudio
+
+    class Meta:
+        verbose_name = 'Estudios'
+        verbose_name_plural = 'Estudios'
+        ordering = ['nome_do_estudio']
 
 class StatusEmpresa(models.Model):
     STATUS_CHOICES = [
