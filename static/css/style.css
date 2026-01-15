@@ -1,3 +1,10 @@
+:root{
+    --red: #fc645b;
+    --green: #24c4ac;
+    --yellow: #fccc04;
+    --blue: #046c84;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -75,6 +82,14 @@ h1 {
 
 .titulo{
     background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    font-weight: bold;
+}
+
+.titulo-diretoria{
+    background-color: #fc645b;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
@@ -209,7 +224,7 @@ footer a:hover {
     flex-wrap: wrap;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-outline {
     padding: 10px 20px;
     border-radius: 8px;
     text-decoration: none;
@@ -226,6 +241,12 @@ footer a:hover {
 }
 
 .btn-secondary {
+    background-color: #f1f1f1;
+    color: #333 !important;
+    border: 1px solid #ddd;
+}
+
+.btn-outline {
     background-color: #f1f1f1;
     color: #333 !important;
     border: 1px solid #ddd;

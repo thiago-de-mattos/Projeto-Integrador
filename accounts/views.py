@@ -70,7 +70,7 @@ def home(request):
         permicoes = list(get_user_roles(request.user))
         permicoes_limpa = permicoes[0].get_name().replace('_','').title()
     except:
-        permicoes_limpa = "Visitante"
+        permicoes_limpa = ""
     
     contagem = Accounts.objects.count() 
     total_empresas = Empresa.objects.count()
