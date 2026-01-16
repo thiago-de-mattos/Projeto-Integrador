@@ -12,6 +12,7 @@
 
 <body>
     <nav class="nav-bar">
+
         <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png?VersionId=s.86rgjwEhWjZKF.EPF0IRrXA7vJXITK&itok=Z-jYtdsg" alt="Logo AC-Jogos" width="60">
         <div class="nav-button">
             <ul class="lista">
@@ -28,9 +29,29 @@
                 <a href="{% url 'cadastro' %}" class="botao">
                     <button class="btn-primary">Cadastrar</button>
                 </a>
+
+        <img src="{% static 'image/logo.png' %}" alt="" width="60">
+        <div class="nav-button">
+            <ul class="lista">
+                <li><button class="btn-primary-lista">Jogos</button></li>
+                <li><button class="btn-primary-lista">Empresas</button></li>
+                <li><button class="btn-primary-lista">Sobre</button></li>
+            </ul>
+            
+
+            <div class="botoes">
+                <a href="{% url 'login' %}" class="botao">
+                    <button class="btn-primary">Login</button>
+
+                </a>
+
+                <a href="{% url 'cadastro' %}" class="botao">
+                    <button class="btn-primary">Cadastrar</button></a>
+
             </div>
         </div>
     </nav>
+
 
     <hr>
 
@@ -222,6 +243,34 @@
 
     </main>
     
+
+
+    <hr>
+    <main class="conteudo">
+        <div class="container-vitrine">
+
+            <h2>Objetivo da AC-Jogos</h2>
+            <p>O principal objetivo da associação é promover discussões sobre os rumos da indústria de jogos, 
+                compartilhar boas práticas e incentivar a formação profissional. Além disso, busca dar visibilidade 
+                aos jogos produzidos no Rio de Janeiro.</p>
+        </div>
+
+        <h2>Veja os jogos mais populares das empresas parceiras</h2>
+        <div class="carrossel">
+            <img src="{% static 'image/jogo_1.png' %}" alt="" width="250">
+            <img src="{% static 'image/jogo_2.png' %}" alt="" width="250">
+            <img src="{% static 'image/jogo_3.png' %}" alt="" width="250">
+        </div>
+        <h2>Empresas Parceiras</h2>
+        <p>Foto das Empresas</p>
+        <div class="centro">
+
+            <div class="container-vitrine">
+                <h2>Sobre Nós</h2>
+                <p>Contamos com mais de 60 empresas localizadas em todo o Brasil e estúdios e +3 mil funcionários</p>
+            </div>
+        </div>
+    </main>
     <footer>
         &copy; Todos os Direitos Reservados a AC-Jogos
     </footer>

@@ -329,10 +329,16 @@ form .helptext {
 
 .nav-button{
     display: flex;
+
     align-items: center;
     justify-content: space-between;
     flex: 1; 
+    
+
     gap: 20px;
+    align-items: center;
+    justify-content:space-between
+
 }
 
 li{
@@ -342,10 +348,13 @@ li{
 .lista{
     display: flex;
     gap: 20px;
+
     list-style: none;
     margin: 0 auto; /* Centraliza a lista */
     padding-left: 7.5rem
     
+
+
 
 }
 
@@ -361,21 +370,29 @@ li{
     transition: 0.3s;
     display: inline-block;
 }
+
 .btn-primary-lista>a{
     text-decoration: none;
     color: white;
 }
+
+
+
 hr{
     margin-top: 5px;
     border-color: rgb(55, 172, 55)
 }
 
 .nav-bar{
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
     gap: 20px;
+
+    display: flex; 
+
 }
 
 .container-vitrine {
@@ -589,4 +606,13 @@ h2{
 }
 
 
+
+
+.conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
