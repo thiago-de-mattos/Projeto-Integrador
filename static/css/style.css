@@ -31,11 +31,8 @@ header>nav>a{
 
 main {
     flex: 1;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 20px;
+    /* Remova todas as propriedades de display flex e align */
 }
 
 .container {
@@ -259,7 +256,7 @@ footer a:hover {
     border-radius: 5px;
 }
 
-.btn-primary:hover, .btn-secondary:hover {
+.btn-primary:hover, .btn-secondary:hover,.btn-primary-lista:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
@@ -281,10 +278,6 @@ footer a:hover {
     text-decoration: none;
 }
 
-.nav-bar{
-    display: flex;
-
-}
 
 .carrossel{
     display: flex;
@@ -333,4 +326,293 @@ form .helptext {
     font-style: Arial;
 }
 
+
+.nav-button{
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+    flex: 1; 
+    
+
+    gap: 20px;
+    align-items: center;
+    justify-content:space-between
+
+}
+
+li{
+    list-style-type: none;
+}
+
+.lista{
+    display: flex;
+    gap: 20px;
+
+    list-style: none;
+    margin: 0 auto; /* Centraliza a lista */
+    padding-left: 7.5rem
+    
+
+
+
+}
+
+.btn-primary-lista {
+    background: linear-gradient(135deg, #39bdb2 0%, #d5e452 100%);
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.btn-primary-lista>a{
+    text-decoration: none;
+    color: white;
+}
+
+
+
+hr{
+    margin-top: 5px;
+    border-color: rgb(55, 172, 55)
+}
+
+.nav-bar{
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 20px;
+
+    display: flex; 
+
+}
+
+.container-vitrine {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+.conteudo {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Mudei de center para flex-start */
+    align-items: center;
+    padding: 0; /* Mudei de 20px para 0 */
+    gap: 20px; /* Adicione espaçamento controlado entre os elementos */
+}
+
+.a{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.container-vitrine:hover{
+    transform: rotateX(360deg);
+}
+.container-vitrine-imagem{
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 100%;
+
+}
+.container-vitrine-imagem>img{
+    border-radius: 15px;
+    width: 100%;
+    max-width: 300px;
+    max-height: 400px;
+    height: auto;
+    object-fit: contain;
+}
+
+.carrossel {
+    margin: 50px auto;
+    width: 100%;
+    overflow: hidden; /* Mudei de overflow-x: auto para hidden */
+    position: relative;
+    background: #717572;
+    border-radius: 15px;
+    height: 400px;
+}
+
+.carrossel::-webkit-scrollbar {
+    display: none;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5em;
+    animation: scroll-left 20s infinite linear; /* Renomeei e ajustei tempo */
+    padding-right: 1.5em;
+}
+
+/* Pausa a animação quando passar o mouse */
+.carrossel:hover .group {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%); /* Move metade do tamanho total */
+    }
+}
+
+.container-vitrine-imagem {
+    display: flex;
+    flex-direction: column;
+    background:linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    padding: 20px; /* Reduzi o padding */
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    min-width: 280px; /* Largura fixa para consistência */
+    max-width: 280px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid black;
+}
+
+/* Efeito hover nos cards */
+.container-vitrine-imagem:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.container-vitrine-imagem:hover > img {
+    transform: scale(1.1);
+}
+
+/* Adicione títulos aos jogos se quiser */
+.container-vitrine-imagem h3 {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+
+
+.empresas{
+    display: flex;
+    flex-direction: row;
+    gap :10px;
+}
+
+.secao-titulo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.container-vitrine-texto{
+    display: flex;
+    flex-direction: column;
+    background:linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    padding: 40px 15px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: white;
+    
+    gap: 15px;
+}
+
+p{
+    font-size: 15px;
+}
+
+h2{
+    text-align: center;
+    padding-top:15px ;
+}
+
+.btn-primary-jogos{
+    background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    color: white !important;
+    border: none;
+    width: 330px;
+    height: 60px;
+    font-size: 25px;
+    padding: 15px;
+    margin: 15px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+.jogos i {
+    font-size: 2rem;
+    color: #6AB04C;
+    margin-top: 20px;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+}
+
+/* Animação de bounce para o ícone */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.container-empresas{
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid black;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+
+
+.conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
