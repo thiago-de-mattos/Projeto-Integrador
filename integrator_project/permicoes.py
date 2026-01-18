@@ -9,3 +9,5 @@ class Programador(AbstractUserRole):
 class Diretoria(AbstractUserRole):
     available_permissions = {'visualizar_tudo': True, 'editar_tudo': True}
 
+class Empresa(AbstractUserRole):
+    available_permissions = {'gerenciar_empresa': True, 'gerenciar_projetos': True,}
