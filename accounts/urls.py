@@ -48,7 +48,8 @@ urlpatterns = [
     path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
     path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
     path('vitrine/',views.vitrine,name='vitrine'), 
-    path('empresa/estatistica/', views.estatistica, name='estatistica'),
+    path('estatistica/', views.estatistica, name='estatistica'),
+    path('estatistica_detalhada', views.estatisticas_detalhadas, name='estatistica_detalhada'),
     
     path('estudios/', views.cadastro_estudio, name='estudios'),
     path('estudio/editar_estudio/<int:pk>/', views.editar_estudios, name='editar_estudios'),
