@@ -1,3 +1,5 @@
+from rolepermissions.roles import AbstractUserRole
+
 class Diretoria(AbstractUserRole):
     """Diretoria da ACJOGOS-RJ - Acesso total ao sistema"""
     available_permissions = {
