@@ -1,25 +1,24 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %} Meu Site Django {% endblock %}</title>
+    <title>{% block title %} AC Jogos {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 </head>
 
-<body>
+<body class="{% if 'Diretoria' in permicoes %}diretoria-theme{% endif %}">
     <header>
         <nav class="navbar">
-            <a href="{% url 'home' %}" class="logo" style="color: white; font-weight: bold; text-decoration: none; font-size: 1.2rem;">AC JOGOS</a>
+            <a href="{% url 'home' %}" class="logo">AC JOGOS</a>
             <div class="menu">
                 {% if user.is_authenticated %}
                     <a href="{% url 'home' %}">Início</a>
                     {% if "Diretoria" in permicoes %}
                         <a href="{% url 'visao_diretoria' %}">Painel Direção</a>
                     {% endif %}
-                    <a href="{% url 'logout' %}" class="btn-logout">Sair</a>
+                    <a href="{% url 'logout' %}" style="color: var(--highlight);">Sair</a>
                 {% else %}
                     <a href="{% url 'login' %}">Entrar</a>
                 {% endif %}
@@ -29,10 +28,11 @@
     
     <main>
         {% block content %}
-       
         {% endblock %}
     </main>
+
     <footer>
-        <p>© 2025 - Meu Site Incrível</p>
+        <p>© 2025 - AC Jogos Rio de Janeiro. Todos os direitos reservados.</p>
     </footer>
 </body>
+</html>
