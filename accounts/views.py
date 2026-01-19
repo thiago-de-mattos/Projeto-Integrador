@@ -517,3 +517,7 @@ def editar_responsavel_empresa(request, id):
         form = ResponsavelForm(instance=responsavel)
     
     return render(request, 'responsavel_empresa.html', {'form': form})
+
+@login_required(login_url="login")
+def pagina_projeto(request):
+    return render(request, 'pagina_projeto')
