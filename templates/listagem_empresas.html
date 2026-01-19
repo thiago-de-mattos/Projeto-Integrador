@@ -1,92 +1,253 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-lista">
-        <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Lista de Empresas</h2>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        
-        <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
-        <br><br>
-        
-        {% if empresas %}
-            <table border="1" cellpadding="10">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Razão</th>
-                        <th>CNPJ</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                        <th>Site</th>
-                        <th>endereço</th>
-                        <th>Cep</th>
-                        <th>Número</th>
-                        <th>Complemento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for empresa in empresas %}
-                        <tr>
-                            <td>{{ empresa.nome }}</td>
-                            <td>{{ empresa.razao }}</td>
-                            <td>{{ empresa.cnpj }}</td>
-                            <td>{{ empresa.email }}</td>
-                            <td>{{ empresa.telefone }}</td>
-                            <td>{{ empresa.site }}</td>
-                            <td>{{ empresa.endereco }}</td>
-                            <td>{{ empresa.cep }}</td>
-                            <td>{{ empresa.numero }}</td>
-                            <td>{{ empresa.complemento }}</td>
-                            <td>
-                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <table border="1" cellpadding="10">
-                <thead>
-                    <tr>
-                        <th>nome</th>
-                        <th>cpf</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                        <th>Site</th>
-                        <th>endereço</th>
-                        <th>Cep</th>
-                        <th>Número</th>
-                        <th>Complemento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for empresa in empresas %}
-                        <tr>
-                            <td>{{ empresa.nome_responsavel }}</td>
-                            <td>{{ empresa.cpf_responsavel  }}</td>
-                            <td>{{ empresa.email_responsavel  }}</td>
-                            <td>{{ empresa.telefone_responsavel  }}</td>
-                            <td>{{ empresa.nick_responsavel  }}</td>
-                            <td>{{ empresa.endereco_responsavel  }}</td>
-                            <td>{{ empresa.cep_responsavel  }}</td>
-                            <td>{{ empresa.numero_responsavel  }}</td>
-                            <td>{{ empresa.complemento_responsavel  }}</td>
-                            <td>
-                                <a href="{% url 'editar_empresas' empresa.id %}">Editar</a> |
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>Nenhuma empresa cadastrada ainda.</p>
-        {% endif %}
+<div class="container-lista">
+    <h1 class="titulo">AC Jogos</h1>
+    <h2 class="titulo">Lista de Empresas</h2>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
     </div>
+    {% endfor %}
+    {% endif %}
+
+    <br>
+    <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
+    <a href="{% url 'estudios' %}" class="btn btn-primary">Novo Estúdio</a>
+    <a href="{% url 'projetos' %}" class="btn btn-primary">Novo Projeto</a>
+    <br><br>
+
+    <!-- EMPRESAS -->
+    {% if empresas %}
+    <button type="button" onclick="toggleDiv('conteudo_empresas')" class="btn btn-secondary">
+        Mostrar Empresas / Ocultar Empresas
+    </button>
+
+    <div id="conteudo_empresas" style="display:none; margin-top:15px;">
+        <h3>Dados das Empresas</h3>
+        <div class="empresas-lista">
+            {% for empresa in empresas %}
+            <div class="card-empresa">
+                <h3 class="card-titulo"> {{ empresa.nome_fantasia }}</h3>
+                <div class="conjunto">
+                    <h4>Nome Fantasia</h4>
+                    <p>{{ empresa.nome_fantasia }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Razão Social:</h4>
+                    <p>{{ empresa.razao_social }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>CNPJ:</h4>
+                    <p>{{ empresa.cnpj }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Email:</h4>
+                    <p>{{ empresa.email }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Telefone:</h4>
+                    <p>{{ empresa.telefone }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Site:</h4>
+                    <p>{{ empresa.site }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Endereço:</h4>
+                    <p>{{ empresa.endereco_completo }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>CEP:</h4>
+                    <p>{{ empresa.cep }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Cidade:</h4>
+                    <p>{{ empresa.cidade }}</p>
+                </div>
+
+                <div class="conjunto">
+                    <h4>Complemento:</h4>
+                    <p>{{ empresa.complemento }}</p>
+                </div>
+
+                <a href="{% url 'editar_empresas' empresa.id %}" class="btn-editar">Editar Empresa</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <br>
+        {% if responsaveis %}
+        <button type="button" onclick="toggleDiv('conteudo_responsaveis')" class="btn btn-secondary">
+            Mostrar Responsáveis / Ocultar Responsáveis
+        </button>
+
+        <div id="conteudo_responsaveis" style="display:none; margin-top:15px;">
+            <h3>Responsável Cadastrado  </h3>
+            <div class="empresas-lista">
+                {% for responsavel in responsaveis %}
+                <div class="card-empresa card-responsavel">
+                    <h3 class="card-titulo">{{ responsavel.nome_completo }}</h3>
+
+                    {% if responsavel.nome_social %}
+                    <div class="conjunto">
+                        <h4>Nome Social:</h4>
+                        <p>{{ responsavel.nome_social }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="conjunto">
+                        <h4>CPF:</h4>
+                        <p>{{ responsavel.cpf }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Email:</h4>
+                        <p>{{ responsavel.email }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Telefone:</h4>
+                        <p>{{ responsavel.telefone }}</p>
+                    </div>
+
+                    {% if responsavel.nick_discord %}
+                    <div class="conjunto">
+                        <h4>Nick Discord:</h4>
+                        <p>{{ responsavel.nick_discord }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="conjunto">
+                        <h4>CEP:</h4>
+                        <p>{{ responsavel.cep }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Endereço:</h4>
+                        <p>{{ responsavel.endereco }}, {{ responsavel.numero }}</p>
+                    </div>
+
+                    {% if responsavel.complemento %}
+                    <div class="conjunto">
+                        <h4>Complemento:</h4>
+                        <p>{{ responsavel.complemento }}</p>
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-editar">Editar
+                        Responsável</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p>Nenhum responsável cadastrado ainda.</p>
+        {% endif %}
+
+        <hr>
+
+        <!-- ESTÚDIOS -->
+        <br>
+        {% if estudios %}
+        <button type="button" onclick="toggleDiv('conteudo_estudios')" class="btn btn-secondary">
+            Mostrar Estúdios / Ocultar Estúdios
+        </button>
+
+        <div id="conteudo_estudios" style="display:none; margin-top:15px;">
+            <h3>Estúdios Cadastrados</h3>
+            <div class="empresas-lista">
+                {% for estudio in estudios %}
+                <div class="card-empresa card-estudio">
+                    <h3 class="card-titulo">{{ estudio.nome_do_estudio }}</h3>
+                    <div class="conjunto">
+                        <h4>Nome:</h4>
+                        <p>{{ estudio.nome_do_estudio }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Email:</h4>
+                        <p>{{ estudio.email }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Telefone:</h4>
+                        <p>{{ estudio.telefone }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Endereço:</h4>
+                        <p>{{ estudio.endereco }}</p>
+                    </div>
+
+                    <a href="{% url 'editar_estudios' estudio.id %}" class="btn-editar">Editar Estúdio</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+  {% else %}
+        <p>Nenhum estúdio cadastrado ainda.</p>
+        {% endif %}
+        <hr>
+        <br>
+        {% if projetos %}
+        <button type="button" onclick="toggleDiv('conteudo_projetos')" class="btn btn-secondary">
+            Mostrar Projetos / Ocultar Projetos
+        </button>
+
+        <div id="conteudo_projetos" style="display:none; margin-top:15px;">
+            <h3>Projetos Cadastrados</h3>
+            <div class="empresas-lista">
+                {% for projeto in projetos %}
+                <div class="card-empresa card-projeto">
+                    <h3 class="card-titulo">{{ projeto.titulo }}</h3>
+                    
+                    <div class="conjunto">
+                        <h4>Descrição:</h4>
+                        <p>{{ projeto.descricao|truncatewords:20 }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Status:</h4>
+                        <p>{{ projeto.get_status_display }}</p>
+                    </div>
+
+                    <div class="conjunto">
+                        <h4>Equipe:</h4>
+                        <p>{{ projeto.equipe_projeto }}</p>
+                    </div>
+
+                    {% if projeto.url_site %}
+                    <div class="conjunto">
+                        <h4>Site:</h4>
+                        <p><a href="{{ projeto.url_site }}" target="_blank">Acessar Site</a></p>
+                    </div>
+                    {% endif %}
+
+                    
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p>Nenhum projeto cadastrado ainda.</p>
+        {% endif %}
+
+    </div> {% endif %} </div> <script>
+    function toggleDiv(id) {
+        const div = document.getElementById(id);
+        div.style.display = (div.style.display === 'none' || div.style.display === '') ? 'block' : 'none';
+    }
+</script>
+
 {% endblock %}

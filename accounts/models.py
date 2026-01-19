@@ -7,6 +7,7 @@ class Accounts(models.Model):
     nome = models.CharField(max_length=200, verbose_name='Nome')
     cargo = models.CharField(max_length=200, verbose_name='Cargo')
     empresa = models.CharField(max_length=200, verbose_name='Empresa')
+    estudios = models.CharField(max_length=200, blank=True, verbose_name='Estudios')
 
 class CustomUser(AbstractUser):
     pass
@@ -90,6 +91,30 @@ class Empresa(models.Model):
         verbose_name_plural = 'Empresas'
         ordering = ['nome_fantasia']
 
+
+
+class Estudios(models.Model):
+    empresa = models.ForeignKey(
+        Empresa,
+        on_delete=models.CASCADE,
+        related_name='estudios',
+        null=True,
+        blank=True
+    )
+
+    nome_do_estudio = models.CharField('Nome do estúdio', max_length=150)
+    email = models.EmailField('E-mail')
+    telefone = models.CharField('Telefone', max_length=20, blank=True)
+
+    endereco = models.CharField('Endereço', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.nome_do_estudio
+
+    class Meta:
+        verbose_name = 'Estudios'
+        verbose_name_plural = 'Estudios'
+        ordering = ['nome_do_estudio']
 
 class StatusEmpresa(models.Model):
     STATUS_CHOICES = [
@@ -322,6 +347,7 @@ class VinculoProfissionalEmpresa(models.Model):
 
 
 class Projeto(models.Model):
+    
     STATUS_CHOICES = [
         ('PLANEJAMENTO', 'Em Planejamento'),
         ('DESENVOLVIMENTO', 'Em Desenvolvimento'),
@@ -339,23 +365,29 @@ class Projeto(models.Model):
     
     titulo = models.CharField('Título', max_length=200)
     descricao = models.TextField('Descrição')
-    genero_principal = models.CharField('Gênero principal', max_length=100)
-    generos_secundarios = models.CharField('Gêneros secundários', max_length=200, blank=True)
-    plataformas = models.CharField('Plataformas', max_length=200)
-    engine_utilizada = models.CharField('Engine', max_length=100, blank=True)
-    
-    data_inicio_desenvolvimento = models.DateField('Início do desenvolvimento')
-    data_lancamento = models.DateField('Data de lançamento', null=True, blank=True)
+    equipe_projeto = models.CharField('Equipe do Projeto', max_length=255)
     status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES)
-    publico_alvo = models.CharField('Público-alvo', max_length=15, choices=PUBLICO_CHOICES)
-    tipo_monetizacao = models.CharField('Monetização', max_length=100, blank=True)
+    url_site = models.URLField('Site', blank=True, null=True)
+
+    # Campos que agora são opcionais (adicionado blank=True e null=True)
+    genero_principal = models.CharField('Gênero principal', max_length=100, blank=True, null=True)
+    generos_secundarios = models.CharField('Gêneros secundários', max_length=200, blank=True, null=True)
+    plataformas = models.CharField('Plataformas', max_length=200, blank=True, null=True)
+    engine_utilizada = models.CharField('Engine', max_length=100, blank=True, null=True)
     
-    url_site = models.URLField('Site', blank=True)
-    url_steam = models.URLField('Steam', blank=True)
-    url_playstore = models.URLField('Play Store', blank=True)
+    data_inicio_desenvolvimento = models.DateField('Início do desenvolvimento', blank=True, null=True)
+    data_lancamento = models.DateField('Data de lançamento', null=True, blank=True)
+    
+    publico_alvo = models.CharField('Público-alvo', max_length=15, choices=PUBLICO_CHOICES, blank=True, null=True)
+    tipo_monetizacao = models.CharField('Monetização', max_length=100, blank=True, null=True)
+    
+    url_steam = models.URLField('Steam', blank=True, null=True)
+    url_playstore = models.URLField('Play Store', blank=True, null=True)
     imagem_capa = models.ImageField('Capa', upload_to='projetos/capas/', blank=True, null=True)
-    trailer_url = models.URLField('Trailer', blank=True)
-    premiacoes = models.TextField('Premiações', blank=True)
+    trailer_url = models.URLField('Trailer', blank=True, null=True)
+    premiacoes = models.TextField('Premiações', blank=True, null=True)
+    
+    data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
     data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
     
     def __str__(self):
@@ -477,3 +509,96 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Perfil'
         verbose_name_plural = 'Perfis'
+        
+        
+class Responsavel_Empresa(models.Model):
+    cpf_validator = RegexValidator(
+        regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$',
+        message='CPF inválido. Use o formato: 000.000.000-00'
+    )
+    nome_completo = models.CharField(
+        'Nome completo',
+        max_length=150,
+        help_text='Nome completo do responsável')
+    
+    nome_social = models.CharField(
+        'Nome social',
+        max_length=150,
+        blank=True,
+        null=True,
+        help_text='Nome social (opcional)')
+    
+    cpf = models.CharField(
+        'CPF',
+        max_length=14,
+        unique=True,
+       validators=[cpf_validator],
+        help_text='000.000.000-00'
+    )
+    
+    email = models.EmailField(
+        'E-mail de contato',
+        help_text='E-mail principal de contato'
+    )
+    
+    telefone = models.CharField(
+        'Telefone',
+        max_length=20,
+        help_text='(00) 00000-0000'
+    )
+    
+    nick_discord = models.CharField(
+        'Nick no Discord',
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='Seu username no Discord'
+    )
+    
+    # Endereço
+    cep = models.CharField(
+        'CEP',
+        max_length=9,
+        help_text='00000-000'
+    )
+    
+    endereco = models.CharField(
+        'Endereço',
+        max_length=200,
+        help_text='Rua, Avenida, etc.'
+    )
+    
+    numero = models.CharField(
+        'Número',
+        max_length=10,
+        help_text='Número da residência'
+    )
+    
+    complemento = models.CharField(
+        'Complemento',
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='Apartamento, bloco, etc. (opcional)'
+    )
+    
+    # Metadados
+    criado_em = models.DateTimeField('Criado em', auto_now_add=True)
+    atualizado_em = models.DateTimeField('Atualizado em', auto_now=True)
+    ativo = models.BooleanField('Ativo', default=True)
+    
+    class Meta:
+        verbose_name = 'Responsável'
+        verbose_name_plural = 'Responsáveis'
+        ordering = ['nome_completo']
+    
+    def __str__(self):
+        return self.nome_completo
+    
+    @property
+    def endereco_completo(self):
+        """Retorna endereço formatado"""
+        partes = [self.endereco, self.numero]
+        if self.complemento:
+            partes.append(self.complemento)
+        return ', '.join(partes) + f' - CEP: {self.cep}'

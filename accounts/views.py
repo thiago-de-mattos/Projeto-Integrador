@@ -9,10 +9,11 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
-from .forms import EmpresaForm,ProjetosForm, ProfileForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Profissional, StatusEmpresa, Projeto
+from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
+from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios,Responsavel_Empresa
 from django.http import HttpResponseForbidden
-
+from django.db.models import Sum, Avg, Count, Max, Min
+from rolepermissions.checkers import has_role
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -90,7 +91,7 @@ def home(request):
 #Usuario de teste para permissoes
 
 def Teste_Diretoria(request):
-    username = "Vitor"
+    username = "Teste"
     password = "123456789"
     user, created = CustomUser.objects.get_or_create(username=username)
     if created:
@@ -102,9 +103,9 @@ def Teste_Diretoria(request):
         assign_role(user, 'diretoria')
         #assign_role(user, "gerente")
         
-        return HttpResponse("Usuario de teste criado")
+        return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
     else:
-        return HttpResponse("Usuario de teste ja criado")
+        return HttpResponse("Usuario de teste ja criado Usuario:Teste Senha:123456789")
     
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
@@ -127,46 +128,118 @@ def visao_diretoria(request):
     return render(request, 'visao_diretoria.html', context)
 
 @login_required(login_url= "login")
+@login_required(login_url="login")
 def cadastro_empresa(request):
+    """Passo 1: Cadastra os dados da empresa"""
     if request.method == 'POST':
         form = EmpresaForm(request.POST, request.FILES)
         if form.is_valid():
             empresa = form.save()
             
+            # Vincula empresa ao perfil do usuário
             perfil, _ = Profile.objects.get_or_create(user=request.user)
             perfil.empresa = empresa
             perfil.save()
             
-            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastra e vinculada no usuario")
-            return redirect('listagem_empresas')
+            # Armazena o ID da empresa na sessão para usar no próximo passo
+            request.session['empresa_id'] = empresa.id
+            
+            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
+            
+            # Redireciona para o cadastro do responsável
+            return redirect('cadastro_responsavel_empresa')
         else:
             print("FORM ERRORS:", form.errors)
-            messages.error(request, f"Erro no formulário: {form.errors}")
+            messages.error(request, "Erro no formulário. Verifique os campos.")
     else:
         form = EmpresaForm()
-    return render(request, 'empresas.html', {'form': form})
     
+    return render(request, 'empresas.html', {'form': form})
+
+
 @login_required(login_url="login")
 def listagem_empresas(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
     if perfil.empresa_id:
         empresas = Empresa.objects.filter(id=perfil.empresa_id)
+        estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
+        responsaveis = Responsavel_Empresa.objects.all()
+        projetos = Projeto.objects.filter(empresas__empresa=perfil.empresa)
     else:
         empresas = Empresa.objects.none()
+        estudios = Estudios.objects.none()
+        responsaveis = Responsavel_Empresa.objects.none()
+        projetos = Projeto.objects.none()
 
-    
-    context = {
-        'empresas':empresas
-    }
-    return render(request,'listagem_empresas.html',context)
+    return render(request, 'listagem_empresas.html', {
+        'empresas': empresas,
+        'estudios': estudios,
+        'responsaveis': responsaveis,
+        'projetos': projetos,
+    })
+
+@login_required(login_url="login")
+def cadastro_estudio(request):
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if not perfil.empresa_id:
+        messages.error(request, "Cadastre uma empresa antes de criar um estúdio.")
+        return redirect('empresas')
+
+    if request.method == 'POST':
+        form = EstudioForm(request.POST)
+        if form.is_valid():
+            estudio = form.save(commit=False)
+            estudio.empresa_id = perfil.empresa_id
+
+            estudio.save()
+            messages.success(
+                request,
+                f'Estúdio {estudio.nome_do_estudio} cadastrado com sucesso!'
+            )
+            return redirect('listagem_empresas')
+    else:
+        form = EstudioForm()
+
+    return render(request, 'estudios.html', {'form': form})
+
+
+@login_required(login_url="login")
+def editar_estudios(request, pk):
+    estudio = get_object_or_404(Estudios, pk=pk)
+
+    if has_role(request.user, "diretoria"):
+        permitido = True
+    else:
+        perfil, _ = Profile.objects.get_or_create(user=request.user)
+        permitido = (perfil.empresa_id == estudio.empresa_id)
+
+    if not permitido:
+        return HttpResponseForbidden("Você não pode editar este estúdio.")
+
+    if request.method == "POST":
+        form = EstudioForm(request.POST, instance=estudio)
+        if form.is_valid():
+            estudio_editado = form.save(commit=False)
+            estudio_editado.empresa = estudio.empresa
+
+            estudio_editado.save()
+            messages.success(request, "Estúdio atualizado com sucesso.")
+            return redirect("listagem_empresas")
+    else:
+        form = EstudioForm(instance=estudio)
+
+    return render(request, "editar_estudios.html", {
+        "form": form,
+        "estudio": estudio
+    })
 
 
 @login_required(login_url="login")
 def editar_empresas(request, pk):
     empresa = get_object_or_404(Empresa, pk=pk)
 
-    # diretoria pode editar qualquer uma
     if has_role(request.user, "diretoria"):
         permitido = True
     else:
@@ -191,14 +264,34 @@ def editar_empresas(request, pk):
 
 @login_required(login_url="login")
 def cadastro_projetos(request):
+    # Seguindo o padrão da sua view 'cadastro_estudio'
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    # Verifica se o usuário tem uma empresa vinculada
+    if not perfil.empresa_id:
+        messages.error(request, "Cadastre uma empresa antes de criar um projeto.")
+        return redirect('cadastro_empresa')
+
     if request.method == 'POST':
         form = ProjetosForm(request.POST)
         if form.is_valid():
-            projetos = form.save()
-            messages.success(request, f"Projeto {projetos} cadastrado")
-            return redirect('projetos')
+            # 1. Salva o Projeto (Tabela Projeto)
+            projeto = form.save()
+
+            # 2. Cria o Vínculo (Tabela EmpresaProjeto)
+            # Como Projeto e Empresa são Muitos-para-Muitos no seu model, 
+            # precisamos criar essa linha na tabela intermediária.
+
+
+            messages.success(
+                request, 
+                f'Projeto "{projeto.titulo}" cadastrado e vinculado à sua empresa!'
+            )
+            return redirect('listagem_empresas')
         else:
-            messages.error(request, 'Corrija os erros abaixo')
+            # Debug para ajudar você a ver erros no terminal se o form falhar
+            print("ERROS NO FORM:", form.errors)
+            messages.error(request, "Erro ao salvar o projeto. Verifique os campos.")
     else:
         form = ProjetosForm()
 
@@ -222,6 +315,7 @@ def editar_meu_perfil(request):
     return render(request, "editar_perfil.html", {"form": form, "perfil": perfil})
 
 @login_required(login_url="login")
+
 def editar_minha_empresa(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
@@ -244,33 +338,182 @@ def editar_minha_empresa(request):
     return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
 
 @login_required(login_url="login")
-
 def estatistica(request):
     
     total_empresas = Empresa.objects.count()
-    empresas_ativas = Empresa.objects.filter(status_historico__status='Ativa').count()
-    projetos_empresa = Projeto.objects.count()
+    empresas_ativas = Empresa.objects.filter(
+        status_historico__status='ATIVA',
+        status_historico__data_fim__isnull=True
+    ).distinct().count()
+
+    total_projetos = projetos.objects.count
+    projetos_desenvolvimento = Projeto.objects.filter(status='DESENVOLVIMENTO').count()
     jogos_lancados = Projeto.objects.filter(status='Lancado').count()
-   
+    
+    total_profissionais = Profissional.objects.count()
+    
+    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=2024)
+    total_jogos_lancados_2024 = dados_ano_atual.aggregate(
+        total=Sum('jogos_lancados')
+    )['total'] or 0
+    
     context = {
         'total_empresas': total_empresas,
         'empresas_ativas': empresas_ativas,
-        'projetos_empresa': projetos_empresa,
-        'jogos_lancados': jogos_lancados, 
+        'total_projetos': total_projetos,
+        'projetos_lancados': projetos_lancados,
+        'projetos_desenvolvimento': projetos_desenvolvimento,
+        'total_profissionais': total_profissionais,
+        'total_jogos_2024': total_jogos_lancados_2024,
     }
     
     return render(request, 'estatistica.html', context)
 
+@login_required(login_url="login")
 def estatisticas_detalhadas(request):
-    dados = DadosAnuaisEmpresa.objects.all()
-    profissionais_empresa = Profissional.objects.count()
-     
+    user = request.user
+    
+    tem_permissao = (
+        has_role(user, 'Diretoria') or
+        has_role(user, 'GestorACJOGOS') or
+        has_role(user, 'PoderPublico')
+    )
+    
+    
+    ano_atual = 2024
+    
+    total_empresas = Empresa.objects.count()
+    empresas_ativas = Empresa.objects.filter(
+        status_historico__status='ATIVA',
+        status_historico__data_fim__isnull=True
+    ).distinct().count()
+    empresas_associadas = Empresa.objects.filter(associada_acjogos=True).count()
+    
+    total_projetos = Projeto.objects.count()
+    projetos_por_status = Projeto.objects.values('status').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    total_profissionais = Profissional.objects.count()
+    vinculos_ativos = VinculoProfissionalEmpresa.objects.filter(
+        data_fim__isnull=True,
+        status_aprovacao='APROVADO'
+    ).count()
+    
+    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=ano_atual)
+    
+    if dados_ano_atual.exists():
+        stats_ano_atual = dados_ano_atual.aggregate(
+            faturamento_total=Sum('faturamento_anual'),
+            faturamento_medio=Avg('faturamento_anual'),
+            investimento_total=Sum('investimento_recebido'),
+            total_funcionarios=Sum('numero_funcionarios'),
+            total_jogos_lancados=Sum('jogos_lancados'),
+            total_jogos_desenvolvimento=Sum('jogos_em_desenvolvimento'),
+        )
+    else:
+        stats_ano_atual = {
+            'faturamento_total': 0,
+            'faturamento_medio': 0,
+            'investimento_total': 0,
+            'total_funcionarios': 0,
+            'total_jogos_lancados': 0,
+            'total_jogos_desenvolvimento': 0,
+        }
+    
+    dados_por_empresa = DadosAnuaisEmpresa.objects.filter(
+        ano_referencia=ano_atual
+    ).select_related('empresa').order_by('-faturamento_anual')
+    
+    empresas_por_porte = Empresa.objects.values('porte_empresa').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    empresas_por_tipo = Empresa.objects.values('tipo_empresa').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    historico_anos = DadosAnuaisEmpresa.objects.values('ano_referencia').annotate(
+        faturamento_total=Sum('faturamento_anual'),
+        total_funcionarios=Sum('numero_funcionarios'),
+        total_jogos_lancados=Sum('jogos_lancados')
+    ).order_by('ano_referencia')
+    
     context = {
-        'dados': dados,
-        'profissionais_empresa': profissionais_empresa,
+        'ano_atual': ano_atual,
+        'total_empresas': total_empresas,
+        'empresas_ativas': empresas_ativas,
+        'empresas_associadas': empresas_associadas,
+        'total_projetos': total_projetos,
+        'projetos_por_status': projetos_por_status,
+        'total_profissionais': total_profissionais,
+        'vinculos_ativos': vinculos_ativos,
+        'stats_ano_atual': stats_ano_atual,
+        'dados_por_empresa': dados_por_empresa,
+        'empresas_por_porte': empresas_por_porte,
+        'empresas_por_tipo': empresas_por_tipo,
+        'historico_anos': historico_anos,
     }
+
     return render(request, 'estatisticas_detalhadas.html', context)
 
+@login_required(login_url="login")
 def vitrine(request):
     return render(request,'vitrine.html')
 
+
+@login_required(login_url="login")
+def cadastro_responsavel_empresa(request):
+    """Passo 2: Cadastra o responsável da empresa"""
+    
+    # Verifica se existe uma empresa cadastrada na sessão
+    empresa_id = request.session.get('empresa_id')
+    
+    if not empresa_id:
+        messages.warning(request, "Cadastre primeiro uma empresa antes de adicionar o responsável.")
+        return redirect('cadastro_empresa')
+    
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST)
+        if form.is_valid():
+            responsavel = form.save(commit=False)
+            
+            # Vincula o responsável à empresa (se seu model tiver esse campo)
+            # responsavel.empresa_id = empresa_id
+            
+            responsavel.save()
+            
+            # Limpa a sessão
+            if 'empresa_id' in request.session:
+                del request.session['empresa_id']
+            
+            messages.success(request, f"Responsável {responsavel.nome_completo} cadastrado com sucesso!")
+            return redirect('listagem_empresas')
+        else:
+            print("FORM ERRORS:", form.errors)
+            messages.error(request, "Erro no formulário. Verifique os campos.")
+    else:
+        form = ResponsavelForm()
+    
+    return render(request, 'responsavel_empresa.html', {'form': form})
+
+
+
+@login_required(login_url="login")
+def editar_responsavel_empresa(request, id):
+    """Edita um responsável existente"""
+    from django.shortcuts import get_object_or_404
+    responsavel = get_object_or_404(Responsavel_Empresa, id=id)
+    
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST, instance=responsavel)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Responsável {responsavel.nome_completo} atualizado com sucesso!")
+            return redirect('listagem_empresas')
+        else:
+            messages.error(request, "Erro ao atualizar. Verifique os campos.")
+    else:
+        form = ResponsavelForm(instance=responsavel)
+    
+    return render(request, 'responsavel_empresa.html', {'form': form})

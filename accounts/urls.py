@@ -9,7 +9,7 @@ def logout_view(request):
     return redirect('login')
 
 urlpatterns = [
-    path('', views.login_view, name='login'),
+#     path('', views.login_view, name='login'),
     path('login/',
          views.login_view,
          name='login'),
@@ -41,11 +41,18 @@ urlpatterns = [
          views.cadastro_projetos,
          name='projetos'),
     
-    path('empresas/listar',views.listagem_empresas,name='listagem_empresas'),
+    
+        
+ path('empresas/listagem/', views.listagem_empresas, name='listagem_empresas'),
     path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
     path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
     path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
     path('vitrine/',views.vitrine,name='vitrine'), 
     path('empresa/estatistica/', views.estatistica, name='estatistica'),
-
+    
+    path('estudios/', views.cadastro_estudio, name='estudios'),
+    path('estudio/editar_estudio/<int:pk>/', views.editar_estudios, name='editar_estudios'),
+    
+     path('responsavel/cadastrar/', views.cadastro_responsavel_empresa, name='cadastro_responsavel_empresa'),
+     path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
 ]

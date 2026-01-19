@@ -40,6 +40,9 @@ header {
 }
 
 .navbar {
+main {
+    flex: 1;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -153,6 +156,10 @@ input[type="submit"]:hover, .btn-primary:hover {
 }
 
 .stat-number { font-size: 3rem; font-weight: 800; color: var(--primary); display: block; }
+.btn-primary:hover, .btn-secondary:hover,.btn-primary-lista:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
 /* --- Tabelas --- */
 .tabela-wrapper { overflow-x: auto; } /* Responsividade para tabelas */
@@ -178,6 +185,10 @@ footer { background-color: #222; color: #aaa; text-align: center; padding: 1.5re
     .logo-img-container img { max-width: 120px; }
     main { padding: 1rem; }
 }
+.botao{
+    text-decoration: none;
+}
+
 
 /* --- Centralização Perfeita e Responsiva da Logo --- */
 .logo-img-container {
@@ -208,4 +219,394 @@ footer { background-color: #222; color: #aaa; text-align: center; padding: 1.5re
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(4, 108, 132, 0.3);
+
+.nav-button{
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+    flex: 1; 
+    
+
+    gap: 20px;
+    align-items: center;
+    justify-content:space-between
+
+}
+
+li{
+    list-style-type: none;
+}
+
+.lista{
+    display: flex;
+    gap: 20px;
+
+    list-style: none;
+    margin: 0 auto; /* Centraliza a lista */
+    padding-left: 7.5rem
+    
+
+
+
+}
+
+.btn-primary-lista {
+    background: linear-gradient(135deg, #39bdb2 0%, #d5e452 100%);
+    color: white !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.btn-primary-lista>a{
+    text-decoration: none;
+    color: white;
+}
+
+
+
+hr{
+    margin-top: 5px;
+    border-color: rgb(55, 172, 55)
+}
+
+.nav-bar{
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 20px;
+
+    display: flex; 
+
+}
+
+.container-vitrine {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+
+.a{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.conteudo-vitrine:hover{
+    transform: rotateX(360deg);
+}
+.conteudo-vitrine-imagem{
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 100%;
+
+}
+.conteudo-vitrine-imagem>img{
+    border-radius: 15px;
+    width: 100%;
+    max-width: 300px;
+    max-height: 400px;
+    height: auto;
+    object-fit: contain;
+}
+
+.carrossel {
+    margin: 20px auto;
+    width: 100%;
+    overflow: hidden; /* Mudei de overflow-x: auto para hidden */
+    position: relative;
+    background: #717572;
+    border-radius: 15px;
+    height: 400px;
+}
+
+.carrossel::-webkit-scrollbar {
+    display: none;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5em;
+    animation: scroll-left 20s infinite linear; /* Renomeei e ajustei tempo */
+    padding-right: 1.5em;
+}
+
+/* Pausa a animação quando passar o mouse */
+.carrossel:hover .group {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%); /* Move metade do tamanho total */
+    }
+}
+
+.conteudo-vitrine-imagem {
+    display: flex;
+    flex-direction: column;
+    background:linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    padding: 20px; /* Reduzi o padding */
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    min-width: 280px; /* Largura fixa para consistência */
+    max-width: 280px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid black;
+}
+
+/* Efeito hover nos cards */
+.conteudo-vitrine-imagem:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.conteudo-vitrine-imagem:hover > img {
+    transform: scale(1.1);
+}
+
+/* Adicione títulos aos jogos se quiser */
+.conteudo-vitrine-imagem h3 {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+
+
+.empresas{
+    display: flex;
+    flex-direction: row;
+    gap :10px;
+}
+
+.secao-intro{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.conteudo-vitrine-texto{
+    display: flex;
+    flex-direction: column;
+    background:linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    padding: 40px 15px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: white;
+    
+    gap: 15px;
+}
+
+p{
+    font-size: 15px;
+}
+
+h2{
+    text-align: center;
+    padding-top:15px ;
+}
+
+.btn-primary-jogos{
+    background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    color: white !important;
+    border: none;
+    width: 330px;
+    height: 60px;
+    font-size: 25px;
+    padding: 15px;
+    margin: 15px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+    display: inline-block;
+}
+.jogos i {
+    font-size: 2rem;
+    color: #6AB04C;
+    margin-top: 20px;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+}
+
+/* Animação de bounce para o ícone */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.conteudo-empresas{
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid black;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+
+
+.conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.conjunto{
+    display: flex;
+    flex-direction: row;
+}
+
+/* Cards de Empresas e Estúdios */
+.empresas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.card-empresa {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #6AB04C;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-empresa:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-responsavel {
+    border-left-color: #fc645b;
+}
+
+.card-estudio {
+    border-left-color: #046c84;
+}
+
+.card-titulo {
+    color: #6AB04C;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.card-responsavel .card-titulo {
+    color: #fc645b;
+}
+
+.card-estudio .card-titulo {
+    color: #046c84;
+}
+
+.conjunto {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+
+.conjunto h4 {
+    margin: 0;
+    font-weight: bold;
+    min-width: 120px;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.conjunto p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    word-break: break-word;
+}
+
+.btn-editar {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #6AB04C 0%, #BADC58 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.btn-editar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(106, 176, 76, 0.3);
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .empresas-lista {
+        grid-template-columns: 1fr;
+    }
+    
+    .conjunto {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .conjunto h4 {
+        min-width: auto;
+    }
 }
