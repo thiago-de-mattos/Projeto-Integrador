@@ -14,7 +14,7 @@ urlpatterns = [
          views.login_view,
          name='login'),
     path(
-        'home/',
+        '',
         views.home,
         name='home',),
     
