@@ -9,8 +9,8 @@ from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
-from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios
+from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
+from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios,Responsavel_Empresa
 from django.http import HttpResponseForbidden
 
 
@@ -127,23 +127,32 @@ def visao_diretoria(request):
     return render(request, 'visao_diretoria.html', context)
 
 @login_required(login_url= "login")
+@login_required(login_url="login")
 def cadastro_empresa(request):
+    """Passo 1: Cadastra os dados da empresa"""
     if request.method == 'POST':
         form = EmpresaForm(request.POST, request.FILES)
         if form.is_valid():
             empresa = form.save()
             
+            # Vincula empresa ao perfil do usuário
             perfil, _ = Profile.objects.get_or_create(user=request.user)
             perfil.empresa = empresa
             perfil.save()
             
-            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastra e vinculada no usuario")
-            return redirect('listagem_empresas')
+            # Armazena o ID da empresa na sessão para usar no próximo passo
+            request.session['empresa_id'] = empresa.id
+            
+            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
+            
+            # Redireciona para o cadastro do responsável
+            return redirect('cadastro_responsavel_empresa')
         else:
             print("FORM ERRORS:", form.errors)
-            messages.error(request, f"Erro no formulário: {form.errors}")
+            messages.error(request, "Erro no formulário. Verifique os campos.")
     else:
         form = EmpresaForm()
+    
     return render(request, 'empresas.html', {'form': form})
 
 
@@ -154,13 +163,19 @@ def listagem_empresas(request):
     if perfil.empresa_id:
         empresas = Empresa.objects.filter(id=perfil.empresa_id)
         estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
+        responsaveis = Responsavel_Empresa.objects.all()
+        projetos = Projeto.objects.filter(empresas__empresa=perfil.empresa)
     else:
         empresas = Empresa.objects.none()
         estudios = Estudios.objects.none()
+        responsaveis = Responsavel_Empresa.objects.none()
+        projetos = Projeto.objects.none()
 
     return render(request, 'listagem_empresas.html', {
         'empresas': empresas,
         'estudios': estudios,
+        'responsaveis': responsaveis,
+        'projetos': projetos,
     })
 
 @login_required(login_url="login")
@@ -248,14 +263,34 @@ def editar_empresas(request, pk):
 
 @login_required(login_url="login")
 def cadastro_projetos(request):
+    # Seguindo o padrão da sua view 'cadastro_estudio'
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    # Verifica se o usuário tem uma empresa vinculada
+    if not perfil.empresa_id:
+        messages.error(request, "Cadastre uma empresa antes de criar um projeto.")
+        return redirect('cadastro_empresa')
+
     if request.method == 'POST':
         form = ProjetosForm(request.POST)
         if form.is_valid():
-            projetos = form.save()
-            messages.success(request, f"Projeto {projetos} cadastrado")
-            return redirect('projetos')
+            # 1. Salva o Projeto (Tabela Projeto)
+            projeto = form.save()
+
+            # 2. Cria o Vínculo (Tabela EmpresaProjeto)
+            # Como Projeto e Empresa são Muitos-para-Muitos no seu model, 
+            # precisamos criar essa linha na tabela intermediária.
+
+
+            messages.success(
+                request, 
+                f'Projeto "{projeto.titulo}" cadastrado e vinculado à sua empresa!'
+            )
+            return redirect('listagem_empresas')
         else:
-            messages.error(request, 'Corrija os erros abaixo')
+            # Debug para ajudar você a ver erros no terminal se o form falhar
+            print("ERROS NO FORM:", form.errors)
+            messages.error(request, "Erro ao salvar o projeto. Verifique os campos.")
     else:
         form = ProjetosForm()
 
@@ -331,3 +366,59 @@ def estatisticas_detalhadas(request):
 def vitrine(request):
     return render(request,'vitrine.html')
 
+
+@login_required(login_url="login")
+def cadastro_responsavel_empresa(request):
+    """Passo 2: Cadastra o responsável da empresa"""
+    
+    # Verifica se existe uma empresa cadastrada na sessão
+    empresa_id = request.session.get('empresa_id')
+    
+    if not empresa_id:
+        messages.warning(request, "Cadastre primeiro uma empresa antes de adicionar o responsável.")
+        return redirect('cadastro_empresa')
+    
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST)
+        if form.is_valid():
+            responsavel = form.save(commit=False)
+            
+            # Vincula o responsável à empresa (se seu model tiver esse campo)
+            # responsavel.empresa_id = empresa_id
+            
+            responsavel.save()
+            
+            # Limpa a sessão
+            if 'empresa_id' in request.session:
+                del request.session['empresa_id']
+            
+            messages.success(request, f"Responsável {responsavel.nome_completo} cadastrado com sucesso!")
+            return redirect('listagem_empresas')
+        else:
+            print("FORM ERRORS:", form.errors)
+            messages.error(request, "Erro no formulário. Verifique os campos.")
+    else:
+        form = ResponsavelForm()
+    
+    return render(request, 'responsavel_empresa.html', {'form': form})
+
+
+
+@login_required(login_url="login")
+def editar_responsavel_empresa(request, id):
+    """Edita um responsável existente"""
+    from django.shortcuts import get_object_or_404
+    responsavel = get_object_or_404(Responsavel_Empresa, id=id)
+    
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST, instance=responsavel)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Responsável {responsavel.nome_completo} atualizado com sucesso!")
+            return redirect('listagem_empresas')
+        else:
+            messages.error(request, "Erro ao atualizar. Verifique os campos.")
+    else:
+        form = ResponsavelForm(instance=responsavel)
+    
+    return render(request, 'responsavel_empresa.html', {'form': form})
