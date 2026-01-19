@@ -55,4 +55,6 @@ urlpatterns = [
     
      path('responsavel/cadastrar/', views.cadastro_responsavel_empresa, name='cadastro_responsavel_empresa'),
      path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
+     
+     path('pagina/projeto',views.pagina_projeto , name= 'pagina_projeto'),
 ]
