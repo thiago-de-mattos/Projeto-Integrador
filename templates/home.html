@@ -5,47 +5,41 @@
 
 {% block content %}
 
-<div class="dashboard-container", style="text-align: center;">
+<div class="container-lista">
 
-    <div style="text-align: center;">
-        <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" alt="Logomarca da AC Jogos" width="100" height="100">
-    </div>
+    <div class="logo-img-container">
+        <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" 
+            alt="Logomarca da AC Jogos">
+    </div>  
 
     <section class="titulo-diretoria">
         <h1>Olá, {{ user.username }}!</h1>
+        <p style="text-align: center; color: #666;">Você está logado como: <strong>{{ permicoes }}</strong></p>
     </section>
-
-    <p style="margin-bottom: 30px;">Você está logado como: <strong>{{ permicoes }}</strong></p>
-
-    <hr>
+  
     {% if permicoes == "Diretoria" %}
-    <div class="actions-section" style="background: #fff; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
-        <h3>Ações Disponíveis:</h3>
-        <div class="button-group">
-            
-                <a href="{% url 'visao_diretoria' %}" class="btn-primary">
-                    Visualizar Painel da Diretoria
-                </a>
-
-                <a href="{% url 'cadastro' %}" class="btn-outline">Cadastrar Novo Perfil</a>
-            {% endif %}
-
+    <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #eee;">
+    
+    <div style="text-align: center;">
+        <h3 style="color: var(--danger);">Área Administrativa</h3>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Acessar Painel</a>
+            <a href="{% url 'cadastro' %}" class="btn-primary">Cadastrar Novo Usuário</a>
         </div>
     </div>
-
-    <hr>
+    {% endif %}
 
     <div class="card-grid">
         <div class="card-stat">
             <h3>Empresas</h3>
-            <p class="stat-desc">Cadastradas no sistema:</p>
-            <p class="stat-number">{{ total_empresas }}</p>
+            <p>Cadastradas no sistema:</p>
+            <span class="stat-number">{{ total_empresas }}</span>
         </div>
 
         <div class="card-stat">
             <h3>Projetos</h3>
-            <p class="stat-desc">Jogos em desenvolvimento:</p>
-            <p class="stat-number">{{ total_projetos }}</p>
+            <p>Jogos em desenvolvimento:</p>
+            <span class="stat-number">{{ total_projetos }}</span>
         </div>
     </div>
 </div>
