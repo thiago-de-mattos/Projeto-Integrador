@@ -4,6 +4,11 @@
     <div class="container">
         <h1 class="titulo">AC Jogos</h1>
         <h2 class="titulo">Cadastro de Projetos</h2>
+        {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+{% endif %}
             
         {% if messages %}
             {% for message in messages %}
@@ -15,9 +20,9 @@
             
         <form action="{% url 'projetos' %}" method="post">
             {% csrf_token %}
-            {{ form.nome.label_tag }}
-            {{ form.nome }}
-            {{ form.nome.errors }}
+            {{ form.titulo.label_tag }}
+            {{ form.titulo }}
+            {{ form.titulo.errors }}
             <br>
             {{ form.descricao.label_tag }}
             {{ form.descricao }}
@@ -27,16 +32,16 @@
             {{ form.status }}
             {{ form.status.errors }}
             <br>
-            {{ form.equipe.label_tag }}
-            {{ form.equipe }}
-            {{ form.equipe.errors }}
+            {{ form.equipe_projeto.label_tag }}
+            {{ form.equipe_projeto }}
+            {{ form.equipe_projeto.errors }}
             <br>
-            {{ form.links.label_tag }}
-            {{ form.links }}
-            {{ form.links.errors }}
+            {{ form.url_site.label_tag }}
+            {{ form.url_site }}
+            {{ form.url_site.errors }}
             <br>
 
-            <button type="submit">Enviar</button>
+            <button type="submit" class="btn-primary">Enviar</button>
         </form>
             
 

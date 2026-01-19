@@ -40,3 +40,6 @@ class Coletivo(AbstractUserRole):
         'ver_mapa_empresas': True,
         'exportar_dados_agregados': True,
     }
+
+class Empresa(AbstractUserRole):
+    available_permissions = {'gerenciar_empresa': True, 'gerenciar_projetos': True,}
