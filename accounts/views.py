@@ -12,7 +12,8 @@ from .models import Accounts
 from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
 from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios,Responsavel_Empresa
 from django.http import HttpResponseForbidden
-
+from django.db.models import Sum, Avg, Count, Max, Min
+from rolepermissions.checkers import has_role
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -314,6 +315,7 @@ def editar_meu_perfil(request):
     return render(request, "editar_perfil.html", {"form": form, "perfil": perfil})
 
 @login_required(login_url="login")
+
 def editar_minha_empresa(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
@@ -336,33 +338,126 @@ def editar_minha_empresa(request):
     return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
 
 @login_required(login_url="login")
-
 def estatistica(request):
     
     total_empresas = Empresa.objects.count()
-    empresas_ativas = Empresa.objects.filter(status_historico__status='Ativa').count()
-    projetos_empresa = Projeto.objects.count()
+    empresas_ativas = Empresa.objects.filter(
+        status_historico__status='ATIVA',
+        status_historico__data_fim__isnull=True
+    ).distinct().count()
+
+    total_projetos = projetos.objects.count
+    projetos_desenvolvimento = Projeto.objects.filter(status='DESENVOLVIMENTO').count()
     jogos_lancados = Projeto.objects.filter(status='Lancado').count()
-   
+    
+    total_profissionais = Profissional.objects.count()
+    
+    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=2024)
+    total_jogos_lancados_2024 = dados_ano_atual.aggregate(
+        total=Sum('jogos_lancados')
+    )['total'] or 0
+    
     context = {
         'total_empresas': total_empresas,
         'empresas_ativas': empresas_ativas,
-        'projetos_empresa': projetos_empresa,
-        'jogos_lancados': jogos_lancados, 
+        'total_projetos': total_projetos,
+        'projetos_lancados': projetos_lancados,
+        'projetos_desenvolvimento': projetos_desenvolvimento,
+        'total_profissionais': total_profissionais,
+        'total_jogos_2024': total_jogos_lancados_2024,
     }
     
     return render(request, 'estatistica.html', context)
 
+@login_required(login_url="login")
 def estatisticas_detalhadas(request):
-    dados = DadosAnuaisEmpresa.objects.all()
-    profissionais_empresa = Profissional.objects.count()
-     
+    user = request.user
+    
+    tem_permissao = (
+        has_role(user, 'Diretoria') or
+        has_role(user, 'GestorACJOGOS') or
+        has_role(user, 'PoderPublico')
+    )
+    
+    
+    ano_atual = 2024
+    
+    total_empresas = Empresa.objects.count()
+    empresas_ativas = Empresa.objects.filter(
+        status_historico__status='ATIVA',
+        status_historico__data_fim__isnull=True
+    ).distinct().count()
+    empresas_associadas = Empresa.objects.filter(associada_acjogos=True).count()
+    
+    total_projetos = Projeto.objects.count()
+    projetos_por_status = Projeto.objects.values('status').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    total_profissionais = Profissional.objects.count()
+    vinculos_ativos = VinculoProfissionalEmpresa.objects.filter(
+        data_fim__isnull=True,
+        status_aprovacao='APROVADO'
+    ).count()
+    
+    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=ano_atual)
+    
+    if dados_ano_atual.exists():
+        stats_ano_atual = dados_ano_atual.aggregate(
+            faturamento_total=Sum('faturamento_anual'),
+            faturamento_medio=Avg('faturamento_anual'),
+            investimento_total=Sum('investimento_recebido'),
+            total_funcionarios=Sum('numero_funcionarios'),
+            total_jogos_lancados=Sum('jogos_lancados'),
+            total_jogos_desenvolvimento=Sum('jogos_em_desenvolvimento'),
+        )
+    else:
+        stats_ano_atual = {
+            'faturamento_total': 0,
+            'faturamento_medio': 0,
+            'investimento_total': 0,
+            'total_funcionarios': 0,
+            'total_jogos_lancados': 0,
+            'total_jogos_desenvolvimento': 0,
+        }
+    
+    dados_por_empresa = DadosAnuaisEmpresa.objects.filter(
+        ano_referencia=ano_atual
+    ).select_related('empresa').order_by('-faturamento_anual')
+    
+    empresas_por_porte = Empresa.objects.values('porte_empresa').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    empresas_por_tipo = Empresa.objects.values('tipo_empresa').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    historico_anos = DadosAnuaisEmpresa.objects.values('ano_referencia').annotate(
+        faturamento_total=Sum('faturamento_anual'),
+        total_funcionarios=Sum('numero_funcionarios'),
+        total_jogos_lancados=Sum('jogos_lancados')
+    ).order_by('ano_referencia')
+    
     context = {
-        'dados': dados,
-        'profissionais_empresa': profissionais_empresa,
+        'ano_atual': ano_atual,
+        'total_empresas': total_empresas,
+        'empresas_ativas': empresas_ativas,
+        'empresas_associadas': empresas_associadas,
+        'total_projetos': total_projetos,
+        'projetos_por_status': projetos_por_status,
+        'total_profissionais': total_profissionais,
+        'vinculos_ativos': vinculos_ativos,
+        'stats_ano_atual': stats_ano_atual,
+        'dados_por_empresa': dados_por_empresa,
+        'empresas_por_porte': empresas_por_porte,
+        'empresas_por_tipo': empresas_por_tipo,
+        'historico_anos': historico_anos,
     }
+
     return render(request, 'estatisticas_detalhadas.html', context)
 
+@login_required(login_url="login")
 def vitrine(request):
     return render(request,'vitrine.html')
 

@@ -2,28 +2,36 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="titulo">Estatísticas do setor de jogos - RJ</h1>
-        <div class="card-estatistica">
-            <div class="card">
-                <h3>Total de Empresas Cadastradas</h2>
-                <p>{{ total_empresas }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Empresas Ativas</h2>
-                <p>{{ empresas_ativas }}</p>
-                
-            <div class="card">
-                <h3>Total de Jogos Cadastrados</h2>
-                <p>{{ projetos_empresa }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Jogos Lançados</h2>
-                <p>{{ jogos_lancados }}</p>
-            </div>
+    <h1>Mapa de Empresas e Profissionais de Jogos - RJ</h1>
+    
+    <div class="cards">
+        <div class="card">
+            <h3>Empresas</h3>
+            <p class="numero">{{ total_empresas }}</p>
+            <span class="info">{{ empresas_ativas }} ativas</span>
         </div>
-            
+        
+        <div class="card">
+            <h3>Profissionais</h3>
+            <p class="numero">{{ total_profissionais }}</p>
+        </div>
+        
+        <div class="card">
+            <h3>Projetos</h3>
+            <p class="numero">{{ total_projetos }}</p>
+        </div>
     </div>
-
+    
+    {% if user.is_authenticated %}
+        {% load roles %}
+        {% has_role user 'Diretoria' as is_diretoria %}
+        {% has_role user 'Coletivo' as is_coletivo %}
+        
+        {% if is_diretoria or is_coletivo %}
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="{% url 'estatisticas_detalhadas' %}" class="btn">
+                     Ver Relatórios Detalhados
+                </a>
+            </div>
+        {% endif %}
 {% endblock %}
