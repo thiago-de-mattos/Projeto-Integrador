@@ -50,7 +50,7 @@ main {
     margin: 0 auto;
     flex-wrap: wrap;
 }
-
+}
 .logo {
     color: var(--white);
     font-weight: 700;
@@ -219,7 +219,7 @@ footer { background-color: #222; color: #aaa; text-align: center; padding: 1.5re
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(4, 108, 132, 0.3);
-
+}
 .nav-button{
     display: flex;
 
