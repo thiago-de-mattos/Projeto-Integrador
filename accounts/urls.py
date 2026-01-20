@@ -9,7 +9,6 @@ def logout_view(request):
     return redirect('login')
 
 urlpatterns = [
-#     path('', views.login_view, name='login'),
     path('login/',
          views.login_view,
          name='login'),
