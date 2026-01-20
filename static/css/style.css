@@ -51,7 +51,6 @@ main {
     flex-wrap: wrap;
 }
 }
-
 .logo {
     color: var(--white);
     font-weight: 700;
@@ -221,7 +220,6 @@ footer { background-color: #222; color: #aaa; text-align: center; padding: 1.5re
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(4, 108, 132, 0.3);
 }
-
 .nav-button{
     display: flex;
 
@@ -613,159 +611,67 @@ h2{
     }
 }
 
-.btn-editar-responsavel{
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #b05b4c 0%, #e04d20 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: transform 0.2s;
-}
-
-.btn-primary-lista-empresa{
-    width: 30%;
-    padding: 12px;
-    background-color: var(--primary);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius);
-    font-weight: bold;
-    cursor: pointer;
-    transition: filter 0.3s, transform 0.1s;
-    text-align: center;
-    display: inline-block;
-    text-decoration: none;
-}
-
-.card-titulo-estudio{
-    color: #0bdcf7;
-}
-
-.btn-editar-estudio{
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #b05b4c 0%, #e04d20 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: transform 0.2s;
-    background:#0bdcf7 ;
-}
-
-/* HAMBURGER */
-.hamburger {
-    display: none;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
+/*pagina_projeto*/
+.card-jogo {
+    position: relative;
+    overflow: hidden;
     cursor: pointer;
 }
 
-/* MENU MOBILE */
-.menu-mobile {
-    display: none;
-    flex-direction: column;
-    background: #222;
-    padding: 15px;
-    gap: 15px;
+/* Imagem */
+.card-imagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.menu-mobile a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-}
-
-@media (max-width: 768px) {
-
-    .desktop-menu {
-        display: none;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    .menu-mobile.show {
-        display: flex;
-    }
-
-    .botoes {
-        display: flex;
-        gap: 8px;
-    }
-
-    .botoes button {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-
-    .container,
-    .container-lista {
-        max-width: 100%;
-        width: 100%;
-        padding: 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-
-    .lista {
-        padding-left: 0;
-        justify-content: center;
-    }
-}
-
-.carrossel {
+.card-imagem img {
     width: 100%;
-    max-width: 100vw;
+    max-width: 180px;
+    max-height: 220px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
+/* Descrição escondida */
+.card-descricao {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Texto */
+.card-descricao p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Hover */
+.card-jogo:hover .card-descricao {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-jogo:hover img {
+    transform: scale(1.08);
+}
+
+/* Mobile: descrição visível */
 @media (max-width: 768px) {
-    .carrossel {
-        height: auto;
-        padding: 10px 0;
+    .card-descricao {
+        position: relative;
+        opacity: 1;
+        background: #f4f6f8;
+        color: #333;
+        transform: none;
     }
 }
-
-@media (max-width: 768px) {
-
-    .conteudo-vitrine-imagem {
-        min-width: 220px;
-        max-width: 220px;
-    }
-}
-
-@media (max-width: 768px) {
-
-    .conteudo-vitrine-texto {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        padding: 20px;
-        border-radius: 0; /* opcional, visual moderno */
-    }
-}
-
-@media (max-width: 768px) {
-
-    .empresas {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .conteudo-empresas {
-        max-width: 100%;
-        width: 100%;
-    }
-}
-
-
