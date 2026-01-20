@@ -1,215 +1,109 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
+<section class="container-lista">
+    <h2>Jogos Disponíveis</h2>
 
-<body>
-    <nav class="nav-bar">
+    <button class="btn" id="btn-empresa">Filtrar por empresa</button>
+    <button class="btn" id="btn-genero">Filtrar por gênero</button>
 
-        <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png?VersionId=s.86rgjwEhWjZKF.EPF0IRrXA7vJXITK&itok=Z-jYtdsg" alt="Logo AC-Jogos" width="60">
-        <div class="nav-button">
-            <ul class="lista">
-                <li><button class="btn-primary-lista" ><a href="#jogos">Jogos</a></button></li>
-                <li><button class="btn-primary-lista"><a href="#empresas">Empresas</a></button></li>
-                <li><button class="btn-primary-lista"><a href="#sobre">Sobre</a></button></li>
-            </ul>
-            
-            <div class="botoes">
-                <a href="{% url 'login' %}" class="botao">
-                    <button class="btn-primary">Login</button>
-                </a>
+    <div id="filtro-opcoes" style="margin:15px 0;"></div>
 
-                <a href="{% url 'cadastro' %}" class="botao">
-                    <button class="btn-primary">Cadastrar</button>
-                </a>
+    <div class="empresas-lista">
 
-
-    </nav>
-
-
-    <hr>
-
-    <section class="secao-intro">
-            <h1>Bem-vindo à AC-Jogos</h1>
-            <h2>A maior associação de desenvolvedores de jogos do Rio de Janeiro</h2>
-            <div class="jogos">
-                <i class="fa-solid fa-arrow-down"></i>
-                <button class="btn-primary-jogos">Conheça nossos jogos</button>
-                <i class="fa-solid fa-arrow-down"></i>
+        <div class="card-empresa card-estudio card-jogo"
+             data-empresa="Estúdio Neon"
+             data-genero="Corrida">
+            <div class="card-imagem">
+                <img src="{% static 'image/jogo_1.png' %}" alt="Neon Rush">
             </div>
-    </section>
-
-</div>
-
-<h2 id="jogos">Veja alguns dos jogos ofertados</h2>
-    <div class="conteudo">
-        <div class="carrossel" >
-            <div class="group">
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
-                    
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
-
-                </div>
-            </div>
-            <div aria-hidden="false" class="group">
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
-                    
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
-
-                </div>
-                                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
-
-                </div>
-            </div>
-            <div aria-hidden="false" class="group">
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
-                    
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
-
-                </div>
-                                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
-
-                </div>
-            </div>
-            <div aria-hidden="false" class="group">
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
-                    
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
-
-                </div>
-                                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
-
-                </div>
-            </div>
-            <div aria-hidden="false" class="group">
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
-                    
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
-
-                </div>
-                                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
-
-                </div>
-                <div class="conteudo-vitrine-imagem">
-                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
-
-                </div>
+            <h3 class="card-titulo">Neon Rush</h3>
+            <p>Corrida / Arcade</p>
+            <div class="card-descricao">
+                <p>
+                    Corrida arcade em alta velocidade com visual neon,
+                    multiplayer online e desafios diários.
+                </p>
             </div>
         </div>
-        
-        <h2 id="empresas">Veja algumas de nossas empresas parceiras</h2>
-        <div class="empresas" >
-            <div class="conteudo-empresas">
-                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/AltF4Logo.png" alt="">
+
+        <div class="card-empresa card-estudio card-jogo"
+             data-empresa="Studio Verde"
+             data-genero="Aventura">
+            <div class="card-imagem">
+                <img src="{% static 'image/jogo_2.png' %}" alt="Floresta Perdida">
             </div>
-            <div class="conteudo-empresas">
-
-                <img src="https://rj.acjogos.com.br/wp-content/uploads/2024/04/SendoEstudio.png" alt="">
+            <h3 class="card-titulo">Floresta Perdida</h3>
+            <p>Aventura</p>
+            <div class="card-descricao">
+                <p>
+                    Uma aventura narrativa em uma floresta misteriosa,
+                    cheia de enigmas e exploração.
+                </p>
             </div>
+        </div>
 
-            <div class="conteudo-empresas">
-                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/IndieHero_Logo.png" alt="">
-
+        <div class="card-empresa card-estudio card-jogo"
+             data-empresa="Maricá Games"
+             data-genero="RPG">
+            <div class="card-imagem">
+                <img src="{% static 'image/jogo_3.png' %}" alt="Dungeon do Maricá">
             </div>
-
-            <div class="conteudo-empresas">
-
-                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/limiar-logo-margin.png" alt="">
+            <h3 class="card-titulo">Dungeon do Maricá</h3>
+            <p>RPG</p>
+            <div class="card-descricao">
+                <p>
+                    RPG com masmorras procedurais, loot,
+                    builds variadas e progressão de personagem.
+                </p>
             </div>
         </div>
 
     </div>
-    
+</section>
 
-    <footer>
-        &copy; Todos os Direitos Reservados a AC-Jogos
-    </footer>
-</body>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-</html>
+    const cards = document.querySelectorAll(".card-empresa");
+    const areaFiltros = document.getElementById("filtro-opcoes");
+
+    document.getElementById("btn-empresa").onclick = () => criarBotoes("data-empresa");
+    document.getElementById("btn-genero").onclick = () => criarBotoes("data-genero");
+
+    function criarBotoes(atributo) {
+        areaFiltros.innerHTML = "";
+
+        const valores = [...new Set(
+            Array.from(cards).map(card => card.getAttribute(atributo))
+        )];
+
+        valores.forEach(valor => {
+            const btn = document.createElement("button");
+            btn.className = "btn";
+            btn.textContent = valor;
+
+            btn.onclick = () => filtrar(atributo, valor);
+            areaFiltros.appendChild(btn);
+        });
+
+        const btnTodos = document.createElement("button");
+        btnTodos.className = "btn";
+        btnTodos.textContent = "Mostrar todos";
+        btnTodos.onclick = mostrarTodos;
+        areaFiltros.appendChild(btnTodos);
+    }
+
+    function filtrar(atributo, valor) {
+        cards.forEach(card => {
+            card.style.display =
+                card.getAttribute(atributo) === valor ? "block" : "none";
+        });
+    }
+
+    function mostrarTodos() {
+        cards.forEach(card => card.style.display = "block");
+    }
+
+});
+</script>
