@@ -536,7 +536,7 @@ h2{
 }
 
 .card-estudio {
-    border-left-color: #046c84;
+    border-left-color: #0bdcf7;
 }
 
 .card-titulo {
@@ -552,7 +552,7 @@ h2{
 }
 
 .card-estudio .card-titulo {
-    color: #046c84;
+    color: --highlight;
 }
 
 .conjunto {

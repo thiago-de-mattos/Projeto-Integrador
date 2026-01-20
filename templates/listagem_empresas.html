@@ -14,15 +14,15 @@
     {% endif %}
 
     <br>
-    <a href="{% url 'empresas' %}" class="btn btn-primary">Nova Empresa</a>
-    <a href="{% url 'estudios' %}" class="btn btn-primary">Novo Estúdio</a>
-    <a href="{% url 'projetos' %}" class="btn btn-primary">Novo Projeto</a>
+    <a href="{% url 'empresas' %}" class="btn-primary-lista-empresa">Nova Empresa</a>
+    <a href="{% url 'estudios' %}" class="btn-primary-lista-empresa">Novo Estúdio</a>
+    <a href="{% url 'projetos' %}" class="btn-primary-lista-empresa">Novo Projeto</a>
     <br><br>
 
     <!-- EMPRESAS -->
     {% if empresas %}
-    <button type="button" onclick="toggleDiv('conteudo_empresas')" class="btn btn-secondary">
-        Mostrar Empresas / Ocultar Empresas
+    <button type="button" onclick="toggleDiv('conteudo_empresas')" class="btn-primary-lista-empresa">
+        Mostrar / Ocultar (Empresas)
     </button>
 
     <div id="conteudo_empresas" style="display:none; margin-top:15px;">
@@ -88,8 +88,8 @@
 
         <br>
         {% if responsaveis %}
-        <button type="button" onclick="toggleDiv('conteudo_responsaveis')" class="btn btn-secondary">
-            Mostrar Responsáveis / Ocultar Responsáveis
+        <button type="button" onclick="toggleDiv('conteudo_responsaveis')" class="btn-primary-lista-empresa">
+            Mostrar / Ocultar (Responsáveis)
         </button>
 
         <div id="conteudo_responsaveis" style="display:none; margin-top:15px;">
@@ -145,7 +145,7 @@
                     </div>
                     {% endif %}
 
-                    <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-editar">Editar
+                    <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-editar-responsavel">Editar
                         Responsável</a>
                 </div>
                 {% endfor %}
@@ -160,8 +160,8 @@
         <!-- ESTÚDIOS -->
         <br>
         {% if estudios %}
-        <button type="button" onclick="toggleDiv('conteudo_estudios')" class="btn btn-secondary">
-            Mostrar Estúdios / Ocultar Estúdios
+        <button type="button" onclick="toggleDiv('conteudo_estudios')" class="btn-primary-lista-empresa">
+            Mostrar / Ocultar (Estúdios)
         </button>
 
         <div id="conteudo_estudios" style="display:none; margin-top:15px;">
@@ -169,7 +169,7 @@
             <div class="empresas-lista">
                 {% for estudio in estudios %}
                 <div class="card-empresa card-estudio">
-                    <h3 class="card-titulo">{{ estudio.nome_do_estudio }}</h3>
+                    <h3 class="card-titulo-estudio">{{ estudio.nome_do_estudio }}</h3>
                     <div class="conjunto">
                         <h4>Nome:</h4>
                         <p>{{ estudio.nome_do_estudio }}</p>
@@ -190,7 +190,7 @@
                         <p>{{ estudio.endereco }}</p>
                     </div>
 
-                    <a href="{% url 'editar_estudios' estudio.id %}" class="btn-editar">Editar Estúdio</a>
+                    <a href="{% url 'editar_estudios' estudio.id %}" class="btn-editar-estudio">Editar Estúdio</a>
                 </div>
                 {% endfor %}
             </div>
@@ -201,8 +201,8 @@
         <hr>
         <br>
         {% if projetos %}
-        <button type="button" onclick="toggleDiv('conteudo_projetos')" class="btn btn-secondary">
-            Mostrar Projetos / Ocultar Projetos
+        <button type="button" onclick="toggleDiv('conteudo_projetos')" class="btn-primary-lista-empresa">
+            Mostrar  / Ocultar (Projetos)
         </button>
 
         <div id="conteudo_projetos" style="display:none; margin-top:15px;">
@@ -243,7 +243,8 @@
         <p>Nenhum projeto cadastrado ainda.</p>
         {% endif %}
 
-    </div> {% endif %} </div> <script>
+    </div> {% endif %} </div> 
+<script>
     function toggleDiv(id) {
         const div = document.getElementById(id);
         div.style.display = (div.style.display === 'none' || div.style.display === '') ? 'block' : 'none';

@@ -65,8 +65,7 @@ def login_view(request):
 @login_required(login_url="login")
 def home(request):
     username=request.POST.get('username')
-    
-    #para saber quais permiçoes tem
+
     try:
         permicoes = list(get_user_roles(request.user))
         permicoes_limpa = permicoes[0].get_name().replace('_','').title()
@@ -88,7 +87,7 @@ def home(request):
     return render(request, "home.html", context) 
     
 
-#Usuario de teste para permissoes
+
 
 def Teste_Diretoria(request):
     username = "Teste"
@@ -101,7 +100,7 @@ def Teste_Diretoria(request):
         user.save()
         
         assign_role(user, 'diretoria')
-        #assign_role(user, "gerente")
+
         
         return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
     else:
@@ -110,7 +109,7 @@ def Teste_Diretoria(request):
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
-    """ Busca todos os registros no banco de dados e permite ver e editar tudo. """
+
     contas = Accounts.objects.all()
 
     try:
@@ -135,18 +134,15 @@ def cadastro_empresa(request):
         form = EmpresaForm(request.POST, request.FILES)
         if form.is_valid():
             empresa = form.save()
-            
-            # Vincula empresa ao perfil do usuário
+
             perfil, _ = Profile.objects.get_or_create(user=request.user)
             perfil.empresa = empresa
             perfil.save()
-            
-            # Armazena o ID da empresa na sessão para usar no próximo passo
+
             request.session['empresa_id'] = empresa.id
             
             messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
-            
-            # Redireciona para o cadastro do responsável
+ 
             return redirect('cadastro_responsavel_empresa')
         else:
             print("FORM ERRORS:", form.errors)
@@ -264,10 +260,9 @@ def editar_empresas(request, pk):
 
 @login_required(login_url="login")
 def cadastro_projetos(request):
-    # Seguindo o padrão da sua view 'cadastro_estudio'
+
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
-    # Verifica se o usuário tem uma empresa vinculada
     if not perfil.empresa_id:
         messages.error(request, "Cadastre uma empresa antes de criar um projeto.")
         return redirect('cadastro_empresa')
@@ -275,12 +270,8 @@ def cadastro_projetos(request):
     if request.method == 'POST':
         form = ProjetosForm(request.POST)
         if form.is_valid():
-            # 1. Salva o Projeto (Tabela Projeto)
-            projeto = form.save()
 
-            # 2. Cria o Vínculo (Tabela EmpresaProjeto)
-            # Como Projeto e Empresa são Muitos-para-Muitos no seu model, 
-            # precisamos criar essa linha na tabela intermediária.
+            projeto = form.save()
 
 
             messages.success(
@@ -289,7 +280,7 @@ def cadastro_projetos(request):
             )
             return redirect('listagem_empresas')
         else:
-            # Debug para ajudar você a ver erros no terminal se o form falhar
+
             print("ERROS NO FORM:", form.errors)
             messages.error(request, "Erro ao salvar o projeto. Verifique os campos.")
     else:
@@ -464,9 +455,7 @@ def vitrine(request):
 
 @login_required(login_url="login")
 def cadastro_responsavel_empresa(request):
-    """Passo 2: Cadastra o responsável da empresa"""
-    
-    # Verifica se existe uma empresa cadastrada na sessão
+
     empresa_id = request.session.get('empresa_id')
     
     if not empresa_id:
@@ -477,13 +466,10 @@ def cadastro_responsavel_empresa(request):
         form = ResponsavelForm(request.POST)
         if form.is_valid():
             responsavel = form.save(commit=False)
-            
-            # Vincula o responsável à empresa (se seu model tiver esse campo)
-            # responsavel.empresa_id = empresa_id
+
             
             responsavel.save()
-            
-            # Limpa a sessão
+
             if 'empresa_id' in request.session:
                 del request.session['empresa_id']
             
@@ -501,7 +487,7 @@ def cadastro_responsavel_empresa(request):
 
 @login_required(login_url="login")
 def editar_responsavel_empresa(request, id):
-    """Edita um responsável existente"""
+
     from django.shortcuts import get_object_or_404
     responsavel = get_object_or_404(Responsavel_Empresa, id=id)
     
