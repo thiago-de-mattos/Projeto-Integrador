@@ -114,6 +114,8 @@ def Teste_Diretoria(request):
 def visao_diretoria(request):
 
     contas = Accounts.objects.all()
+    empresas = Empresa.objects.all()
+    projetos = Projeto.objects.all()
 
     try:
         permicoes = list(get_user_roles(request.user))
@@ -123,8 +125,10 @@ def visao_diretoria(request):
     
     context = {
         'contas': contas,
+        'empresas': empresas,
+        'projetos': projetos,
         'username': request.user.username,
-        'permicoes': permicoes_limpa
+        'permicoes': permicoes_limpa,
         }
     
     return render(request, 'visao_diretoria.html', context)
