@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import render,  redirect, get_object_or_404
 from .models import CustomUser
 from django.contrib.auth import authenticate,login as login_django
@@ -10,10 +11,13 @@ from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
-from .models import Empresa, Profile, DadosAnuaisEmpresa, Projeto, Estudios,Responsavel_Empresa
 from django.http import HttpResponseForbidden
 from django.db.models import Sum, Avg, Count, Max, Min
 from rolepermissions.checkers import has_role
+from .models import (
+    Empresa, Profile, DadosAnuaisEmpresa, Projeto, 
+    Estudios,Responsavel_Empresa, Profissional, VinculoProfissionalEmpresa
+    )
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -64,8 +68,7 @@ def login_view(request):
 
 @login_required(login_url="login")
 def home(request):
-    username=request.POST.get('username')
-
+    
     try:
         permicoes = list(get_user_roles(request.user))
         permicoes_limpa = permicoes[0].get_name().replace('_','').title()
@@ -330,6 +333,8 @@ def editar_minha_empresa(request):
 
 @login_required(login_url="login")
 def estatistica(request):
+
+    ano_atual = timezone.now().year
     
     total_empresas = Empresa.objects.count()
     empresas_ativas = Empresa.objects.filter(
@@ -337,13 +342,13 @@ def estatistica(request):
         status_historico__data_fim__isnull=True
     ).distinct().count()
 
-    total_projetos = projetos.objects.count
+    total_projetos = Projeto.objects.count()
     projetos_desenvolvimento = Projeto.objects.filter(status='DESENVOLVIMENTO').count()
-    jogos_lancados = Projeto.objects.filter(status='Lancado').count()
+    jogos_lancados = Projeto.objects.filter(status='LANCADO').count()
     
     total_profissionais = Profissional.objects.count()
     
-    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=2024)
+    dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=ano_atual)
     total_jogos_lancados_2024 = dados_ano_atual.aggregate(
         total=Sum('jogos_lancados')
     )['total'] or 0
@@ -352,10 +357,11 @@ def estatistica(request):
         'total_empresas': total_empresas,
         'empresas_ativas': empresas_ativas,
         'total_projetos': total_projetos,
-        'projetos_lancados': projetos_lancados,
+        'projetos_lancados': jogos_lancados,
         'projetos_desenvolvimento': projetos_desenvolvimento,
         'total_profissionais': total_profissionais,
         'total_jogos_2024': total_jogos_lancados_2024,
+        'ano_referencia': ano_atual,
     }
     
     return render(request, 'estatistica.html', context)
