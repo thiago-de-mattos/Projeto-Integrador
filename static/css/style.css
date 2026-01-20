@@ -610,3 +610,68 @@ h2{
         min-width: auto;
     }
 }
+
+/*pagina_projeto*/
+.card-jogo {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Imagem */
+.card-imagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-imagem img {
+    width: 100%;
+    max-width: 180px;
+    max-height: 220px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+/* Descrição escondida */
+.card-descricao {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Texto */
+.card-descricao p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Hover */
+.card-jogo:hover .card-descricao {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-jogo:hover img {
+    transform: scale(1.08);
+}
+
+/* Mobile: descrição visível */
+@media (max-width: 768px) {
+    .card-descricao {
+        position: relative;
+        opacity: 1;
+        background: #f4f6f8;
+        color: #333;
+        transform: none;
+    }
+}
