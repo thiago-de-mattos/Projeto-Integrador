@@ -520,4 +520,4 @@ def editar_responsavel_empresa(request, id):
 
 @login_required(login_url="login")
 def pagina_projeto(request):
-    return render(request, 'pagina_projeto')
+    return render(request, 'pagina_projeto.html')
