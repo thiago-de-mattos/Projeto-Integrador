@@ -1,4 +1,9 @@
 {% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
 {% block content %}
     <div class="resultados">
         {% for projeto in projetos %}
@@ -13,11 +18,7 @@
             <p>Nenhum projeto encontrado.</p>
         {% endfor %}
     </div>
-</div>
 
-
-
-</div>
 
 <head>
     <meta charset="UTF-8">
@@ -255,13 +256,18 @@
     </footer>
     <script>
         const hamburger = document.querySelector('.hamburger');
-        const menuMobile = document.querySelector('.menu-mobile');
-        
-        hamburger.addEventListener('click', () => {
-            menuMobile.classList.toggle('show');
-        });
+            const menuMobile = document.querySelector('.menu-mobile');
+            
+            hamburger.addEventListener('click', () => {
+                menuMobile.classList.toggle('show');
+            });
+
+
+
     </script>
 
-{% endblock %}
+
 </body>
+</html>
+{% endblock %}
 
