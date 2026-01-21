@@ -1,44 +1,43 @@
 {% extends 'base.html' %}
+{% load permission_tags %}
 
 {% block content %}
 <div class="container">
     <h1>Relatórios Detalhados</h1>
-    <p class="alerta"> Acesso restrito: Diretoria e Coletivos</p>
-    
+    <p class="alerta">Acesso restrito: Diretoria e Coletivos</p>
+
     <div class="secao">
         <h2>Dados do Setor - {{ ano_atual }}</h2>
-        
+
         <div class="cards">
             <div class="card destaque">
                 <h3>Faturamento Total</h3>
                 <p class="numero">R$ {{ faturamento_total|floatformat:0 }}</p>
             </div>
-            
+
             <div class="card">
                 <h3>Total de Empresas</h3>
                 <p class="numero">{{ total_empresas }}</p>
             </div>
-            
+
             <div class="card">
                 <h3>Total de Funcionários</h3>
                 <p class="numero">{{ total_funcionarios }}</p>
             </div>
-            
+
             <div class="card">
                 <h3>Projetos em Andamento</h3>
                 <p class="numero">{{ total_projetos }}</p>
             </div>
         </div>
     </div>
-    
-    {% load roles %}
-    {% has_role user 'Diretoria' as is_diretoria %}
-    
-    {% if is_diretoria %}
+
+    {% if user.is_authenticated and user|has_role:'Diretoria' %}
         <div class="secao-admin">
-            <h3> Área Administrativa (Apenas Diretoria)</h3>
+            <h3>Área Administrativa (Apenas Diretoria)</h3>
             <p>Aqui você pode gerenciar permissões, aprovar cadastros, etc.</p>
         </div>
     {% endif %}
+
 </div>
 {% endblock %}
