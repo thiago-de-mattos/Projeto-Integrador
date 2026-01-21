@@ -508,8 +508,10 @@ def editar_responsavel_empresa(request, id):
     else:
         form = ResponsavelForm(instance=responsavel)
     
-    return render(request, 'responsavel_empresa.html', {'form': form})
+    return render(request, 'editar_responsavel.html', {'form': form})
 
 @login_required(login_url="login")
 def pagina_projeto(request):
     return render(request, 'pagina_projeto.html')
+
+
