@@ -1452,3 +1452,41 @@ input[type="submit"],
     overflow-x: auto; 
     padding: 10px 0;
 }
+
+.form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--primary);
+    }
+
+    /* Estilo para a lista de erros do Django */
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0 0;
+        font-size: 0.85rem;
+    }
+
+    /* Classe aplicada quando o campo tem erro */
+    .has-error input, 
+    .has-error select, 
+    .has-error textarea {
+        border: 2px solid #dc3545 !important;
+        background-color: #fff8f8;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+    .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
