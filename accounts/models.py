@@ -38,6 +38,9 @@ class Empresa(models.Model):
         ('PUBLICADORA', 'Publicadora'),
         ('AMBAS', 'Ambas'),
     ]
+    nome = models.CharField(max_length=100)
+    municipio = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=100)
     
     PORTE_CHOICES = [
         ('MEI', 'MEI'),
@@ -355,6 +358,10 @@ class Projeto(models.Model):
         ('CANCELADO', 'Cancelado'),
         ('DESCONTINUADO', 'Descontinuado'),
     ]
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    tipo_jogo = models.CharField(max_length=100) # Ex: "Educativo", "Aventura"
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     
     PUBLICO_CHOICES = [
         ('INFANTIL', 'Infantil'),

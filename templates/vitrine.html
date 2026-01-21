@@ -2,6 +2,38 @@
 <!DOCTYPE html>
 <html lang="en">
 
+    <div class="resultados">
+        {% for projeto in projetos %}
+            <div class="card">
+                <h3>{{ projeto.nome }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <p><strong>Empresa:</strong> {{ projeto.empresa.nome }}</p>
+                <p><strong>Município:</strong> {{ projeto.empresa.municipio }}</p>
+                <p><strong>Tipo de Jogo:</strong> {{ projeto.tipo_jogo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+    <div class="resultados">
+        {% for projeto in projetos %}
+            <div class="card">
+                <h3>{{ projeto.nome }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <p><strong>Empresa:</strong> {{ projeto.empresa.nome }}</p>
+                <p><strong>Município:</strong> {{ projeto.empresa.municipio }}</p>
+                <p><strong>Tipo de Jogo:</strong> {{ projeto.tipo_jogo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
