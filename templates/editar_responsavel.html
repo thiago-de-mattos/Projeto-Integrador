@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="titulo">Editar Responsável</h1>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">
+        Preencha os dados do responsável pela empresa
+    </p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="form-perfil">
+        {% csrf_token %}
+        
+        <!-- Seção: Identificação -->
+        <div class="form-section">
+           
+            
+            <div class="form-group">
+                <label for="{{ form.nome_completo.id_for_label }}">
+                    {{ form.nome_completo.label }} <span class="required">*</span>
+                </label>
+                {{ form.nome_completo }}
+                {% if form.nome_completo.errors %}
+                    <span class="error-message">{{ form.nome_completo.errors.0 }}</span>
+                {% endif %}
+                {% if form.nome_completo.help_text %}
+                    <small class="helptext">{{ form.nome_completo.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.nome_social.id_for_label }}">
+                    {{ form.nome_social.label }}
+                </label>
+                {{ form.nome_social }}
+                {% if form.nome_social.errors %}
+                    <span class="error-message">{{ form.nome_social.errors.0 }}</span>
+                {% endif %}
+                {% if form.nome_social.help_text %}
+                    <small class="helptext">{{ form.nome_social.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.cpf.id_for_label }}">
+                    {{ form.cpf.label }} <span class="required">*</span>
+                </label>
+                {{ form.cpf }}
+                {% if form.cpf.errors %}
+                    <span class="error-message">{{ form.cpf.errors.0 }}</span>
+                {% endif %}
+                {% if form.cpf.help_text %}
+                    <small class="helptext">{{ form.cpf.help_text }}</small>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Seção: Contato -->
+        <div class="form-section">
+            <h3 class="section-title">Contato</h3>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">
+                    {{ form.email.label }} <span class="required">*</span>
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <span class="error-message">{{ form.email.errors.0 }}</span>
+                {% endif %}
+                {% if form.email.help_text %}
+                    <small class="helptext">{{ form.email.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.telefone.id_for_label }}">
+                        {{ form.telefone.label }} <span class="required">*</span>
+                    </label>
+                    {{ form.telefone }}
+                    {% if form.telefone.errors %}
+                        <span class="error-message">{{ form.telefone.errors.0 }}</span>
+                    {% endif %}
+                    {% if form.telefone.help_text %}
+                        <small class="helptext">{{ form.telefone.help_text }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.nick_discord.id_for_label }}">
+                        {{ form.nick_discord.label }}
+                    </label>
+                    {{ form.nick_discord }}
+                    {% if form.nick_discord.errors %}
+                        <span class="error-message">{{ form.nick_discord.errors.0 }}</span>
+                    {% endif %}
+                    {% if form.nick_discord.help_text %}
+                        <small class="helptext">{{ form.nick_discord.help_text }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Endereço -->
+        <div class="form-section">
+            <h3 class="section-title">Endereço</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.cep.id_for_label }}">
+                        {{ form.cep.label }} <span class="required">*</span>
+                    </label>
+                    {{ form.cep }}
+                    {% if form.cep.errors %}
+                        <span class="error-message">{{ form.cep.errors.0 }}</span>
+                    {% endif %}
+                    {% if form.cep.help_text %}
+                        <small class="helptext">{{ form.cep.help_text }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.numero.id_for_label }}">
+                        {{ form.numero.label }} <span class="required">*</span>
+                    </label>
+                    {{ form.numero }}
+                    {% if form.numero.errors %}
+                        <span class="error-message">{{ form.numero.errors.0 }}</span>
+                    {% endif %}
+                    {% if form.numero.help_text %}
+                        <small class="helptext">{{ form.numero.help_text }}</small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.endereco.id_for_label }}">
+                    {{ form.endereco.label }} <span class="required">*</span>
+                </label>
+                {{ form.endereco }}
+                {% if form.endereco.errors %}
+                    <span class="error-message">{{ form.endereco.errors.0 }}</span>
+                {% endif %}
+                {% if form.endereco.help_text %}
+                    <small class="helptext">{{ form.endereco.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.complemento.id_for_label }}">
+                    {{ form.complemento.label }}
+                </label>
+                {{ form.complemento }}
+                {% if form.complemento.errors %}
+                    <span class="error-message">{{ form.complemento.errors.0 }}</span>
+                {% endif %}
+                {% if form.complemento.help_text %}
+                    <small class="helptext">{{ form.complemento.help_text }}</small>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                Editar Responsável
+            </button>
+            <a href="{% url 'listagem_empresas' %}" class="btn-cancel">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

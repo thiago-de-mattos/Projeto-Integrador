@@ -2,6 +2,38 @@
 <!DOCTYPE html>
 <html lang="en">
 
+    <div class="resultados">
+        {% for projeto in projetos %}
+            <div class="card">
+                <h3>{{ projeto.nome }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <p><strong>Empresa:</strong> {{ projeto.empresa.nome }}</p>
+                <p><strong>Município:</strong> {{ projeto.empresa.municipio }}</p>
+                <p><strong>Tipo de Jogo:</strong> {{ projeto.tipo_jogo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+    <div class="resultados">
+        {% for projeto in projetos %}
+            <div class="card">
+                <h3>{{ projeto.nome }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <p><strong>Empresa:</strong> {{ projeto.empresa.nome }}</p>
+                <p><strong>Município:</strong> {{ projeto.empresa.municipio }}</p>
+                <p><strong>Tipo de Jogo:</strong> {{ projeto.tipo_jogo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,24 +95,16 @@
     </section>
 <div class="conteudo-vitrine-texto" id="sobre">
     <h2>Quem Somos</h2>
-    <p>A AC-Jogos é a principal associação de desenvolvedores de jogos do Rio de Janeiro, reunindo mais de 60 estúdios e 3 mil profissionais dedicados 
-        à criação de experiências interativas memoráveis.Atuamos como ponte entre desenvolvedores, investidores, instituições de ensino e o mercado, 
-        promovendo o crescimento sustentável da indústria através de iniciativas concretas: eventos de networking, workshops técnicos, mentorias especializadas, 
-        e programas de visibilidade que conectam jogos brasileiros com públicos globais.Nosso compromisso é fortalecer o ecossistema criativo local, transformando 
-        talento em oportunidade e ideias em jogos que conquistam o mundo. Aqui, desenvolvedores encontram não apenas apoio técnico e estratégico, mas uma comunidade 
-        vibrante que compartilha conhecimento, recursos e a paixão por criar jogos extraordinários.Seja você um desenvolvedor indie começando sua jornada ou um estúdio 
-        consolidado buscando expandir horizontes, a AC-Jogos é o seu espaço para crescer, conectar e inovar.</p>
+    <p>Somos a maior rede de desenvolvedores de jogos do RJ. Com mais de 60 estúdios parceiros, transformamos ideias em oportunidades 
+        globais através de suporte técnico, estratégico e uma comunidade vibrante apaixonada pela inovação.</p>
     
 </div>
 <div class="conteudo-vitrine-texto">
 
     <h2>Nossa Missão</h2>
-    <p>Fortalecer o ecossistema de desenvolvimento de jogos no Rio de Janeiro, criando oportunidades 
-    concretas e conexões estratégicas entre desenvolvedores, investidores, distribuidores e o público gamer. 
-    Atuamos com toda a diversidade da indústria de jogos: desenvolvimento de jogos digitais para PC, 
-    consoles e mobile (Android/iOS), além de jogos analógicos como tabuleiros, card games, RPGs de mesa 
-    e experiências híbridas. Nosso objetivo é unir profissionais de todas as plataformas, promovendo 
-    troca de conhecimento, parcerias comerciais e visibilidade tanto no mercado nacional quanto internacional.</p>
+    <p>Fortalecemos o ecossistema de jogos no Rio de Janeiro criando conexões entre desenvolvedores, investidores e o público gamer. 
+        Atuamos em todas as frentes — de jogos digitais (PC, console e mobile) a analógicos e RPGs — promovendo parcerias e 
+        visibilidade nacional e internacional para profissionais de todas as plataformas.</p>
 </div>
 <h2 id="jogos">Veja alguns dos jogos ofertados</h2>
     <div class="conteudo">
