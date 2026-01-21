@@ -1,9 +1,47 @@
 {% extends 'base.html' %}
 
+<h1>Empresas / Estúdios</h1>
+
+
+
 {% block content %}
 <div class="container-lista">
     <h1 class="titulo">AC Jogos</h1>
+
+    <form method="get" class="search-bar">
+        <input
+            type="text"
+            name="q"
+            placeholder="Buscar por nome ou razão social"
+            value="{{ query }}"
+        />
+
+        <select name="cidade">
+            <option value="">Todas as cidades</option>
+            {% for c in cidades %}
+                <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>
+                    {{ c }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Pesquisar</button>
+    </form>
+
     <h2 class="titulo">Lista de Empresas</h2>
+
+    <ul>
+        {% for empresa in empresas %}
+            <li>
+                <strong>{{ empresa.nome_fantasia }}</strong><br>
+                {{ empresa.cidade }} - {{ empresa.estado }}<br>
+                {{ empresa.site|default:"Sem site" }}
+            </li>
+        {% empty %}
+            <li>Nenhuma empresa encontrada.</li>
+        {% endfor %}
+    </ul>
+
 
     {% if messages %}
     {% for message in messages %}

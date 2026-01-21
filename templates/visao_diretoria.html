@@ -3,27 +3,26 @@
 {% block content %}
 <div class="container-lista">
     <h2>Painel de Controle - Diretoria</h2>
-    <p style="text-align: center; margin-bottom: 10px;">Olá, {{ username }}! Aqui você pode visualizar todos os registros do sistema:</p>
+    <p style="text-align: center; margin-bottom: 20px;">Olá, {{ username }}! Aqui você pode visualizar todos os registros do sistema:</p>
 
     <div class="tabela-wrapper"></div>
         <table class="tabela-dados">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Empresa</th>
-                    <th>Cargo</th>
+                    <th>Nome Fantasia</th>
+                    <th>CNPJ</th>
+                    <th>Cidade</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {% for conta in contas %}
+                {% for empresa in empresas %}
                 <tr>
-                    <td>{{ conta.nome }}</td>
-                    <td>{{ conta.empresa }}</td>
-                    <td>{{ conta.cargo }}</td>
+                    <td>{{ empresa.nome_fantasia }}</td>
+                    <td>{{ empresa.cnpj }}</td>
+                    <td>{{ empresa.cidade }}/{{ empresa.estado }}</td>
                     <td>
-                        <a href="#">Editar</a> | 
-                        <a href="#" color: var(--danger); font-weight: bold;">Excluir</a>
+                        <a href="{% url 'editar_empresas' empresa.pk %}">Editar</a>
                     </td>
                 </tr>
                 {% empty %}
@@ -33,5 +32,35 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <hr>
+    <div class="tabela-wrapper">
+        <table class="tabela-dados">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Equipe</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for projeto in projetos %}
+                <tr>
+                    <td>{{ projeto.titulo }}</td>
+                    <td>{{ projeto.get_status_display }}</td>
+                    <td>{{ projeto.equipe_projeto }}</td>
+                    <td>
+                        <a href="#">Visualizar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhum projeto encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

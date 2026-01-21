@@ -36,12 +36,22 @@ urlpatterns = [
          views.cadastro_empresa,
          name='empresas'),
     
+    path('empresas/listagem/',
+         views.listagem_empresas, 
+         name="listagem_empresas"),
+    
     path('projetos/',
          views.cadastro_projetos,
          name='projetos'),
     
-    
-        
+    path('projetos/vitrine/',
+         views.vitrine_projetos, 
+         name="vitrine_projetos"),
+
+     path('vitrine/', 
+          views.vitrine, 
+          name='vitrine'),
+
  path('empresas/listagem/', views.listagem_empresas, name='listagem_empresas'),
     path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
     path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),

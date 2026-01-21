@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import render,  redirect, get_object_or_404
-from .models import CustomUser
+from .models import CustomUser, Empresa, Projeto
 from django.contrib.auth import authenticate,login as login_django
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,7 +12,7 @@ from rolepermissions.decorators import has_role_decorator
 from .models import Accounts
 from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
 from django.http import HttpResponseForbidden
-from django.db.models import Sum, Avg, Count, Max, Min
+from django.db.models import Sum, Avg, Count, Max, Min, Q
 from rolepermissions.checkers import has_role
 from .models import (
     Empresa, Profile, DadosAnuaisEmpresa, Projeto, 
@@ -114,6 +114,8 @@ def Teste_Diretoria(request):
 def visao_diretoria(request):
 
     contas = Accounts.objects.all()
+    empresas = Empresa.objects.all()
+    projetos = Projeto.objects.all()
 
     try:
         permicoes = list(get_user_roles(request.user))
@@ -123,8 +125,10 @@ def visao_diretoria(request):
     
     context = {
         'contas': contas,
+        'empresas': empresas,
+        'projetos': projetos,
         'username': request.user.username,
-        'permicoes': permicoes_limpa
+        'permicoes': permicoes_limpa,
         }
     
     return render(request, 'visao_diretoria.html', context)
@@ -157,7 +161,38 @@ def cadastro_empresa(request):
 
 
 @login_required(login_url="login")
+
 def listagem_empresas(request):
+    query = request.GET.get("q", "")
+    cidade = request.GET.get("cidade", "")
+
+    empresas = Empresa.objects.all()
+
+    if query:
+        empresas = empresas.filter(
+            Q(nome_fantasia__icontains=query) |
+            Q(razao_social__icontains=query)
+        )
+
+    if cidade:
+        empresas = empresas.filter(cidade__iexact=cidade)
+
+    cidades = (
+        Empresa.objects
+        .exclude(cidade__isnull=True)
+        .exclude(cidade__exact="")
+        .values_list("cidade", flat=True)
+        .distinct()
+        .order_by("cidade")
+    )
+
+    context = {
+        "empresas": empresas,
+        "query": query,
+        "cidades": cidades,
+        "cidade_selecionada": cidade,
+    }
+
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
     if perfil.empresa_id:
@@ -455,9 +490,42 @@ def estatisticas_detalhadas(request):
     return render(request, 'estatisticas_detalhadas.html', context)
 
 @login_required(login_url="login")
-def vitrine(request):
-    return render(request,'vitrine.html')
+def vitrine_projetos(request):
+    query = request.GET.get("q", "")
+    genero = request.GET.get("genero", "")
 
+    projetos = Projeto.objects.prefetch_related("empresas").all()
+
+    if query:
+        projetos = projetos.filter(
+            Q(titulo__icontains=query) |
+            Q(descricao__icontains=query)
+        )
+
+    if genero:
+        projetos = projetos.filter(genero_principal__iexact=genero)
+
+    generos = (
+        Projeto.objects
+        .exclude(genero_principal__isnull=True)
+        .exclude(genero_principal__exact="")
+        .values_list("genero_principal", flat=True)
+        .distinct()
+        .order_by("genero_principal")
+    )
+
+    context = {
+        "projetos": projetos,
+        "query": query,
+        "generos": generos,
+        "genero_selecionado": genero,
+    }
+
+    return render(request, "vitrine_projetos.html", context)
+
+@login_required(login_url="login")
+def vitrine(request):
+    return render(request, 'vitrine.html')
 
 @login_required(login_url="login")
 def cadastro_responsavel_empresa(request):
