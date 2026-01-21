@@ -21,7 +21,10 @@ from .forms import (
     ProfileForm, ResponsavelForm
 )
 
-
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = UserCreationForm.Meta.fields
 
 def get_clean_role(user):
     try:
