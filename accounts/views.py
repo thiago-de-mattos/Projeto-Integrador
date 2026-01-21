@@ -82,6 +82,7 @@ def home(request):
         'total_contas': Accounts.objects.count(),
         'total_empresas': Empresa.objects.count(),
         'total_projetos': Projeto.objects.count(),
+        'total_estudios': Estudios.objects.count(),
     }
     return render(request, "home.html", context) 
     
