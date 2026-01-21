@@ -504,7 +504,7 @@ def vitrine_projetos(request):
 
     return render(request, "vitrine_projetos.html", context)
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def vitrine(request):
     return render(request, 'vitrine.html')
 
