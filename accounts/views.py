@@ -1,31 +1,40 @@
 from django.utils import timezone
-from django.shortcuts import render,  redirect, get_object_or_404
-from .models import CustomUser, Empresa, Projeto
-from django.contrib.auth import authenticate,login as login_django
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login as login_django
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.db.models import Sum, Avg, Count, Q
+
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
-from .models import Accounts
-from .forms import EmpresaForm, EstudioForm, ProjetosForm, ProfileForm,ResponsavelForm
-from django.http import HttpResponseForbidden
-from django.db.models import Sum, Avg, Count, Max, Min, Q
-from rolepermissions.checkers import has_role
+
 from .models import (
-    Empresa, Profile, DadosAnuaisEmpresa, Projeto, 
-    Estudios,Responsavel_Empresa, Profissional, VinculoProfissionalEmpresa
+    CustomUser, Empresa, Projeto, Accounts, Profile, 
+    DadosAnuaisEmpresa, Estudios, Responsavel_Empresa, 
+    Profissional, VinculoProfissionalEmpresa
     )
+from .forms import (
+    EmpresaForm, EstudioForm, ProjetosForm, 
+    ProfileForm, ResponsavelForm, CustomUserCreationForm
+)
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = UserCreationForm.Meta.fields
 
+def get_clean_role(user):
+    try:
+        roles = list(get_user_roles(user))
+        return roles[0].get_name().replace('_', ' ').title() if roles else ""
+    except:
+        return ""
+
 def cadastro(request):
-    
+
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
 
@@ -43,7 +52,6 @@ def cadastro(request):
     
     return render(request, 'cadastro.html', context)
         
-
 def login_view(request):
     if request.method=='GET':
         return render(request, 'login.html')
@@ -68,30 +76,15 @@ def login_view(request):
 
 @login_required(login_url="login")
 def home(request):
-    
-    try:
-        permicoes = list(get_user_roles(request.user))
-        permicoes_limpa = permicoes[0].get_name().replace('_','').title()
-    except:
-        permicoes_limpa = ""
-    
-    contagem = Accounts.objects.count() 
-    total_empresas = Empresa.objects.count()
-    total_projetos = Projeto.objects.count()
-
     context = {
         'username': request.user.username, 
-        'permicoes': permicoes_limpa,
-        'total_contas': contagem,
-        'total_empresas': total_empresas,
-        'total_projetos': total_projetos,
+        'permicoes': get_clean_role(request.user),
+        'total_contas': Accounts.objects.count(),
+        'total_empresas': Empresa.objects.count(),
+        'total_projetos': Projeto.objects.count(),
     }
-    
     return render(request, "home.html", context) 
     
-
-
-
 def Teste_Diretoria(request):
     username = "Teste"
     password = "123456789"
@@ -103,7 +96,6 @@ def Teste_Diretoria(request):
         user.save()
         
         assign_role(user, 'diretoria')
-
         
         return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
     else:
@@ -133,7 +125,6 @@ def visao_diretoria(request):
     
     return render(request, 'visao_diretoria.html', context)
 
-@login_required(login_url= "login")
 @login_required(login_url="login")
 def cadastro_empresa(request):
     """Passo 1: Cadastra os dados da empresa"""
@@ -159,9 +150,7 @@ def cadastro_empresa(request):
     
     return render(request, 'empresas.html', {'form': form})
 
-
 @login_required(login_url="login")
-
 def listagem_empresas(request):
     query = request.GET.get("q", "")
     cidade = request.GET.get("cidade", "")
@@ -238,7 +227,6 @@ def cadastro_estudio(request):
 
     return render(request, 'estudios.html', {'form': form})
 
-
 @login_required(login_url="login")
 def editar_estudios(request, pk):
     estudio = get_object_or_404(Estudios, pk=pk)
@@ -268,7 +256,6 @@ def editar_estudios(request, pk):
         "form": form,
         "estudio": estudio
     })
-
 
 @login_required(login_url="login")
 def editar_empresas(request, pk):
@@ -311,7 +298,6 @@ def cadastro_projetos(request):
 
             projeto = form.save()
 
-
             messages.success(
                 request, 
                 f'Projeto "{projeto.titulo}" cadastrado e vinculado à sua empresa!'
@@ -344,7 +330,6 @@ def editar_meu_perfil(request):
     return render(request, "editar_perfil.html", {"form": form, "perfil": perfil})
 
 @login_required(login_url="login")
-
 def editar_minha_empresa(request):
     perfil, _ = Profile.objects.get_or_create(user=request.user)
 
@@ -410,7 +395,6 @@ def estatisticas_detalhadas(request):
         has_role(user, 'GestorACJOGOS') or
         has_role(user, 'PoderPublico')
     )
-    
     
     ano_atual = 2024
     
@@ -557,12 +541,9 @@ def cadastro_responsavel_empresa(request):
     
     return render(request, 'responsavel_empresa.html', {'form': form})
 
-
-
 @login_required(login_url="login")
 def editar_responsavel_empresa(request, id):
 
-    from django.shortcuts import get_object_or_404
     responsavel = get_object_or_404(Responsavel_Empresa, id=id)
     
     if request.method == 'POST':
@@ -581,5 +562,3 @@ def editar_responsavel_empresa(request, id):
 @login_required(login_url="login")
 def pagina_projeto(request):
     return render(request, 'pagina_projeto.html')
-
-
