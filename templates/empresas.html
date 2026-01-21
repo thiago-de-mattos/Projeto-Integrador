@@ -1,77 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Cadastro de Empresas</h2>
-            
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-            
-        <form action="{% url 'empresas' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h2>Dados Jurídicos</h2>
-            {{ form.nome_fantasia.label_tag }}
-            {{ form.nome_fantasia }}
-            {{ form.nome_fantasia.errors }}
-            <br>
-            
-            {{ form.razao_social.label_tag }}
-            {{ form.razao_social }}
-            {{ form.razao_social.errors }}
-            <br>
-            
-            {{ form.cnpj.label_tag }}
-            {{ form.cnpj }}
-            {{ form.cnpj.errors }}
-            <br>
-            
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {{ form.email.errors }}
-            <br>
-            
-            {{ form.telefone.label_tag }}
-            {{ form.telefone }}
-            {{ form.telefone.errors }}
-            <br>
-            
-            {{ form.site.label_tag }}
-            {{ form.site }}
-            {{ form.site.errors }}
-            <br>
-            
-            {{ form.endereco_completo.label_tag }}
-            {{ form.endereco_completo }}
-            {{ form.endereco_completo.errors }}
-            <br>
-            
-            {{ form.cep.label_tag }}
-            {{ form.cep }}
-            {{ form.cep.errors }}
-            <br>
-            
-            {{ form.cidade.label_tag }}
-            {{ form.cidade }}
-            {{ form.cidade.errors }}
-            <br>
-            
-            {{ form.complemento.label_tag }}
-            {{ form.complemento }}
-            {{ form.complemento.errors }}
-            <br>
+<div class="container">
+    <h1 class="titulo">AC Jogos</h1>
+    <h2 class="titulo">Cadastro de Empresas</h2>
+        
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+        
+    <form action="{% url 'empresas' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h2>Dados Jurídicos</h2>
+
+        {% for field in form %}
+            <div class="form-group {% if field.errors %}has-error{% endif %}">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                
+                {{ field }}
+                
+                {% if field.errors %}
+                    <div class="errorlist">
+                        {% for error in field.errors %}
+                            <small><strong>* {{ error }}</strong></small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-primary" style="margin-top: 20px;">Avançar</button>
+    </form>
+</div>
+
+<script>
+    // na data fundação é dia/mes/ano
+    // Script para rolar a tela até o primeiro erro automaticamente
+    document.addEventListener("DOMContentLoaded", function() {
+        const firstError = document.querySelector('.has-error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
 
             
 
 
-            <button type="submit"  class="btn-primary">Avançar</button>
+            
         </form>
             
 
     </div>
 {% endblock %}
+

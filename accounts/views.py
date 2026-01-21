@@ -508,7 +508,7 @@ def vitrine_projetos(request):
 
     return render(request, "vitrine_projetos.html", context)
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def vitrine(request):
     return render(request, 'vitrine.html')
 
@@ -560,6 +560,6 @@ def editar_responsavel_empresa(request, id):
     
     return render(request, 'editar_responsavel.html', {'form': form})
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def pagina_projeto(request):
     return render(request, 'pagina_projeto.html')
