@@ -4,7 +4,7 @@
 <section class="container-lista">
     <h2>Jogos Disponíveis</h2>
 
-    <button class="btn" id="btn-empresa">Filtrar por empresa</button>
+    <button class="btn"  id="btn-empresa" >Filtrar por empresa</button>
     <button class="btn" id="btn-genero">Filtrar por gênero</button>
 
     <div id="filtro-opcoes" style="margin:15px 0;"></div>
@@ -17,7 +17,7 @@
             <div class="card-imagem">
                 <img src="{% static 'image/jogo_1.png' %}" alt="Neon Rush">
             </div>
-            <h3 class="card-titulo">Neon Rush</h3>
+            <h3 class="card-titulo">Power Ranger</h3>
             <p class="centro">Corrida / Arcade</p>
             <div class="card-descricao">
                 <p>
@@ -33,7 +33,7 @@
             <div class="card-imagem">
                 <img src="{% static 'image/jogo_2.png' %}" alt="Floresta Perdida">
             </div>
-            <h3 class="card-titulo">Floresta Perdida</h3>
+            <h3 class="card-titulo">Albatroz</h3>
             <p class="centro">Aventura</p>
             <div class="card-descricao">
                 <p>
@@ -49,7 +49,7 @@
             <div class="card-imagem">
                 <img src="{% static 'image/jogo_3.png' %}" alt="Dungeon do Maricá">
             </div>
-            <h3 class="card-titulo">Dungeon do Maricá</h3>
+            <h3 class="card-titulo">Paw Patrol</h3>
             <p class="centro">RPG</p>
             <div class="card-descricao">
                 <p>
@@ -68,8 +68,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll(".card-empresa");
     const areaFiltros = document.getElementById("filtro-opcoes");
 
-    document.getElementById("btn-empresa").onclick = () => criarBotoes("data-empresa");
-    document.getElementById("btn-genero").onclick = () => criarBotoes("data-genero");
+    let filtroAtual = null; 
+
+    document.getElementById("btn-empresa").onclick =
+        () => toggleFiltros("data-empresa");
+
+    document.getElementById("btn-genero").onclick =
+        () => toggleFiltros("data-genero");
+
+    function toggleFiltros(atributo) {
+
+  
+        if (filtroAtual === atributo) {
+            areaFiltros.style.display = "none";
+            areaFiltros.innerHTML = "";
+            filtroAtual = null;
+            return;
+        }
+
+       
+        filtroAtual = atributo;
+        areaFiltros.style.display = "block";
+        criarBotoes(atributo);
+    }
 
     function criarBotoes(atributo) {
         areaFiltros.innerHTML = "";
