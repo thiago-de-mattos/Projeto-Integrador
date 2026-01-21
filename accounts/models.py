@@ -395,7 +395,6 @@ class Projeto(models.Model):
     premiacoes = models.TextField('Premiações', blank=True, null=True)
     
     data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
-    data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
     
     def __str__(self):
         return self.titulo
