@@ -456,7 +456,7 @@ def estatisticas_detalhadas(request):
         'historico_anos': historico_anos,
     }
 
-    return render(request, 'estatisticas_detalhadas.html', context)
+    return render(request, 'estatistica_detalhada.html', context)
 
 @login_required(login_url="login")
 def vitrine(request):
