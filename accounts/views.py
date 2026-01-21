@@ -18,13 +18,10 @@ from .models import (
     )
 from .forms import (
     EmpresaForm, EstudioForm, ProjetosForm, 
-    ProfileForm, ResponsavelForm, CustomUserCreationForm
+    ProfileForm, ResponsavelForm
 )
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = CustomUser
-        fields = UserCreationForm.Meta.fields
+
 
 def get_clean_role(user):
     try:
