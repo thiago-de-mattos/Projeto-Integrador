@@ -126,7 +126,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 #indicação do local dos niveis de usuario 
 
-ROLEPERMISSIONS_MODULE = 'integrator_project.permicoes'
+ROLEPERMISSIONS_MODULE = 'integrator_project.permissoes'
 
 #Modelo de usuário
 AUTH_USER_MODEL = 'accounts.CustomUser'
