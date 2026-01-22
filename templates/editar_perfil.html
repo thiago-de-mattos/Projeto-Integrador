@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Meu Perfil - AC Jogos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="titulo">Editar Perfil</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="form-perfil">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label>Usuário:</label>
+                <input type="text" value="{{ user.username }}" disabled 
+                       style="background-color: #e9ecef; cursor: not-allowed; border: 1px solid #ccc; padding: 10px; border-radius: 4px;">
+                <small class="helptext">O nome de usuário não pode ser alterado.</small>
+            </div>
+
+            <div class="form-section">
+            <div class="form-group">
+                <label for="{{ form.telefone_contato.id_for_label }}">Telefone:</label>
+                {{ form.telefone_contato }}
+            </div>
+
+            <div class="form-group foto-perfil-secao">
+                <label>Sua Foto de Perfil</label>
+                
+                <div class="avatar-wrapper">
+                    <div class="avatar-preview">
+                        {% if form.instance.foto_perfil %}
+                            <img src="{{ form.instance.foto_perfil.url }}" alt="Foto de Perfil" id="preview-img">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                <img src="" id="preview-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+                                <i class="fas fa-user fa-3x" id="avatar-icon"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="avatar-controls">
+                        <label for="{{ form.foto_perfil.id_for_label }}" class="btn-upload">
+                            <i class="fas fa-camera"></i> Alterar Foto
+                        </label>
+                        <input type="file" name="foto_perfil" id="{{ form.foto_perfil.id_for_label }}" class="input-file-oculto">
+
+                        {% if form.instance.foto_perfil %}
+                            <input type="checkbox" name="foto_perfil-clear" id="foto_perfil-clear_id" class="checkbox-limpar">
+                            <label for="foto_perfil-clear_id" class="btn-remover">
+                                <i class="fas fa-trash"></i> Remover
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if form.foto_perfil.errors %}
+                    <div class="errorlist">{{ form.foto_perfil.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-actions" style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
+            <button type="submit" class="btn-primary">Salvar Perfil</button>
+            <a href="{% url 'home' %}" class="btn-cancel" style="text-decoration: none; line-height: 2.4; text-align: center;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+
+<!-- aplicação de javascript: para permitir a pré visualização da foto -->
+<script> 
+    const inputFoto = document.querySelector('input[type="file"]');
+    const previewImg = document.getElementById('preview-img');
+    const nomeArquivoLabel = document.getElementById('nome-arquivo');
+
+    if (inputFoto) {
+        inputFoto.addEventListener('change', function() {
+            const file = this.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+
+                // Quando o navegador terminar de ler o arquivo:
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result; // Troca o SRC da imagem pela prévia
+                    nomeArquivoLabel.textContent = "Selecionado: " + file.name;
+                }
+
+                reader.readAsDataURL(file); // Lê o arquivo como URL de dados
+            }
+        });
+    }
+</script>
+{% endblock %}

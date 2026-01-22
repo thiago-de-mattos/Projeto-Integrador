@@ -7,12 +7,16 @@
 
 <div class="container-lista">
 
-    <div class="logo-img-container">
-        <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" 
-            alt="Logomarca da AC Jogos">
-    </div>  
-
-    <section class="titulo-diretoria">
+    <section style="text-align: center" class="titulo-diretoria">
+        {% if user.profile.foto_perfil %}
+            <img src="{{ user.profile.foto_perfil.url }}" alt="Perfil" class="welcome-avatar">
+        {% else %}
+            <div class="welcome-logo-container">
+                <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" 
+                    alt="Logomarca da AC Jogos" class="welcome-logo">
+            </div>  
+        {% endif %}
+        
         <h1>Olá, {{ user.username }}!</h1>
         <p style="text-align: center; color: #666;">Você está logado como: <strong>{{ permicoes }}</strong></p>
     </section>
