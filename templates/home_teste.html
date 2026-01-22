@@ -1,0 +1,353 @@
+{% extends 'base_teste.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-hero relative overflow-hidden">
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgxNDcsIDIwMCwgMjMwLCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40"></div>
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 relative z-10">
+    <!-- Tag -->
+    <div class="flex justify-center mb-6 animate-fade-in">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30">
+        <div class="w-2 h-2 rounded-full bg-primary animate-pulse-glow"></div>
+        <span class="text-sm font-medium text-primary">Ecossistema de Games do Rio de Janeiro</span>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h1 class="font-display text-5xl md:text-7xl font-bold text-center mb-6 animate-fade-in">
+      Mapeando o Futuro dos<br>
+      <span class="text-gradient">Jogos Digitais</span> no RJ
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="text-xl text-center text-muted-foreground max-w-3xl mx-auto mb-12 animate-fade-in">
+      Conectamos estúdios, profissionais e instituições do ecossistema criativo fluminense. Descubra quem faz games no Rio de Janeiro.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-fade-in">
+      <a href="{% url 'empresas_teste' %}" class="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-xl text-lg font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all">
+        Explorar Empresas
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+      <a href="{% url 'mapa' %}" class="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-xl text-lg font-semibold border-2 border-primary/50 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+        Ver Mapa Interativo
+      </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <!-- Empresas -->
+      <div class="glass rounded-2xl p-8 text-center group hover:border-primary/50 transition-all animate-fade-in">
+        <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+        </div>
+        <div class="font-display text-5xl font-bold text-foreground mb-2">120+</div>
+        <div class="font-semibold text-foreground mb-1">Empresas Mapeadas</div>
+        <div class="text-sm text-muted-foreground">Estúdios ativos no RJ</div>
+      </div>
+
+      <!-- Projetos -->
+      <div class="glass rounded-2xl p-8 text-center group hover:border-primary/50 transition-all animate-fade-in" style="animation-delay: 0.1s">
+        <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-br from-accent to-pink-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="font-display text-5xl font-bold text-foreground mb-2">350+</div>
+        <div class="font-semibold text-foreground mb-1">Projetos Cadastrados</div>
+        <div class="text-sm text-muted-foreground">Games desenvolvidos</div>
+      </div>
+
+      <!-- Cidades -->
+      <div class="glass rounded-2xl p-8 text-center group hover:border-primary/50 transition-all animate-fade-in" style="animation-delay: 0.2s">
+        <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <div class="font-display text-5xl font-bold text-foreground mb-2">45</div>
+        <div class="font-semibold text-foreground mb-1">Cidades do RJ</div>
+        <div class="text-sm text-muted-foreground">Presença estadual</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Empresas em Destaque -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+  <div class="flex items-center justify-between mb-12">
+    <div>
+      <h2 class="font-display text-4xl font-bold mb-2">
+        Empresas em <span class="text-gradient">Destaque</span>
+      </h2>
+      <p class="text-muted-foreground">
+        Conheça os estúdios e empresas que estão transformando o cenário de games no Estado do Rio de Janeiro.
+      </p>
+    </div>
+    <a href="{% url 'empresas_teste' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+      Ver todas
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Card Empresa 1 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🎮
+          </div>
+          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+            Destaque
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          Aquiris Game Studio
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Rio de Janeiro
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            50-100
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card Empresa 2 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🐌
+          </div>
+          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+            Destaque
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          Rogue Snail
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento Indie</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Niterói
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            10-20
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card Empresa 3 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            ⚔️
+          </div>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          Swordtales
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Rio de Janeiro
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            5-10
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card Empresa 4 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🎭
+          </div>
+          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+            Destaque
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          JoyMasher
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento Indie</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Rio de Janeiro
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            2-5
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card Empresa 5 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            👁️
+          </div>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          Behold Studios
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Rio de Janeiro
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            10-20
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card Empresa 6 -->
+    <a href="#" class="group block">
+      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🎨
+          </div>
+        </div>
+        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+          Dumativa
+        </h3>
+        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
+        <div class="flex items-center gap-4 text-sm text-muted-foreground">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+            Petrópolis
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            5-10
+          </span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Vitrine de Projetos -->
+<section class="bg-secondary/30 py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-12">
+      <div>
+        <h2 class="font-display text-4xl font-bold mb-2">
+          Vitrine de <span class="text-gradient-gaming">Projetos</span>
+        </h2>
+        <p class="text-muted-foreground">
+          Jogos desenvolvidos no Rio de Janeiro que conquistaram o mundo.
+        </p>
+      </div>
+      <a href="{% url 'projetos_teste' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+        Ver todos
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Projeto 1 -->
+      <div class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1">
+        <div class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
+          🏎️
+        </div>
+        <div class="p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">
+              Lançado
+            </span>
+            <div class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span class="text-sm font-bold text-foreground">4.8</span>
+            </div>
+          </div>
+          <h3 class="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+            Horizon Chase Turbo
+          </h3>
+          <p class="text-sm text-muted-foreground mb-3">Aquiris</p>
+          <div class="flex gap-2">
+            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">PC</span>
+            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">PS4</span>
+            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">Switch</span>
+            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">+1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projeto 2 -->
+      <div class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1">
+        <div class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
+          🔫
+        </div>
+        <div class="p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-2 py-1 rounded text-xs font-medium bg-purple-500/20 text-purple-400">
+              Em Desenvolvimento
+            </span>
+            <div class="flex items-center gap-1">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                
+{% endblock %}
