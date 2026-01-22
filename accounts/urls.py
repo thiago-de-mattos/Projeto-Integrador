@@ -3,6 +3,8 @@ from . import views
 from .views import Teste_Diretoria
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
 def logout_view(request):
     logout(request)
@@ -43,4 +45,4 @@ urlpatterns = [
      path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
 
 
-     ]
+     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
