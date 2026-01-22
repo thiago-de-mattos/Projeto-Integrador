@@ -1490,3 +1490,160 @@ input[type="submit"],
     }
     .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
     .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+
+/* /* ===== PÁGINA: HOME (estilo ícone da foto) ===== */ */
+.titulo-diretoria {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-avatar, .welcome-avatar-empty {
+    width: 150px;  /* Tamanho maior para desktop */
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.welcome-avatar-empty {
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: #adb5bd;
+}
+
+    /* --- Responsividade para Celular (Telas até 768px) --- */
+@media (max-width: 768px) {
+    .welcome-avatar, .welcome-avatar-empty {
+        width: 100px;    /* Reduz um pouco o tamanho no celular */
+        height: 100px;
+        margin-bottom: 10px;
+    }
+
+    .welcome-avatar-empty {
+        font-size: 40px; /* Ícone menor no celular */
+    }
+
+    .titulo-diretoria h1 {
+        font-size: 1.5rem; /* Diminui o título para não quebrar linhas estranhas */
+        padding: 0 10px;
+    }
+
+    .titulo-diretoria p {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+}
+
+/* ===== PÁGINA: EDITAR PERFIL ===== */
+.avatar-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 20px;
+    padding: 25px;
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    width: 100%;
+}
+
+/* Moldura da Foto */
+.avatar-preview {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f2f5;
+    color: #adb5bd;
+}
+
+/* Linha dos Botões */
+.avatar-controls {
+    display: flex;
+    flex-direction: row; /* Lado a lado no PC */
+    gap: 10px;
+    width: auto;
+}
+
+.btn-upload {
+    padding: 10px 18px;
+    background: var(--white);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-upload:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-remover {
+    padding: 10px 18px;
+    background: transparent;
+    border: 2px solid var(--danger);
+    color: var(--danger);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-remover:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+    .avatar-controls {
+        flex-direction: column; /* Empilha botões no celular */
+        width: 100%;
+    }
+    
+    .btn-upload, .btn-remover {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .avatar-preview {
+        width: 110px;
+        height: 110px;
+    }
+}
+
+/* Esconder os inputs originais */
+.input-file-oculto, .checkbox-limpar {
+    display: none !important;
+}
