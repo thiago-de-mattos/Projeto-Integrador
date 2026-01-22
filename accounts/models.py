@@ -33,6 +33,20 @@ class ArranjosProdutivo(models.Model):
 
 
 class Empresa(models.Model):
+    #
+    latitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True
+    )
+    #
     TIPO_CHOICES = [
         ('DESENVOLVEDORA', 'Desenvolvedora'),
         ('PUBLICADORA', 'Publicadora'),
