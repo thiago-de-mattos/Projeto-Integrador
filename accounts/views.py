@@ -7,6 +7,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseForbidden
 from django.db.models import Sum, Avg, Count, Q
 
+#
+from django.http import JsonResponse
+import json
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+#
+
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
@@ -563,3 +570,275 @@ def editar_responsavel_empresa(request, id):
 # @login_required(login_url="login")
 def pagina_projeto(request):
     return render(request, 'pagina_projeto.html')
+
+# html de teste
+def home_teste(request):
+    """Página inicial com empresas e projetos em destaque"""
+    # Usando associada_acjogos ao invés de aprovada
+    empresas_destaque = Empresa.objects.filter(
+        associada_acjogos=True
+    ).order_by('-data_cadastro')[:6]
+    
+    # Ajustar conforme seu modelo de Projeto
+    projetos_destaque = Projeto.objects.all().select_related('empresa').order_by('-data_lancamento')[:4]
+    
+    # Estatísticas gerais
+    stats = {
+        'total_empresas': Empresa.objects.filter(associada_acjogos=True).count(),
+        'total_projetos': Projeto.objects.count(),
+        'total_cidades': Empresa.objects.filter(associada_acjogos=True).values('municipio').distinct().count(),
+    }
+    
+    context = {
+        'empresas_destaque': empresas_destaque,
+        'projetos_destaque': projetos_destaque,
+        'stats': stats,
+    }
+    return render(request, 'home_teste.html', context)
+
+
+def empresas_list(request):
+    """Lista todas as empresas com filtros"""
+    # Removido filtro por 'aprovada' - ajuste conforme necessário
+    # Se quiser filtrar apenas associadas, use: filter(associada_acjogos=True)
+    empresas = Empresa.objects.all()
+    
+    # Filtros
+    search = request.GET.get('search', '')
+    cidade = request.GET.get('cidade', 'Todas')
+    porte = request.GET.get('porte', 'Todos')
+    tipo = request.GET.get('tipo', 'Todos')
+    
+    if search:
+        empresas = empresas.filter(
+            Q(nome__icontains=search) | 
+            Q(nome_fantasia__icontains=search) |
+            Q(tipo_empresa__icontains=search)
+        )
+    
+    # Usar 'municipio' ao invés de 'cidade'
+    if cidade != 'Todas':
+        empresas = empresas.filter(municipio=cidade)
+    
+    # Usar 'porte_empresa' ao invés de 'porte'
+    if porte != 'Todos':
+        empresas = empresas.filter(porte_empresa=porte)
+    
+    # Filtro por tipo
+    if tipo != 'Todos':
+        empresas = empresas.filter(tipo=tipo)
+    
+    # Listas para filtros - usando 'municipio'
+    cidades = Empresa.objects.values_list('municipio', flat=True).distinct().order_by('municipio')
+    
+    # Portes disponíveis - ajuste conforme suas escolhas no model
+    portes = [
+        ('MEI', 'MEI'),
+        ('Microempresa', 'Microempresa'),
+        ('Pequeno Porte', 'Pequeno Porte'),
+        ('Médio Porte', 'Médio Porte'),
+        ('Grande Porte', 'Grande Porte'),
+    ]
+    
+    # Serializar para Alpine.js - usando campos corretos
+    empresas_json = json.dumps(list(empresas.values(
+        'id', 'nome', 'nome_fantasia', 'tipo_empresa', 'municipio', 'porte_empresa', 'associada_acjogos'
+    )), default=str)
+    
+    context = {
+        'empresas': empresas,
+        'empresas_json': empresas_json,
+        'cidades': cidades,
+        'portes': portes,
+        'selected_cidade': cidade,
+        'selected_porte': porte,
+        'search': search,
+    }
+    return render(request, 'empresa_test.html', context)
+
+
+def empresa_detail(request, pk):
+    """Detalhes de uma empresa específica"""
+    empresa = get_object_or_404(Empresa, pk=pk)
+    projetos = Projeto.objects.filter(empresa=empresa)
+    
+    context = {
+        'empresa': empresa,
+        'projetos': projetos,
+    }
+    return render(request, 'pages/empresa_detail.html', context)
+
+
+def projetos_list(request):
+    """Lista todos os projetos públicos"""
+    projetos = Projeto.objects.all().select_related('empresa').order_by('-data_lancamento')
+    
+    # Filtros - ajuste conforme campos do seu modelo
+    status = request.GET.get('status', 'Todos')
+    genero = request.GET.get('genero', 'Todos')
+    
+    # Ajuste os filtros conforme os campos reais do seu modelo Projeto
+    if status != 'Todos':
+        projetos = projetos.filter(status=status)
+    
+    if genero != 'Todos':
+        projetos = projetos.filter(genero__icontains=genero)
+    
+    context = {
+        'projetos': projetos,
+        'selected_status': status,
+        'selected_genero': genero,
+    }
+    return render(request, 'projetos_teste.html', context)
+
+
+def mapa(request):
+    """Mapa interativo das empresas"""
+    # Ajuste conforme os campos de latitude/longitude do seu modelo
+    empresas = Empresa.objects.filter(
+        latitude__isnull=False,
+        longitude__isnull=False
+    )
+    
+    # Serializar coordenadas para o mapa
+    empresas_coords = []
+    for emp in empresas:
+        empresas_coords.append({
+            'nome': emp.nome,
+            'cidade': emp.municipio,  # Usando municipio
+            'lat': float(emp.latitude),
+            'lng': float(emp.longitude),
+            'porte': emp.porte_empresa,  # Usando porte_empresa
+        })
+    
+    # Estatísticas para o mapa
+    stats = {
+        'regioes': 8,
+        'cidades': empresas.values('municipio').distinct().count(),
+        'empresas': empresas.count(),
+        'profissionais': Profile.objects.filter(user__is_active=True).count(),
+    }
+    
+    context = {
+        'empresas_coords_json': json.dumps(empresas_coords),
+        'stats': stats,
+    }
+    return render(request, 'mapa.html', context)
+
+
+def estatisticas_teste(request):
+    """Página de estatísticas do ecossistema"""
+    empresas = Empresa.objects.all()
+    
+    # Estatísticas gerais
+    stats = {
+        'crescimento_anual': 23,
+        'faturamento_estimado': '45M',
+        'total_profissionais': Profile.objects.filter(user__is_active=True).count(),
+        'total_empresas': empresas.count(),
+    }
+    
+    # Distribuição por porte - usando porte_empresa
+    por_porte = {}
+    portes_choices = [
+        'MEI', 'Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte'
+    ]
+    for porte in portes_choices:
+        por_porte[porte] = empresas.filter(porte_empresa=porte).count()
+    
+    # Distribuição por cidade (top 5) - usando municipio
+    por_cidade = empresas.values('municipio').annotate(
+        total=Count('id')
+    ).order_by('-total')[:5]
+    
+    # Distribuição por tipo de empresa
+    por_tipo = {}
+    tipos = empresas.values_list('tipo_empresa', flat=True).distinct()
+    for tipo in tipos:
+        if tipo:
+            por_tipo[tipo] = empresas.filter(tipo_empresa=tipo).count()
+    
+    context = {
+        'stats': stats,
+        'por_porte': por_porte,
+        'por_cidade': list(por_cidade),
+        'por_tipo': por_tipo,
+    }
+    return render(request, 'estatisticas_teste.html', context)
+
+
+def logout_view(request):
+    """Logout do usuário"""
+    logout(request)
+    return redirect('home_teste')
+
+
+# API endpoints (opcional, para AJAX)
+def api_empresas(request):
+    """API JSON para empresas"""
+    empresas = Empresa.objects.all().values(
+        'id', 'nome', 'nome_fantasia', 'tipo_empresa', 'municipio', 
+        'porte_empresa', 'latitude', 'longitude'
+    )
+    return JsonResponse(list(empresas), safe=False)
+
+
+def api_stats(request):
+    """API JSON para estatísticas"""
+    stats = {
+        'total_empresas': Empresa.objects.count(),
+        'total_projetos': Projeto.objects.count(),
+        'total_profissionais': Profile.objects.filter(user__is_active=True).count(),
+        'crescimento': 23,
+    }
+    return JsonResponse(stats)
+
+
+def login_view_teste(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            user = User.objects.get(email=email)
+            user = authenticate(request, username=user.username, password=password)
+        except User.DoesNotExist:
+            user = None
+
+        if user:
+            login(request, user)
+            return redirect("inicio")
+        else:
+            return render(request, "login_teste.html", {
+                "error": "E-mail ou senha inválidos"
+            })
+
+    return render(request, "login_teste.html")
+
+
+def register_view_teste(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        password2 = request.POST.get("password2")
+
+        if password != password2:
+            return render(request, "cadastro_teste.html", {
+                "error": "As senhas não coincidem"
+            })
+
+        if User.objects.filter(email=email).exists():
+            return render(request, "cadastro_teste.html", {
+                "error": "Este e-mail já está cadastrado"
+            })
+
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password
+        )
+
+        login(request, user)
+        return redirect("inicio")
+
+    return render(request, "cadastro_teste.html")

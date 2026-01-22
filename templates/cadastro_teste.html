@@ -1,0 +1,176 @@
+{% extends 'base_teste.html' %}
+
+{% block content %}
+
+<style>
+    .auth-wrapper {
+        min-height: calc(100vh - 160px); /* ajusta se navbar/footer forem maiores */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at right, #3b1d5f, #050b1e);
+    }
+
+    .auth-card {
+        width: 380px;
+        padding: 40px;
+        background: rgba(10, 20, 40, 0.88);
+        border-radius: 16px;
+        box-shadow: 0 0 40px rgba(0,0,0,.5);
+        color: #fff;
+        font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .auth-card .logo {
+        text-align: center;
+        font-size: 38px;
+        margin-bottom: 10px;
+    }
+
+    .auth-card h1 {
+        text-align: center;
+        margin: 0;
+    }
+
+    .auth-card p {
+        text-align: center;
+        color: #9bb;
+        margin: 10px 0 30px;
+    }
+
+    .auth-card label {
+        font-size: 14px;
+        margin-top: 15px;
+        display: block;
+    }
+
+    .auth-card input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 8px;
+        border: none;
+        background: #0f1a30;
+        color: #fff;
+    }
+
+    .auth-card button {
+        width: 100%;
+        margin-top: 25px;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #19e3ff, #4b7bff);
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+    }
+
+    .auth-card .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .auth-card .footer a {
+        color: #19e3ff;
+        text-decoration: none;
+    }
+
+    .auth-card .error {
+        margin-top: 15px;
+        background: rgba(255,0,0,.15);
+        padding: 10px;
+        border-radius: 8px;
+        color: #ff9b9b;
+        font-size: 14px;
+        text-align: center;
+    }
+      .options {
+            display: flex;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .option-card {
+            width: 170px;
+            background: rgba(15,23,42,.75);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,.05);
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,.4);
+        }
+
+        .option-icon {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .option-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .option-sub {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="logo">🎮</div>
+
+        <h1>Crie sua conta</h1>
+        <p>Associe-se à ACJOGOS-RJ</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label>E-mail</label>
+            <input type="email" name="email" required>
+
+            <label>Senha</label>
+            <input type="password" name="password" required>
+
+            <label>Confirmar senha</label>
+            <input type="password" name="password2" required>
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <button type="submit">Criar conta →</button>
+        </form>
+
+        <div class="footer">
+            Já tem conta?
+            <a href="{% url 'login_teste' %}">Entrar</a>
+        </div>
+        <div class="options">
+                <div class="option-card">
+                    <div class="option-icon">🏢</div>
+                    <div class="option-title">Empresa/Estúdio</div>
+                    <div class="option-sub">Associado</div>
+                </div>
+        
+                <div class="option-card">
+                    <div class="option-icon">👤</div>
+                    <div class="option-title">Profissional</div>
+                    <div class="option-sub">Afiliado</div>
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock %}

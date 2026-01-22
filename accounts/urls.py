@@ -43,6 +43,18 @@ urlpatterns = [
 
      path('responsavel/cadastrar/', views.cadastro_responsavel_empresa, name='cadastro_responsavel_empresa'),
      path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
+     
+     
+     #
+    path('home_teste/', views.home_teste, name='home_teste'),
+    path('empresas_teste/', views.empresas_list, name='empresas_teste'),
+    # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
+    path('projetos_teste/', views.projetos_list, name='projetos_teste'),
+    path('mapa_teste/', views.mapa, name='mapa'),
+    path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
+     path("login_teste/", views.login_view_teste, name="login_teste"),
+    path("cadastro_teste/", views.register_view_teste, name="cadastro_teste"),
+     #
 
 
      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
