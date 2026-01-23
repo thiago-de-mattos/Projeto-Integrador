@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views 
-from .views import Teste_Diretoria
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.conf import settings
