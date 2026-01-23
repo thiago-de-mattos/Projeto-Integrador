@@ -1,13 +1,182 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home - AC Jogos{% endblock %}
+{% block title %}Home - ACJOGOS-RJ{% endblock %}
+
+{% block extra_head %}
+<style>
+    .container-lista {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Hero Section */
+    .titulo-diretoria {
+        text-align: center;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .welcome-logo-container {
+        margin-bottom: 2rem;
+    }
+
+    .welcome-logo {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 20px rgba(25, 227, 255, 0.3));
+    }
+
+    .welcome-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary);
+        box-shadow: 0 0 30px rgba(25, 227, 255, 0.4);
+        margin-bottom: 1.5rem;
+    }
+
+    .titulo-diretoria h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .titulo-diretoria p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+    }
+
+    .titulo-diretoria p strong {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Admin Area */
+    .diretoria {
+        background: linear-gradient(135deg, rgba(227, 25, 255, 0.1) 0%, rgba(75, 123, 255, 0.1) 100%);
+        border: 1px solid rgba(227, 25, 255, 0.3);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .diretoria h3 {
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: inline-block;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(25, 227, 255, 0.4);
+    }
+
+    /* Stats Grid */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .card-stat {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-stat::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+    }
+
+    .card-stat:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        border-color: var(--primary);
+    }
+
+    .card-stat h3 {
+        font-size: 1.2rem;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .card-stat p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-number {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .titulo-diretoria h1 {
+            font-size: 2rem;
+        }
+
+        .card-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .diretoria > div {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
 <div class="container-lista">
 
-    <section style="text-align: center" class="titulo-diretoria">
+    <section class="titulo-diretoria">
         {% if user.profile.foto_perfil %}
             <img src="{{ user.profile.foto_perfil.url }}" alt="Perfil" class="welcome-avatar">
         {% else %}
@@ -17,18 +186,16 @@
             </div>  
         {% endif %}
         
-        <h1>Olá, {{ user.username }}!</h1>
-        <p style="text-align: center; color: #666;">Você está logado como: <strong>{{ permicoes }}</strong></p>
+        <h1>Olá, {{ user.username }}! 🎮</h1>
+        <p>Você está logado como: <strong>{{ permicoes }}</strong></p>
     </section>
   
     {% if permicoes == "Diretoria" %}
-    <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #eee;">
-    
-    <div style="text-align: center;" class="diretoria">
-        <h3 style="color: var(--danger);">Área Administrativa</h3>
+    <div class="diretoria">
+        <h3>⚡ Área Administrativa</h3>
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
             <a href="{% url 'visao_diretoria' %}" class="btn-primary">Acessar Painel</a>
-            <a href="{% url 'cadastro' %}" class="btn-primary">Cadastrar Novo Usuário</a>
+            <a href="{% url 'cadastro_teste' %}" class="btn-primary">Cadastrar Novo Usuário</a>
             <a href="{% url 'listagem_empresas' %}" class="btn-primary">Visualizar Empresas</a>
         </div>
     </div>
@@ -36,23 +203,22 @@
 
     <div class="card-grid">
         <div class="card-stat">
-            <h3>Empresas</h3>
-            <p>Cadastradas no sistema:</p>
+            <h3>🏢 Empresas</h3>
+            <p>Cadastradas no sistema</p>
             <span class="stat-number">{{ total_empresas }}</span>
         </div>
 
         <div class="card-stat">
-            <h3>Estúdios</h3>
-            <p>Cadastrados no sistema:</p>
+            <h3>🎨 Estúdios</h3>
+            <p>Cadastrados no sistema</p>
             <span class="stat-number">{{ total_estudios }}</span>
         </div>
 
         <div class="card-stat">
-            <h3>Projetos</h3>
-            <p>Jogos em desenvolvimento:</p>
+            <h3>🎮 Projetos</h3>
+            <p>Jogos em desenvolvimento</p>
             <span class="stat-number">{{ total_projetos }}</span>
         </div>
-
     </div>
 </div>
 
