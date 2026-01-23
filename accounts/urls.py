@@ -15,7 +15,9 @@ urlpatterns = [
      path('', views.home, name='home',),
      path('login/', views.login_view, name='login'),
      path('logout/', logout_view, name='logout'),
-
+    
+    
+    # Pedro veja essas urls
      path('cadastro/', views.cadastro, name='cadastro'),
      path('cadastro/empresa/', views.cadastro_empresa, name='cadastro_empresa'),
      path('cadastro/profissional/', views.cadastro_profissional, name='cadastro_profissional'),
