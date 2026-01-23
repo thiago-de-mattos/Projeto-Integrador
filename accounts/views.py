@@ -60,7 +60,7 @@ def cadastro(request):
     
     return render(request, 'cadastro.html', context)
 
-    # Pedro veja se esse vai te servir o de cima verifique tambem 
+    # Pedro veja se esse vai te servir o de cima verifique tambem veja o template empresa.html onde vc fez a logica de adicionar empresa
 def cadastro_empresa(request):
     """Cadastro de empresa - Cria User + Profile + Empresa"""
     
