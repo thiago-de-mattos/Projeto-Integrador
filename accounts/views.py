@@ -59,6 +59,8 @@ def cadastro(request):
     context = {'form': form}
     
     return render(request, 'cadastro.html', context)
+
+    # Pedro veja se esse vai te servir o de cima verifique tambem 
 def cadastro_empresa(request):
     """Cadastro de empresa - Cria User + Profile + Empresa"""
     
