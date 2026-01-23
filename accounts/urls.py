@@ -17,6 +17,9 @@ urlpatterns = [
      path('logout/', logout_view, name='logout'),
 
      path('cadastro/', views.cadastro, name='cadastro'),
+     path('cadastro/empresa/', views.cadastro_empresa, name='cadastro_empresa'),
+     path('cadastro/profissional/', views.cadastro_profissional, name='cadastro_profissional'),
+    
      path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
      
      path('diretoria/', views.visao_diretoria, name='visao_diretoria'),
