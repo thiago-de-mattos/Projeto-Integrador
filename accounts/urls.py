@@ -20,8 +20,6 @@ urlpatterns = [
      path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
      
      path('diretoria/', views.visao_diretoria, name='visao_diretoria'),
-     #Usuario de teste DIRETORIA
-     path("teste/", Teste_Diretoria, name="usuario_teste"),
 
      path('empresas/', views.cadastro_empresa, name='empresas'),
      path('empresas/listagem/', views.listagem_empresas, name="listagem_empresas"),
@@ -45,7 +43,7 @@ urlpatterns = [
      path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
      
      
-     #
+     
     path('home_teste/', views.home_teste, name='home_teste'),
     path('empresas_teste/', views.empresas_list, name='empresas_teste'),
     # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
@@ -54,7 +52,7 @@ urlpatterns = [
     path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
      path("login_teste/", views.login_view_teste, name="login_teste"),
     path("cadastro_teste/", views.register_view_teste, name="cadastro_teste"),
-     #
+     
 
 
      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
