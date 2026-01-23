@@ -1,6 +1,5 @@
 from django.urls import path
-from . import views 
-from .views import Teste_Diretoria
+from . import views  
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.conf import settings
@@ -20,8 +19,6 @@ urlpatterns = [
      path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
      
      path('diretoria/', views.visao_diretoria, name='visao_diretoria'),
-     #Usuario de teste DIRETORIA
-     path("teste/", Teste_Diretoria, name="usuario_teste"),
 
      path('empresas/', views.cadastro_empresa, name='empresas'),
      path('empresas/listagem/', views.listagem_empresas, name="listagem_empresas"),
