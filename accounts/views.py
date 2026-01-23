@@ -13,6 +13,7 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 User = get_user_model()
+from django.views.decorators.cache import never_cache
 #
 
 from rolepermissions.roles import assign_role
@@ -41,24 +42,24 @@ def get_clean_role(user):
     except:
         return ""
 
-def cadastro(request):
+# def cadastro(request):
 
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
 
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, 'Usuário cadastrado com sucesso!')
-            return redirect('login')
+#         if form.is_valid():
+#             user = form.save()
+#             messages.success(request, 'Usuário cadastrado com sucesso!')
+#             return redirect('login')
         
-        else:
-            messages.error(request, 'Houve um erro no cadastro. Verifique os campos.')
+#         else:
+#             messages.error(request, 'Houve um erro no cadastro. Verifique os campos.')
 
-    else:
-        form = CustomUserCreationForm()
-    context = {'form': form}
+#     else:
+#         form = CustomUserCreationForm()
+#     context = {'form': form}
     
-    return render(request, 'cadastro.html', context)
+#     return render(request, 'cadastro.html', context)
 
     # Pedro veja se esse vai te servir o de cima verifique tambem veja o template empresa.html onde vc fez a logica de adicionar empresa
 def cadastro_empresa(request):
@@ -174,27 +175,27 @@ def cadastro_profissional(request):
     context = {'form': form}
     return render(request, 'cadastro_profissional.html', context)
 
-def login_view(request):
-    if request.method=='GET':
-        return render(request, 'login.html')
-    else:
-        username=request.POST.get('username')
-        senha=request.POST.get('senha')
+# def login_view(request):
+#     if request.method=='GET':
+#         return render(request, 'login.html')
+#     else:
+#         username=request.POST.get('username')
+#         senha=request.POST.get('senha')
         
-        if not username or not senha:
-            messages.error(request,'Preencha os campos')
-            return render(request,'login.html')
+#         if not username or not senha:
+#             messages.error(request,'Preencha os campos')
+#             return render(request,'login.html')
         
-        user=authenticate(username=username,password=senha)
+#         user=authenticate(username=username,password=senha)
         
-        if user:
-            login_django(request,user)
-            print(f"DEBUG: Usuário {user.username} logado com sucesso!")
-            return redirect('home')
+#         if user:
+#             login_django(request,user)
+#             print(f"DEBUG: Usuário {user.username} logado com sucesso!")
+#             return redirect('home')
         
-        else:
-            messages.error(request, 'Usuário ou senha inválidos')
-            return render(request, 'login.html')
+#         else:
+#             messages.error(request, 'Usuário ou senha inválidos')
+#             return render(request, 'login.html')
 
 @login_required(login_url="login")
 def home(request):
@@ -209,21 +210,52 @@ def home(request):
     return render(request, "home.html", context) 
 
 def Teste_Diretoria(request):
-    username = "Teste"
+    username = "teste_diretoria"
+    email = "teste@gmail.com"
     password = "123456789"
-    user, created = CustomUser.objects.get_or_create(username=username)
-    if created:
-        user.set_password(password)
+    
+    # Tenta buscar o usuário pelo username OU email
+    user = CustomUser.objects.filter(username=username).first() or CustomUser.objects.filter(email=email).first()
+    
+    if user is None:
+        # Criar novo usuário de teste
+        user = CustomUser.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
         user.is_staff = False
         user.is_superuser = False
         user.save()
         
         assign_role(user, 'diretoria')
         
-        return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
+        return HttpResponse("""
+            <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
+                <h1 style="color: #19e3ff;">✅ Usuário de teste criado com sucesso!</h1>
+                <div style="background: #1e2435; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Username:</strong> teste_diretoria</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">E-mail:</strong> teste@gmail.com</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Senha:</strong> 123456789</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Permissão:</strong> Diretoria</p>
+                </div>
+                <a href="/login_teste/" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #19e3ff, #4b7bff); color: #0a0e1a; text-decoration: none; border-radius: 10px; font-weight: bold;">Fazer Login →</a>
+            </div>
+        """)
     else:
-        return HttpResponse("Usuario de teste ja criado Usuario:Teste Senha:123456789")
-
+        return HttpResponse("""
+            <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
+                <h1 style="color: #e319ff;">⚠️ Usuário de teste já existe!</h1>
+                <div style="background: #1e2435; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Username:</strong> teste_diretoria</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">E-mail:</strong> teste@gmail.com</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Senha:</strong> 123456789</p>
+                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Permissão:</strong> Diretoria</p>
+                </div>
+                <a href="/login_teste/" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #19e3ff, #4b7bff); color: #0a0e1a; text-decoration: none; border-radius: 10px; font-weight: bold;">Fazer Login →</a>
+            </div>
+            """
+            )
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
@@ -273,21 +305,23 @@ def cadastro_empresa(request):
     
     return render(request, 'empresas.html', {'form': form})
 
-@login_required(login_url="login")
+@login_required(login_url="login_teste")
 def listagem_empresas(request):
     query = request.GET.get("q", "")
     cidade = request.GET.get("cidade", "")
 
-    empresas = Empresa.objects.all()
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
 
-    if query:
-        empresas = empresas.filter(
-            Q(nome_fantasia__icontains=query) |
-            Q(razao_social__icontains=query)
-        )
-
-    if cidade:
-        empresas = empresas.filter(cidade__iexact=cidade)
+    if perfil.empresa_id:
+        empresas = Empresa.objects.filter(id=perfil.empresa_id)
+        estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
+        responsaveis = Responsavel_Empresa.objects.filter(empresa_id=perfil.empresa_id)
+        projetos = Projeto.objects.filter(empresa=perfil.empresa)  # ✅ CORRETO
+    else:
+        empresas = Empresa.objects.none()
+        estudios = Estudios.objects.none()
+        responsaveis = Responsavel_Empresa.objects.none()
+        projetos = Projeto.objects.none()
 
     cidades = (
         Empresa.objects
@@ -298,32 +332,17 @@ def listagem_empresas(request):
         .order_by("cidade")
     )
 
-    context = {
-        "empresas": empresas,
-        "query": query,
-        "cidades": cidades,
-        "cidade_selecionada": cidade,
-    }
-
-    perfil, _ = Profile.objects.get_or_create(user=request.user)
-
-    if perfil.empresa_id:
-        empresas = Empresa.objects.filter(id=perfil.empresa_id)
-        estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
-        responsaveis = Responsavel_Empresa.objects.all()
-        projetos = Projeto.objects.filter(empresas__empresa=perfil.empresa)
-    else:
-        empresas = Empresa.objects.none()
-        estudios = Estudios.objects.none()
-        responsaveis = Responsavel_Empresa.objects.none()
-        projetos = Projeto.objects.none()
-
     return render(request, 'listagem_empresas.html', {
         'empresas': empresas,
         'estudios': estudios,
         'responsaveis': responsaveis,
         'projetos': projetos,
+        'query': query,
+        'cidades': cidades,
+        'cidade_selecionada': cidade,
     })
+
+
 
 @login_required(login_url="login")
 def cadastro_estudio(request):
@@ -419,7 +438,9 @@ def cadastro_projetos(request):
         form = ProjetosForm(request.POST)
         if form.is_valid():
 
-            projeto = form.save()
+            projeto = form.save(commit=False)  # 👈 NÃO salva ainda
+            projeto.empresa = perfil.empresa   # 👈 VINCULA A EMPRESA
+            projeto.save()                      # 👈 AGORA salva
 
             messages.success(
                 request, 
@@ -427,13 +448,13 @@ def cadastro_projetos(request):
             )
             return redirect('listagem_empresas')
         else:
-
             print("ERROS NO FORM:", form.errors)
             messages.error(request, "Erro ao salvar o projeto. Verifique os campos.")
     else:
         form = ProjetosForm()
 
     return render(request, 'projetos.html', {'form': form})
+
 
 @login_required(login_url="login")
 def editar_meu_perfil(request):
@@ -634,27 +655,37 @@ def vitrine_projetos(request):
 def vitrine(request):
     return render(request, 'vitrine.html')
 
-@login_required(login_url="login")
+@login_required(login_url="login_teste")
+
 def cadastro_responsavel_empresa(request):
 
     empresa_id = request.session.get('empresa_id')
     
     if not empresa_id:
-        messages.warning(request, "Cadastre primeiro uma empresa antes de adicionar o responsável.")
+        messages.warning(
+            request,
+            "Cadastre primeiro uma empresa antes de adicionar o responsável."
+        )
         return redirect('cadastro_empresa')
     
     if request.method == 'POST':
         form = ResponsavelForm(request.POST)
+
         if form.is_valid():
             responsavel = form.save(commit=False)
 
-            
+            # 🔥 LINHA QUE FALTAVA
+            responsavel.empresa = Empresa.objects.get(id=empresa_id)
+
             responsavel.save()
 
-            if 'empresa_id' in request.session:
-                del request.session['empresa_id']
+            # limpa a sessão se quiser
+            del request.session['empresa_id']
             
-            messages.success(request, f"Responsável {responsavel.nome_completo} cadastrado com sucesso!")
+            messages.success(
+                request,
+                f"Responsável {responsavel.nome_completo} cadastrado com sucesso!"
+            )
             return redirect('listagem_empresas')
         else:
             print("FORM ERRORS:", form.errors)
@@ -663,6 +694,7 @@ def cadastro_responsavel_empresa(request):
         form = ResponsavelForm()
     
     return render(request, 'responsavel_empresa.html', {'form': form})
+
 
 @login_required(login_url="login")
 def editar_responsavel_empresa(request, id):
@@ -907,8 +939,10 @@ def api_stats(request):
     }
     return JsonResponse(stats)
 
-
+@never_cache
 def login_view_teste(request):
+    # Se o usuário já está logado, redireciona para home
+    
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -919,40 +953,98 @@ def login_view_teste(request):
         except User.DoesNotExist:
             user = None
 
-        if user:
+        if user is not None:
             login(request, user)
-            return redirect("inicio")
+            return redirect("home")  # ← Vai para a home antiga
         else:
             return render(request, "login_teste.html", {
-                "error": "E-mail ou senha inválidos"
+                "error": "E-mail ou senha inválidos",
+                "email": email
             })
 
     return render(request, "login_teste.html")
 
 
+@never_cache
 def register_view_teste(request):
+
+    
     if request.method == "POST":
+        username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
         password2 = request.POST.get("password2")
 
+        # Validação: senhas coincidem
         if password != password2:
             return render(request, "cadastro_teste.html", {
-                "error": "As senhas não coincidem"
+                "error": "As senhas não coincidem",
+                "username": username,
+                "email": email
             })
 
+        # Validação: email já existe
         if User.objects.filter(email=email).exists():
             return render(request, "cadastro_teste.html", {
-                "error": "Este e-mail já está cadastrado"
+                "error": "Este e-mail já está cadastrado",
+                "username": username,
+                "email": email
+            })
+        
+        # Validação: username já existe
+        if User.objects.filter(username=username).exists():
+            return render(request, "cadastro_teste.html", {
+                "error": "Este nome de usuário já está em uso",
+                "username": username,
+                "email": email
             })
 
+        # Criar usuário com username correto
         user = User.objects.create_user(
-            username=email,
+            username=username,
             email=email,
             password=password
         )
 
-        login(request, user)
-        return redirect("inicio")
+        # Mensagem de sucesso
+        messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
+        
+        # Redirecionar para login (SEM fazer login automático)
+        return redirect("login_teste")
 
     return render(request, "cadastro_teste.html")
+
+
+@login_required(login_url="login")
+def editar_projeto(request, projeto_id):
+    perfil, _ = Profile.objects.get_or_create(user=request.user)
+
+    if not perfil.empresa:
+        messages.error(request, "Você precisa ter uma empresa para editar projetos.")
+        return redirect('cadastro_empresa')
+
+    projeto = get_object_or_404(
+        Projeto,
+        id=projeto_id,
+        empresa=perfil.empresa
+    )
+
+    if request.method == 'POST':
+        form = ProjetosForm(request.POST, instance=projeto)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                f'Projeto "{projeto.titulo}" atualizado com sucesso!'
+            )
+            return redirect('listagem_empresas')
+        else:
+            messages.error(request, "Erro ao atualizar o projeto. Verifique os campos.")
+    else:
+        form = ProjetosForm(instance=projeto)
+
+    return render(request, 'editar_projeto.html', {
+        'form': form,
+        'projeto': projeto
+    })
