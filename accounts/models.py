@@ -532,6 +532,11 @@ class Profile(models.Model):
         
         
 class Responsavel_Empresa(models.Model):
+    empresa = models.ForeignKey(
+        Empresa,
+        on_delete=models.CASCADE,
+        related_name="responsaveis"
+    )
     cpf_validator = RegexValidator(
         regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$',
         message='CPF inválido. Use o formato: 000.000.000-00'
