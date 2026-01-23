@@ -93,6 +93,22 @@ def home(request):
     }
     return render(request, "home.html", context) 
 
+def Teste_Diretoria(request):
+    username = "Teste"
+    password = "123456789"
+    user, created = CustomUser.objects.get_or_create(username=username)
+    if created:
+        user.set_password(password)
+        user.is_staff = False
+        user.is_superuser = False
+        user.save()
+        
+        assign_role(user, 'diretoria')
+        
+        return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
+    else:
+        return HttpResponse("Usuario de teste ja criado Usuario:Teste Senha:123456789")
+
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
