@@ -1,8 +1,11 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto, Profile, Estudios, Responsavel_Empresa
+from .models import Empresa, Projeto, Profile, Estudios, Responsavel_Empresa, Profissional
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 
 class ResponsavelForm(forms.ModelForm):
@@ -206,3 +209,212 @@ class CadastroForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2']
+
+
+
+
+# Pedro veja se isto esta correto e se vc vai aproveitar isso.  
+class CadastroEmpresaForm(forms.ModelForm):
+    """Formulário de cadastro de empresa"""
+    
+    # Campos de acesso (User)
+    email = forms.EmailField(
+        label='Email de Acesso',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'contato@suaempresa.com',
+            'class': 'form-control'
+        })
+    )
+    password = forms.CharField(
+        label='Senha',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Mínimo 8 caracteres',
+            'class': 'form-control'
+        }),
+        min_length=8,
+        help_text='Use letras, números e caracteres especiais'
+    )
+    
+    class Meta:
+        model = Empresa
+        fields = [
+            'nome_fantasia', 'razao_social', 'cnpj', 'telefone', 'site',
+            'cep', 'endereco_completo', 'cidade', 'latitude', 'longitude',
+            'tipo_empresa', 'porte_empresa', 'data_fundacao', 'arranjo_produtivo'
+        ]
+        widgets = {
+            'nome_fantasia': forms.TextInput(attrs={
+                'placeholder': 'Ex: Pixel Studios',
+                'class': 'form-control'
+            }),
+            'razao_social': forms.TextInput(attrs={
+                'placeholder': 'Ex: Pixel Studios LTDA',
+                'class': 'form-control'
+            }),
+            'cnpj': forms.TextInput(attrs={
+                'placeholder': '00.000.000/0000-00',
+                'class': 'form-control'
+            }),
+            'telefone': forms.TextInput(attrs={
+                'placeholder': '(21) 98888-8888',
+                'class': 'form-control'
+            }),
+            'site': forms.URLInput(attrs={
+                'placeholder': 'https://suaempresa.com',
+                'class': 'form-control'
+            }),
+            'cep': forms.TextInput(attrs={
+                'placeholder': '00000-000',
+                'class': 'form-control',
+                'id': 'cep'
+            }),
+            'endereco_completo': forms.TextInput(attrs={
+                'placeholder': 'Rua, número, complemento',
+                'class': 'form-control'
+            }),
+            'cidade': forms.TextInput(attrs={
+                'placeholder': 'Rio de Janeiro',
+                'class': 'form-control'
+            }),
+            'latitude': forms.NumberInput(attrs={
+                'placeholder': 'Será preenchido automaticamente',
+                'class': 'form-control',
+                'readonly': 'readonly'
+            }),
+            'longitude': forms.NumberInput(attrs={
+                'placeholder': 'Será preenchido automaticamente',
+                'class': 'form-control',
+                'readonly': 'readonly'
+            }),
+            'tipo_empresa': forms.Select(attrs={'class': 'form-control'}),
+            'porte_empresa': forms.Select(attrs={'class': 'form-control'}),
+            'data_fundacao': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'arranjo_produtivo': forms.Select(attrs={'class': 'form-control'}),
+        }
+        help_texts = {
+            'latitude': 'Preenchido automaticamente pelo CEP',
+            'longitude': 'Preenchido automaticamente pelo CEP',
+        }
+    
+    def clean_cnpj(self):
+        cnpj = self.cleaned_data.get('cnpj')
+        # Remove caracteres não numéricos
+        cnpj_limpo = ''.join(filter(str.isdigit, cnpj))
+        
+        if len(cnpj_limpo) != 14:
+            raise forms.ValidationError('CNPJ deve ter 14 dígitos')
+        
+        # Verifica se já existe
+        if Empresa.objects.filter(cnpj=cnpj).exists():
+            raise forms.ValidationError('Este CNPJ já está cadastrado')
+        
+        return cnpj
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Este email já está cadastrado')
+        return email
+
+
+class CadastroProfissionalForm(forms.ModelForm):
+    """Formulário de cadastro de profissional"""
+    
+    # Campos de acesso (User)
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'seu@email.com',
+            'class': 'form-control'
+        })
+    )
+    password = forms.CharField(
+        label='Senha',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Mínimo 8 caracteres',
+            'class': 'form-control'
+        }),
+        min_length=8,
+        help_text='Use letras, números e caracteres especiais'
+    )
+    
+    class Meta:
+        model = Profissional
+        fields = [
+            'nome_completo', 'cpf', 'telefone', 'cidade_residencia',
+            'data_nascimento', 'tempo_experiencia', 'portfolio_url',
+            'linkedin', 'github', 'behance', 'biografia'
+        ]
+        widgets = {
+            'nome_completo': forms.TextInput(attrs={
+                'placeholder': 'Ex: João Silva',
+                'class': 'form-control'
+            }),
+            'cpf': forms.TextInput(attrs={
+                'placeholder': '000.000.000-00',
+                'class': 'form-control'
+            }),
+            'telefone': forms.TextInput(attrs={
+                'placeholder': '(21) 98888-8888',
+                'class': 'form-control'
+            }),
+            'cidade_residencia': forms.TextInput(attrs={
+                'placeholder': 'Rio de Janeiro',
+                'class': 'form-control'
+            }),
+            'data_nascimento': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'tempo_experiencia': forms.NumberInput(attrs={
+                'placeholder': 'Ex: 5',
+                'min': '0',
+                'class': 'form-control'
+            }),
+            'portfolio_url': forms.URLInput(attrs={
+                'placeholder': 'https://seuportfolio.com',
+                'class': 'form-control'
+            }),
+            'linkedin': forms.URLInput(attrs={
+                'placeholder': 'https://linkedin.com/in/seuperfil',
+                'class': 'form-control'
+            }),
+            'github': forms.URLInput(attrs={
+                'placeholder': 'https://github.com/seuperfil',
+                'class': 'form-control'
+            }),
+            'behance': forms.URLInput(attrs={
+                'placeholder': 'https://behance.net/seuperfil',
+                'class': 'form-control'
+            }),
+            'biografia': forms.Textarea(attrs={
+                'placeholder': 'Conte um pouco sobre você',
+                'rows': 3,
+                'class': 'form-control'
+            }),
+        }
+    
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get('cpf')
+        # Remove caracteres não numéricos
+        cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        
+        if len(cpf_limpo) != 11:
+            raise forms.ValidationError('CPF deve ter 11 dígitos')
+        
+        # Verifica se já existe
+        if Profissional.objects.filter(cpf=cpf).exists():
+            raise forms.ValidationError('Este CPF já está cadastrado')
+        
+        return cpf
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Este e-mail já está cadastrado.")
+
+        return email
