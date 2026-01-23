@@ -11,7 +11,8 @@ from django.db.models import Sum, Avg, Count, Q
 from django.http import JsonResponse
 import json
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 #
 
 from rolepermissions.roles import assign_role
@@ -25,7 +26,7 @@ from .models import (
     )
 from .forms import (
     EmpresaForm, EstudioForm, ProjetosForm, 
-    ProfileForm, ResponsavelForm
+    ProfileForm, ResponsavelForm, CadastroEmpresaForm, CadastroProfissionalForm
 )
 
 class CustomUserCreationForm(UserCreationForm):
@@ -58,7 +59,119 @@ def cadastro(request):
     context = {'form': form}
     
     return render(request, 'cadastro.html', context)
+def cadastro_empresa(request):
+    """Cadastro de empresa - Cria User + Profile + Empresa"""
+    
+    if request.method == 'POST':
+        form = CadastroEmpresaForm(request.POST)
         
+        if form.is_valid():
+            try:
+                # Pega o email e senha dos campos extras
+                email = form.cleaned_data['email']
+                password = form.cleaned_data['password']
+                
+                # Cria o User
+                username = email.split('@')[0]
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+                
+                # Salva a Empresa
+                empresa = form.save(commit=False)
+                empresa.email = email
+                empresa.save()
+                
+                # Cria o Profile e vincula
+                profile = Profile.objects.create(
+                    user=user,
+                    tipo_usuario='EMPRESA',
+                    empresa=empresa
+                )
+                
+                # Signal vai dar cargo "Associado" e deixar pendente
+                
+                messages.success(request, 'Empresa cadastrada! Aguarde aprovação da Diretoria.')
+                return redirect('login')
+                
+            except Exception as e:
+                messages.error(request, f'Erro ao cadastrar: {str(e)}')
+        else:
+            # Se form inválido, mostra os erros
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    else:
+        form = CadastroEmpresaForm()
+    
+    context = {'form': form}
+    return render(request, 'cadastro_empresa.html', context)
+
+
+def cadastro_profissional(request):
+    """Cadastro de profissional - Cria User + Profile + Profissional"""
+    
+    if request.method == 'POST':
+        form = CadastroProfissionalForm(request.POST)
+        
+        if form.is_valid():
+            try:
+                # Pega o email e senha
+                email = form.cleaned_data['email']
+                password = form.cleaned_data['password']
+                
+                # Cria o User
+                username = email.split('@')[0]
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+                
+                # Salva o Profissional
+                profissional = form.save(commit=False)
+                profissional.user = user
+                profissional.email = email
+                profissional.save()
+                
+                # Cria o Profile
+                profile = Profile.objects.create(
+                    user=user,
+                    tipo_usuario='PROFISSIONAL',
+                    profissional=profissional
+                )
+                
+                # Signal vai dar cargo "Afiliado" automaticamente
+                
+                messages.success(request, 'Cadastro realizado! Você já pode fazer login.')
+                return redirect('login')
+                
+            except Exception as e:
+                messages.error(request, f'Erro ao cadastrar: {str(e)}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    else:
+        form = CadastroProfissionalForm()
+    
+    context = {'form': form}
+    return render(request, 'cadastro_profissional.html', context)
+
 def login_view(request):
     if request.method=='GET':
         return render(request, 'login.html')
@@ -595,7 +708,6 @@ def home_teste(request):
         'stats': stats,
     }
     return render(request, 'home_teste.html', context)
-
 
 def empresas_list(request):
     """Lista todas as empresas com filtros"""
