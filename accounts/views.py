@@ -207,7 +207,7 @@ def home(request):
         'total_estudios': Estudios.objects.count(),
     }
     return render(request, "home.html", context) 
-    
+
 def Teste_Diretoria(request):
     username = "Teste"
     password = "123456789"
@@ -223,7 +223,7 @@ def Teste_Diretoria(request):
         return HttpResponse("Usuario de teste criado Usuario:Teste Senha:123456789")
     else:
         return HttpResponse("Usuario de teste ja criado Usuario:Teste Senha:123456789")
-    
+
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
