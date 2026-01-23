@@ -147,6 +147,7 @@ class EmpresaForm(forms.ModelForm):
     class Meta:
         model = Empresa
         fields = "__all__"
+        exclude = ['latitude', 'longitude']
         
         widgets = {
             'nome_fantasia': forms.TextInput(attrs={'placeholder': 'Digite o nome da empresa'}),

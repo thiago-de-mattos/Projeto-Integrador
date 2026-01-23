@@ -12,13 +12,13 @@ def logout_view(request):
 
 urlpatterns = [
 
-     path('', views.home, name='home',),
-     path('login/', views.login_view, name='login'),
+     path('home/', views.home, name='home',),
+    #  path('login/', views.login_view, name='login'),
      path('logout/', logout_view, name='logout'),
     
     
     # Pedro veja essas urls
-     path('cadastro/', views.cadastro, name='cadastro'),
+    #  path('cadastro/', views.cadastro, name='cadastro'),
      path('cadastro/empresa/', views.cadastro_empresa, name='cadastro_empresa'),
      path('cadastro/profissional/', views.cadastro_profissional, name='cadastro_profissional'),
     
@@ -51,7 +51,7 @@ urlpatterns = [
      
      
      
-    path('home_teste/', views.home_teste, name='home_teste'),
+    path('', views.home_teste, name='home_teste'),
     path('empresas_teste/', views.empresas_list, name='empresas_teste'),
     # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
     path('projetos_teste/', views.projetos_list, name='projetos_teste'),
@@ -60,6 +60,13 @@ urlpatterns = [
      path("login_teste/", views.login_view_teste, name="login_teste"),
     path("cadastro_teste/", views.register_view_teste, name="cadastro_teste"),
      
+     
+    path(
+    'projetos/editar/<int:projeto_id>/',
+    views.editar_projeto,
+    name='editar_projeto'
+),
+
 
 
      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

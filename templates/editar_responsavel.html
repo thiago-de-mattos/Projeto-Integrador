@@ -1,26 +1,208 @@
 {% extends 'base.html' %}
 
+{% block title %}Editar Responsável - ACJOGOS-RJ{% endblock %}
+
+{% block extra_head %}
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .titulo {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .container > p {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
+    }
+
+    .form-perfil {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(25, 227, 255, 0.2);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .required {
+        color: #ef4444;
+        margin-left: 4px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group input[type="email"],
+    .form-group textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(10, 14, 26, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(25, 227, 255, 0.1);
+    }
+
+    .helptext {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    .error-message {
+        display: block;
+        color: #fca5a5;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        background: rgba(239, 68, 68, 0.1);
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+
+    .form-actions {
+        margin-top: 2.5rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 0.875rem 2.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(25, 227, 255, 0.4);
+    }
+
+    .btn-cancel {
+        background: rgba(148, 163, 184, 0.1);
+        color: var(--text-muted);
+        padding: 0.875rem 2.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        font-size: 1rem;
+    }
+
+    .btn-cancel:hover {
+        background: rgba(148, 163, 184, 0.2);
+        color: var(--text);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .form-perfil {
+            padding: 2rem 1.5rem;
+        }
+
+        .titulo {
+            font-size: 2rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-cancel {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h1 class="titulo">Editar Responsável</h1>
-    <p style="text-align: center; color: #666; margin-bottom: 30px;">
-        Preencha os dados do responsável pela empresa
-    </p>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+    <h1 class="titulo">👤 Editar Responsável</h1>
+    <p>Preencha os dados do responsável pela empresa</p>
 
     <form method="POST" class="form-perfil">
         {% csrf_token %}
         
         <!-- Seção: Identificação -->
         <div class="form-section">
-           
+            <h3 class="section-title">📋 Identificação</h3>
             
             <div class="form-group">
                 <label for="{{ form.nome_completo.id_for_label }}">
@@ -64,7 +246,7 @@
 
         <!-- Seção: Contato -->
         <div class="form-section">
-            <h3 class="section-title">Contato</h3>
+            <h3 class="section-title">📱 Contato</h3>
             
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">
@@ -110,7 +292,7 @@
 
         <!-- Seção: Endereço -->
         <div class="form-section">
-            <h3 class="section-title">Endereço</h3>
+            <h3 class="section-title">📍 Endereço</h3>
             
             <div class="form-row">
                 <div class="form-group">
@@ -170,14 +352,12 @@
         <!-- Botões de Ação -->
         <div class="form-actions">
             <button type="submit" class="btn-primary">
-                Editar Responsável
+                💾 Salvar Alterações
             </button>
             <a href="{% url 'listagem_empresas' %}" class="btn-cancel">
-                Cancelar
+                ← Cancelar
             </a>
         </div>
     </form>
 </div>
-
-
 {% endblock %}

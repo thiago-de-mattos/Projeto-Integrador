@@ -4,7 +4,7 @@
 
 <style>
     .auth-wrapper {
-        min-height: calc(100vh - 160px); /* ajusta se navbar/footer forem maiores */
+        min-height: calc(100vh - 160px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -87,44 +87,44 @@
         font-size: 14px;
         text-align: center;
     }
-      .options {
-            display: flex;
-            gap: 20px;
-            margin-top: 24px;
-        }
 
-        .option-card {
-            width: 170px;
-            background: rgba(15,23,42,.75);
-            border-radius: 14px;
-            padding: 18px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,.05);
-            cursor: pointer;
-            transition: transform .2s, box-shadow .2s;
-        }
+    .options {
+        display: flex;
+        gap: 20px;
+        margin-top: 24px;
+    }
 
-        .option-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,0,0,.4);
-        }
+    .option-card {
+        width: 170px;
+        background: rgba(15,23,42,.75);
+        border-radius: 14px;
+        padding: 18px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,.05);
+        cursor: pointer;
+        transition: transform .2s, box-shadow .2s;
+    }
 
-        .option-icon {
-            font-size: 26px;
-            margin-bottom: 8px;
-        }
+    .option-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
 
-        .option-title {
-            font-size: 14px;
-            font-weight: 600;
-        }
+    .option-icon {
+        font-size: 26px;
+        margin-bottom: 8px;
+    }
 
-        .option-sub {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
+    .option-title {
+        font-size: 14px;
+        font-weight: 600;
+    }
 
+    .option-sub {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 2px;
+    }
 </style>
 
 <div class="auth-wrapper">
@@ -134,17 +134,22 @@
         <h1>Crie sua conta</h1>
         <p>Associe-se à ACJOGOS-RJ</p>
 
-        <form method="post">
+        <form method="post" action="{% url 'cadastro_teste' %}">
             {% csrf_token %}
 
+            <label>Nome de usuário</label>
+            <input type="text" name="username" placeholder="seu_username" 
+                   value="{{ username|default:'' }}" required>
+
             <label>E-mail</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" placeholder="seu@email.com" 
+                   value="{{ email|default:'' }}" required>
 
             <label>Senha</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" placeholder="••••••••" required>
 
             <label>Confirmar senha</label>
-            <input type="password" name="password2" required>
+            <input type="password" name="password2" placeholder="••••••••" required>
 
             {% if error %}
                 <div class="error">{{ error }}</div>
@@ -157,19 +162,20 @@
             Já tem conta?
             <a href="{% url 'login_teste' %}">Entrar</a>
         </div>
+
         <div class="options">
-                <div class="option-card">
-                    <div class="option-icon">🏢</div>
-                    <div class="option-title">Empresa/Estúdio</div>
-                    <div class="option-sub">Associado</div>
-                </div>
-        
-                <div class="option-card">
-                    <div class="option-icon">👤</div>
-                    <div class="option-title">Profissional</div>
-                    <div class="option-sub">Afiliado</div>
-                </div>
+            <div class="option-card">
+                <div class="option-icon">🏢</div>
+                <div class="option-title">Empresa/Estúdio</div>
+                <div class="option-sub">Associado</div>
             </div>
+    
+            <div class="option-card">
+                <div class="option-icon">👤</div>
+                <div class="option-title">Profissional</div>
+                <div class="option-sub">Afiliado</div>
+            </div>
+        </div>
     </div>
 </div>
 
