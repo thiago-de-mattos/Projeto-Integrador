@@ -1,214 +1,231 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %} AC Jogos {% endblock %}</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ACJOGOS-RJ{% endblock %}</title>
 
-        :root {
-            --background: #0a0e1a;
-            --surface: #141827;
-            --surface-light: #1e2435;
-            --primary: #19e3ff;
-            --secondary: #4b7bff;
-            --accent: #e319ff;
-            --text: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-        body {
-            background: linear-gradient(135deg, #0a0e1a 0%, #1a1028 100%);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-        }
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Grotesk', sans-serif;
-        }
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        /* Navbar */
-        .navbar {
-            background: rgba(10, 14, 26, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-        .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+  <!-- ===== ESTILOS ORIGINAIS DO base_teste.html (SEM CORTES) ===== -->
+  <style>
+    :root {
+      --background: 222 47% 6%;
+      --foreground: 210 40% 98%;
+      --card: 222 47% 9%;
+      --card-foreground: 210 40% 98%;
+      --primary: 185 85% 50%;
+      --primary-foreground: 222 47% 6%;
+      --secondary: 222 35% 15%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 222 35% 12%;
+      --muted-foreground: 215 20% 55%;
+      --accent: 280 85% 65%;
+      --accent-foreground: 210 40% 98%;
+      --border: 222 35% 18%;
+      --neon-cyan: 185 100% 60%;
+      --neon-magenta: 320 100% 60%;
+      --neon-blue: 220 100% 65%;
+      --rj-green: 145 70% 45%;
+    }
 
-        .logo::before {
-            content: "▶";
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.8rem;
-        }
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: 'Inter', sans-serif;
+    }
 
-        .menu {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Space Grotesk', sans-serif;
+    }
 
-        .menu a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
-        }
+    .glass {
+      background: hsl(var(--card) / 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsl(var(--border) / 0.5);
+    }
 
-        .menu a:hover {
-            color: var(--primary);
-        }
+    .text-gradient {
+      background: linear-gradient(135deg, hsl(185 85% 50%) 0%, hsl(200 90% 45%) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .menu a[style*="color: var(--highlight)"] {
-            color: var(--accent) !important;
-        }
+    .text-gradient-gaming {
+      background: linear-gradient(135deg, hsl(280 85% 65%) 0%, hsl(320 85% 55%) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        /* Main Content */
-        main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    .bg-hero {
+      background: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(222 47% 12%) 50%, hsl(240 45% 15%) 100%);
+    }
 
-        /* Messages */
-        .container-messages {
-            margin-bottom: 2rem;
-        }
+    .bg-card-gradient {
+      background: linear-gradient(145deg, hsl(222 47% 11%) 0%, hsl(222 47% 8%) 100%);
+    }
 
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            border-left: 4px solid;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-        }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
 
-        .alert-success {
-            border-left-color: #10b981;
-            color: #a7f3d0;
-        }
+    .animate-pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
 
-        .alert-error {
-            border-left-color: #ef4444;
-            color: #fca5a5;
-        }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .alert-warning {
-            border-left-color: #f59e0b;
-            color: #fcd34d;
-        }
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
 
-        .alert-info {
-            border-left-color: var(--primary);
-            color: var(--primary);
-        }
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
 
-        /* Footer */
-        footer {
-            background: rgba(10, 14, 26, 0.6);
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-top: 4rem;
-        }
+    ::-webkit-scrollbar-track {
+      background: hsl(var(--background));
+    }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
+    ::-webkit-scrollbar-thumb {
+      background: hsl(var(--border));
+      border-radius: 5px;
+    }
 
-            .menu {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
+    ::-webkit-scrollbar-thumb:hover {
+      background: hsl(var(--primary));
+    }
+  </style>
 
-            main {
-                padding: 1rem;
-            }
-        }
-    </style>
-    
-    {% block extra_head %}{% endblock %}
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            border: "hsl(var(--border))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            primary: {
+              DEFAULT: "hsl(var(--primary))",
+              foreground: "hsl(var(--primary-foreground))",
+            },
+            secondary: {
+              DEFAULT: "hsl(var(--secondary))",
+              foreground: "hsl(var(--secondary-foreground))",
+            },
+            muted: {
+              DEFAULT: "hsl(var(--muted))",
+              foreground: "hsl(var(--muted-foreground))",
+            },
+            accent: {
+              DEFAULT: "hsl(var(--accent))",
+              foreground: "hsl(var(--accent-foreground))",
+            },
+            card: {
+              DEFAULT: "hsl(var(--card))",
+              foreground: "hsl(var(--card-foreground))",
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  {% block extra_head %}{% endblock %}
 </head>
 
-<body class="{% if 'Diretoria' in permicoes %}diretoria-theme{% endif %}">
-    <header>
-        <nav class="navbar">
-            <a href="{% url 'home' %}" class="logo">ACJOGOS-RJ</a>
-            <div class="menu">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'home' %}">🏠 Início</a>
-                    <a href="{% url 'editar_meu_perfil' %}">👤 Editar Perfil</a>
-                    {% if "Diretoria" in permicoes %}
-                        <a href="{% url 'visao_diretoria' %}">⚡ Painel Direção</a>
-                    {% endif %}
-                    <a href="{% url 'home_teste' %}" style="color: var(--highlight);">🚪 Sair</a>
-                {% else %}
-                    <a href="{% url 'login_teste' %}">🔐 Entrar</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-    
-    <main>
-        <div class="container-messages">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-        {% block content %}
-        {% endblock %}
-    </main>
+<body class="{% if 'Diretoria' in permicoes %}diretoria-theme{% endif %} min-h-screen bg-background text-foreground">
 
-    <footer>
-        <p>© 2025 - ACJOGOS-RJ. Todos os direitos reservados.</p>
-    </footer>
+<!-- NAVBAR (ESTILO TESTE + LÓGICA ORIGINAL) -->
+<nav class="border-b border-border/50 bg-background/80 backdrop-blur-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <a href="{% url 'home' %}" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+          ▶
+        </div>
+        <span class="font-display font-bold text-xl">
+          ACJOGOS<span class="text-primary">-RJ</span>
+        </span>
+      </a>
+
+      <div class="flex items-center gap-2">
+        {% if user.is_authenticated %}
+          <a href="{% url 'home' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Início</a>
+          <a href="{% url 'empresas_teste' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Empresas</a>
+          <a href="{% url 'projetos_teste' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Projetos</a>
+          <a href="{% url 'mapa' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Mapa</a>
+          <a href="{% url 'estatisticas_teste' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Estatísticas</a>
+          <a href="{% url 'editar_meu_perfil' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Perfil</a>
+
+          {% if "Diretoria" in permicoes %}
+            <a href="{% url 'visao_diretoria' %}" class="px-4 py-2 rounded-lg text-sm text-accent hover:bg-secondary/50">
+              Painel Direção
+            </a>
+          {% endif %}
+
+          <a href="{% url 'home_teste' %}" class="px-4 py-2 rounded-lg text-sm text-red-400 hover:bg-secondary/50">
+            Sair
+          </a>
+        {% else %}
+          <a href="{% url 'login_teste' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">
+            Entrar
+          </a>
+          <a href="{% url 'cadastro_teste' %}" class="px-6 py-2 rounded-lg text-sm font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground hover:scale-105 transition">
+            Associe-se
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
+
+  {% if messages %}
+    <div class="space-y-3 mb-6">
+      {% for message in messages %}
+        <div class="glass rounded-lg p-4">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-border/50 mt-20">
+  <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
+    © 2025 ACJOGOS-RJ. Todos os direitos reservados.
+  </div>
+</footer>
+
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>
