@@ -194,6 +194,7 @@ def cadastro_profissional(request):
 #             messages.error(request, 'Usuário ou senha inválidos')
 #             return render(request, 'login.html')
 
+@never_cache
 @login_required(login_url="login")
 def home(request):     
     role = get_clean_role(request.user) # Corrigido: usa request.user
