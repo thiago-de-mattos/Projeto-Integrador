@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,105 +20,9 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
-
-    :root {
-      --background: 222 47% 6%;
-      --foreground: 210 40% 98%;
-      --card: 222 47% 9%;
-      --card-foreground: 210 40% 98%;
-      --primary: 185 85% 50%;
-      --primary-foreground: 222 47% 6%;
-      --secondary: 222 35% 15%;
-      --secondary-foreground: 210 40% 98%;
-      --muted: 222 35% 12%;
-      --muted-foreground: 215 20% 55%;
-      --accent: 280 85% 65%;
-      --accent-foreground: 210 40% 98%;
-      --border: 222 35% 18%;
-      --neon-cyan: 185 100% 60%;
-      --neon-magenta: 320 100% 60%;
-      --neon-blue: 220 100% 65%;
-      --rj-green: 145 70% 45%;
-    }
-
-    body {
-      background-color: hsl(var(--background));
-      color: hsl(var(--foreground));
-      font-family: 'Inter', sans-serif;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-
-    .glass {
-      background: hsl(var(--card) / 0.6);
-      backdrop-filter: blur(24px);
-      border: 1px solid hsl(var(--border) / 0.5);
-    }
-
-    .text-gradient {
-      background: linear-gradient(135deg, hsl(185 85% 50%) 0%, hsl(200 90% 45%) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .text-gradient-gaming {
-      background: linear-gradient(135deg, hsl(280 85% 65%) 0%, hsl(320 85% 55%) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .bg-hero {
-      background: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(222 47% 12%) 50%, hsl(240 45% 15%) 100%);
-    }
-
-    .bg-card-gradient {
-      background: linear-gradient(145deg, hsl(222 47% 11%) 0%, hsl(222 47% 8%) 100%);
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    .animate-pulse-glow {
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
-
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-fade-in {
-      animation: fade-in 0.5s ease-out forwards;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: hsl(var(--background));
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: hsl(var(--border));
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: hsl(var(--primary));
-    }
-  </style>
+  
+  
 
   <script>
     tailwind.config = {
@@ -177,7 +83,7 @@
 
         <!-- Navigation Links -->
         <div class="hidden md:flex items-center gap-1">
-          <a href="{% url 'home_teste' %}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors">
+          <a href="{% url 'vitrine' %}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
@@ -190,13 +96,13 @@
           
 
           
-            <a href="{% url 'login_teste' %}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors">
+            <a href="{% url 'login' %}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
               </svg>
               Entrar
             </a>
-            <a href="{% url 'cadastro_teste' %}" class="px-6 py-2 rounded-lg text-sm font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground hover:shadow-lg hover:scale-105 transition-all">
+            <a href="{% url 'cadastro' %}" class="px-6 py-2 rounded-lg text-sm font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground hover:shadow-lg hover:scale-105 transition-all">
               Associe-se
             </a>
          
@@ -235,10 +141,9 @@
         <div>
           <h4 class="font-display font-semibold mb-4">Navegação</h4>
           <ul class="space-y-2 text-sm text-muted-foreground">
-            <li><a href="{% url 'empresas_teste' %}" class="hover:text-primary transition-colors">Empresas</a></li>
-            <li><a href="{% url 'projetos_teste' %}" class="hover:text-primary transition-colors">Projetos</a></li>
-            <li><a href="{% url 'mapa' %}" class="hover:text-primary transition-colors">Mapa</a></li>
-            <li><a href="{% url 'estatisticas_teste' %}" class="hover:text-primary transition-colors">Estatísticas</a></li>
+            <li><a href="{% url 'empresas_vitrine' %}" class="hover:text-primary transition-colors">Empresas</a></li>
+            <li><a href="{% url 'projetos_vitrine' %}" class="hover:text-primary transition-colors">Projetos</a></li>
+
           </ul>
         </div>
 
