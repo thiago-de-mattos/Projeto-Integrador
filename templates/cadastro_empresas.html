@@ -1,4 +1,4 @@
-{% extends 'base_teste.html' %}
+{% extends 'base_logado.html' %}
 
 {% block extra_head %}
 <style>
@@ -187,8 +187,8 @@
     </form>
 
     <div class="auth-footer">
-      Já possui conta? <a href="{% url 'login_teste' %}">Entrar</a><br>
-      É profissional? <a href="{% url 'cadastro_profissional' %}">Cadastre-se aqui</a>
+      Já possui conta? <a href="{% url 'login' %}">Entrar</a><br>
+      É profissional? <a href="{% url 'cadastro_responsavel_empresa' %}">Cadastre-se aqui</a>
     </div>
 
   </div>
