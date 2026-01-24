@@ -1,6 +1,11 @@
 {% extends 'base_teste.html' %}
 
 {% block extra_head %}
+<!-- Prevenir cache da página de login -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <style>
   .auth-wrapper {
     min-height: calc(100vh - 4rem);
@@ -90,6 +95,16 @@
     font-size: 14px;
     text-align: center;
   }
+
+  .success {
+    margin-top: 15px;
+    background: rgba(0, 255, 0, .15);
+    padding: 10px;
+    border-radius: 8px;
+    color: #9bff9b;
+    font-size: 14px;
+    text-align: center;
+  }
 </style>
 {% endblock %}
 
@@ -101,14 +116,21 @@
     <h1>Bem-vindo de volta</h1>
     <p>Acesse sua conta na Intranet ACJOGOS-RJ</p>
 
-    <form method="post">
+    <form method="post" action="{% url 'login_teste' %}">
       {% csrf_token %}
 
       <label>E-mail</label>
-      <input type="email" name="email" placeholder="seu@email.com" required>
+      <input type="email" name="email" placeholder="seu@email.com" 
+             value="{{ email|default:'' }}" required>
 
       <label>Senha</label>
       <input type="password" name="password" placeholder="••••••••" required>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="success">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
 
       {% if error %}
         <div class="error">{{ error }}</div>

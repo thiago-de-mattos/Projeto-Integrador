@@ -2,18 +2,14 @@
 
 {% block content %}
 <style>
-/* ====== WRAPPER ====== */
 .container {
     min-height: calc(100vh - 200px);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* ====== CARD ====== */
-.container > form,
-.container {
+.card {
     width: 100%;
     max-width: 520px;
     background: rgba(20, 24, 39, 0.9);
@@ -23,23 +19,22 @@
     padding: 2.5rem;
 }
 
-/* ====== TÍTULOS ====== */
 .titulo {
     text-align: center;
     font-size: 1.6rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-h2.titulo {
-    font-size: 0.95rem;
+.subtitulo {
+    text-align: center;
+    font-size: 0.9rem;
     color: var(--text-muted);
     margin-bottom: 2rem;
 }
 
-/* ====== LABELS ====== */
 label {
     display: block;
     margin-bottom: 0.3rem;
@@ -47,7 +42,6 @@ label {
     color: var(--text-muted);
 }
 
-/* ====== INPUTS ====== */
 input,
 textarea,
 select {
@@ -60,9 +54,7 @@ select {
     margin-bottom: 1.2rem;
 }
 
-/* ====== ERROS ====== */
-.errorlist,
-ul.errorlist {
+.errorlist {
     list-style: none;
     padding: 0;
     margin-top: -0.8rem;
@@ -71,15 +63,7 @@ ul.errorlist {
     font-size: 0.8rem;
 }
 
-/* ====== ALERTAS ====== */
-.alert {
-    margin-bottom: 1.5rem;
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-}
-
-/* ====== AÇÕES ====== */
-button.btn-primary {
+.btn-primary {
     width: 100%;
     padding: 0.8rem;
     border-radius: 12px;
@@ -90,7 +74,6 @@ button.btn-primary {
     margin-top: 1rem;
 }
 
-/* ====== CANCELAR ====== */
 .btn-cancel {
     display: block;
     margin-top: 0.8rem;
@@ -104,42 +87,49 @@ button.btn-primary {
 </style>
 
 <div class="container">
-    <h1 class="titulo">AC Jogos</h1>
-    <h2 class="titulo">Editar Estudio: {{ estudio.nome_do_estudio }}</h2>
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        {{ form.nome_do_estudio.label_tag }}
-        {{ form.nome_do_estudio }}
-        {{ form.nome_do_estudio.errors }}
-        <br>
-        
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        {{ form.email.errors }}
-        <br>
-        
-        {{ form.telefone.label_tag }}
-        {{ form.telefone }}
-        {{ form.telefone.errors }}
-        <br>
-        
-        {{ form.endereco.label_tag }}
-        {{ form.endereco }}
-        {{ form.endereco.errors }}
-        <br>
-        
-        <button type="submit" class="btn-primary">Salvar Alterações</button>
-        <a href="{% url 'listagem_empresas' %}" class="btn-cancel">Cancelar</a>
-    </form>
+    <div class="card">
+        <h1 class="titulo">AC Jogos</h1>
+        <h2 class="subtitulo">Editar Projeto: {{ projeto.titulo }}</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.titulo.label_tag }}
+            {{ form.titulo }}
+            {{ form.titulo.errors }}
+
+            {{ form.descricao.label_tag }}
+            {{ form.descricao }}
+            {{ form.descricao.errors }}
+
+            {{ form.status.label_tag }}
+            {{ form.status }}
+            {{ form.status.errors }}
+
+            {{ form.equipe_projeto.label_tag }}
+            {{ form.equipe_projeto }}
+            {{ form.equipe_projeto.errors }}
+
+            {{ form.url_site.label_tag }}
+            {{ form.url_site }}
+            {{ form.url_site.errors }}
+
+            <button type="submit" class="btn-primary">
+                Salvar Alterações
+            </button>
+
+            <a href="{% url 'listagem_empresas' %}" class="btn-cancel">
+                Cancelar
+            </a>
+        </form>
+    </div>
 </div>
 {% endblock %}

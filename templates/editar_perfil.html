@@ -1,30 +1,311 @@
 {% extends 'base.html' %}
 
-{% block title %}Editar Meu Perfil - AC Jogos{% endblock %}
+{% block title %}Editar Meu Perfil - ACJOGOS-RJ{% endblock %}
+
+{% block extra_head %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .titulo {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .form-perfil {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(10, 14, 26, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(25, 227, 255, 0.1);
+    }
+
+    .form-group input:disabled {
+        background-color: rgba(100, 116, 139, 0.2);
+        cursor: not-allowed;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--text-muted);
+    }
+
+    .helptext {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    /* Avatar Section */
+    .foto-perfil-secao {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .avatar-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .avatar-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid var(--primary);
+        box-shadow: 0 0 30px rgba(25, 227, 255, 0.3);
+        position: relative;
+        background: rgba(10, 14, 26, 0.8);
+    }
+
+    .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(25, 227, 255, 0.1) 0%, rgba(75, 123, 255, 0.1) 100%);
+        color: var(--primary);
+    }
+
+    .avatar-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn-upload {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 0.875rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: none;
+        font-size: 0.95rem;
+    }
+
+    .btn-upload:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(25, 227, 255, 0.4);
+    }
+
+    .btn-remover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        padding: 0.875rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        font-size: 0.95rem;
+    }
+
+    .btn-remover:hover {
+        background: rgba(239, 68, 68, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .input-file-oculto {
+        display: none;
+    }
+
+    .checkbox-limpar {
+        display: none;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        margin-top: 2.5rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 0.875rem 2.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(25, 227, 255, 0.4);
+    }
+
+    .btn-cancel {
+        background: rgba(148, 163, 184, 0.1);
+        color: var(--text-muted);
+        padding: 0.875rem 2.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        font-size: 1rem;
+    }
+
+    .btn-cancel:hover {
+        background: rgba(148, 163, 184, 0.2);
+        color: var(--text);
+        transform: translateY(-2px);
+    }
+
+    /* Error Messages */
+    .errorlist {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .form-perfil {
+            padding: 2rem 1.5rem;
+        }
+
+        .titulo {
+            font-size: 2rem;
+        }
+
+        .avatar-wrapper {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+        }
+
+        .avatar-controls {
+            width: 100%;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-cancel {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1 class="titulo">Editar Perfil</h1>
+    <h1 class="titulo">✨ Editar Perfil</h1>
 
     <form method="POST" enctype="multipart/form-data" class="form-perfil">
         {% csrf_token %}
         
         <div class="form-section">
             <div class="form-group">
-                <label>Usuário:</label>
-                <input type="text" value="{{ user.username }}" disabled 
-                       style="background-color: #e9ecef; cursor: not-allowed; border: 1px solid #ccc; padding: 10px; border-radius: 4px;">
+                <label>👤 Usuário:</label>
+                <input type="text" value="{{ user.username }}" disabled>
                 <small class="helptext">O nome de usuário não pode ser alterado.</small>
             </div>
 
-            <div class="form-section">
             <div class="form-group">
-                <label for="{{ form.telefone_contato.id_for_label }}">Telefone:</label>
+                <label for="{{ form.telefone_contato.id_for_label }}">📱 Telefone:</label>
                 {{ form.telefone_contato }}
             </div>
+        </div>
 
+        <div class="form-section">
             <div class="form-group foto-perfil-secao">
-                <label>Sua Foto de Perfil</label>
+                <label>📸 Sua Foto de Perfil</label>
                 
                 <div class="avatar-wrapper">
                     <div class="avatar-preview">
@@ -33,21 +314,21 @@
                         {% else %}
                             <div class="avatar-placeholder">
                                 <img src="" id="preview-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                                <i class="fas fa-user fa-3x" id="avatar-icon"></i>
+                                <span id="avatar-icon" style="font-size: 3rem;">👤</span>
                             </div>
                         {% endif %}
                     </div>
 
                     <div class="avatar-controls">
                         <label for="{{ form.foto_perfil.id_for_label }}" class="btn-upload">
-                            <i class="fas fa-camera"></i> Alterar Foto
+                            📷 Alterar Foto
                         </label>
-                        <input type="file" name="foto_perfil" id="{{ form.foto_perfil.id_for_label }}" class="input-file-oculto">
+                        <input type="file" name="foto_perfil" id="{{ form.foto_perfil.id_for_label }}" class="input-file-oculto" accept="image/*">
 
                         {% if form.instance.foto_perfil %}
                             <input type="checkbox" name="foto_perfil-clear" id="foto_perfil-clear_id" class="checkbox-limpar">
                             <label for="foto_perfil-clear_id" class="btn-remover">
-                                <i class="fas fa-trash"></i> Remover
+                                🗑️ Remover Foto
                             </label>
                         {% endif %}
                     </div>
@@ -58,21 +339,19 @@
             </div>
         </div>
 
-        <div class="form-actions" style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
-            <button type="submit" class="btn-primary">Salvar Perfil</button>
-            <a href="{% url 'home' %}" class="btn-cancel" style="text-decoration: none; line-height: 2.4; text-align: center;">
-                Cancelar
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Salvar Perfil</button>
+            <a href="{% url 'home' %}" class="btn-cancel">
+                ← Cancelar
             </a>
         </div>
     </form>
 </div>
 
-
-<!-- aplicação de javascript: para permitir a pré visualização da foto -->
 <script> 
     const inputFoto = document.querySelector('input[type="file"]');
     const previewImg = document.getElementById('preview-img');
-    const nomeArquivoLabel = document.getElementById('nome-arquivo');
+    const avatarIcon = document.getElementById('avatar-icon');
 
     if (inputFoto) {
         inputFoto.addEventListener('change', function() {
@@ -81,13 +360,15 @@
             if (file) {
                 const reader = new FileReader();
 
-                // Quando o navegador terminar de ler o arquivo:
                 reader.onload = function(e) {
-                    previewImg.src = e.target.result; // Troca o SRC da imagem pela prévia
-                    nomeArquivoLabel.textContent = "Selecionado: " + file.name;
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                    if (avatarIcon) {
+                        avatarIcon.style.display = 'none';
+                    }
                 }
 
-                reader.readAsDataURL(file); // Lê o arquivo como URL de dados
+                reader.readAsDataURL(file);
             }
         });
     }

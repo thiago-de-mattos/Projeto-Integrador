@@ -1,63 +1,196 @@
-{% extends 'base.html' %}
+{% extends 'base_teste.html' %}
 
-{% block content %}
-<div class="container">
-    <h1 class="titulo">AC Jogos</h1>
-    <h2 class="titulo">Cadastro de Empresas</h2>
-        
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-        
-    <form action="{% url 'empresas' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <h2>Dados Jurídicos</h2>
+{% block extra_head %}
+<style>
+  .auth-wrapper {
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at right, #1d5f3b, #050b1e);
+    padding: 40px 20px;
+  }
 
-        {% for field in form %}
-            <div class="form-group {% if field.errors %}has-error{% endif %}">
-                <label for="{{ field.id_for_label }}">
-                    {{ field.label }}
-                </label>
-                
-                {{ field }}
-                
-                {% if field.errors %}
-                    <div class="errorlist">
-                        {% for error in field.errors %}
-                            <small><strong>* {{ error }}</strong></small>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+  .auth-card {
+    width: 650px;
+    max-width: 95%;
+    padding: 40px;
+    background: rgba(10, 20, 40, 0.9);
+    border-radius: 18px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, .6);
+    color: #fff;
+    font-family: 'Inter', Arial, sans-serif;
+  }
 
-        <button type="submit" class="btn-primary" style="margin-top: 20px;">Avançar</button>
-    </form>
-</div>
+  .logo {
+    font-size: 38px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-<script>
-    // na data fundação é dia/mes/ano
-    // Script para rolar a tela até o primeiro erro automaticamente
-    document.addEventListener("DOMContentLoaded", function() {
-        const firstError = document.querySelector('.has-error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    });
-</script>
+  .auth-card h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-            
+  .auth-card > p {
+    color: #9bb;
+    margin: 10px 0 30px;
+    text-align: center;
+  }
 
+  .form-section {
+    margin-top: 30px;
+  }
 
-            
-        </form>
-            
+  .form-section h3 {
+    color: #19ffa6;
+    font-size: 16px;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(25, 255, 166, 0.25);
+  }
 
-    </div>
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .auth-card label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+    color: #ccc;
+  }
+
+  .auth-card input,
+  .auth-card select,
+  .auth-card textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #0f1a30;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .auth-card input::placeholder {
+    color: #6b7a99;
+  }
+
+  .auth-card textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .auth-card button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #19ffa6, #4bffda);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #000;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .auth-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(25, 255, 166, .3);
+  }
+
+  .auth-footer {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #9bb;
+  }
+
+  .auth-footer a {
+    color: #19ffa6;
+    text-decoration: none;
+  }
+
+  .alert {
+    margin-bottom: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .alert-error {
+    background: rgba(255, 0, 0, .15);
+    color: #ff9b9b;
+  }
+
+  .alert-success {
+    background: rgba(0, 255, 0, .15);
+    color: #9bff9b;
+  }
+
+  .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #ff9b9b;
+  }
+
+  .helptext {
+    font-size: 12px;
+    color: #9bb;
+    margin-top: 4px;
+    display: block;
+  }
+</style>
 {% endblock %}
 
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">🏢</div>
+    <h1>Cadastro de Empresa</h1>
+    <p>Cadastre sua empresa parceira da ACJOGOS-RJ</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Dados Jurídicos</h3>
+
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+            {% if field.help_text %}
+              <span class="helptext">{{ field.help_text }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit">Cadastrar Empresa →</button>
+    </form>
+
+    <div class="auth-footer">
+      Já possui conta? <a href="{% url 'login_teste' %}">Entrar</a><br>
+      É profissional? <a href="{% url 'cadastro_profissional' %}">Cadastre-se aqui</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

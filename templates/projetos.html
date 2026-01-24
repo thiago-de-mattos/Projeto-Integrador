@@ -1,49 +1,198 @@
-{% extends 'base.html' %}
+{% extends 'base_teste.html' %}
+
+{% block extra_head %}
+<style>
+  .auth-wrapper {
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at right, #1d5f3b, #050b1e);
+    padding: 40px 20px;
+  }
+
+  .auth-card {
+    width: 650px;
+    max-width: 95%;
+    padding: 40px;
+    background: rgba(10, 20, 40, 0.9);
+    border-radius: 18px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, .6);
+    color: #fff;
+    font-family: 'Inter', Arial, sans-serif;
+  }
+
+  .logo {
+    font-size: 38px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .auth-card h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .auth-card > p {
+    color: #9bb;
+    margin: 10px 0 30px;
+    text-align: center;
+  }
+
+  .form-section {
+    margin-top: 30px;
+  }
+
+  .form-section h3 {
+    color: #19ffa6;
+    font-size: 16px;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(25, 255, 166, 0.25);
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .auth-card label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+    color: #ccc;
+  }
+
+  .auth-card input,
+  .auth-card select,
+  .auth-card textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #0f1a30;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .auth-card input::placeholder,
+  .auth-card textarea::placeholder {
+    color: #6b7a99;
+  }
+
+  .auth-card textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .auth-card button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #19ffa6, #4bffda);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #000;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .auth-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(25, 255, 166, .3);
+  }
+
+  .alert {
+    margin-bottom: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .alert-danger {
+    background: rgba(255, 0, 0, .15);
+    color: #ff9b9b;
+  }
+
+  .alert-success {
+    background: rgba(0, 255, 0, .15);
+    color: #9bff9b;
+  }
+
+  .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #ff9b9b;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Cadastro de Projetos</h2>
-        {% if form.errors %}
-    <div class="alert alert-danger">
-        {{ form.errors }}
-    </div>
-{% endif %}
-            
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-            
-        <form action="{% url 'projetos' %}" method="post">
-            {% csrf_token %}
-            {{ form.titulo.label_tag }}
-            {{ form.titulo }}
-            {{ form.titulo.errors }}
-            <br>
-            {{ form.descricao.label_tag }}
-            {{ form.descricao }}
-            {{ form.descricao.errors }}
-            <br>
-            {{ form.status.label_tag }}
-            {{ form.status }}
-            {{ form.status.errors }}
-            <br>
-            {{ form.equipe_projeto.label_tag }}
-            {{ form.equipe_projeto }}
-            {{ form.equipe_projeto.errors }}
-            <br>
-            {{ form.url_site.label_tag }}
-            {{ form.url_site }}
-            {{ form.url_site.errors }}
-            <br>
+<div class="auth-wrapper">
+  <div class="auth-card">
 
-            <button type="submit" class="btn-primary">Enviar</button>
-        </form>
-            
+    <div class="logo">🎮</div>
+    <h1>Cadastro de Projeto</h1>
+    <p>Cadastre um novo projeto vinculado à sua empresa</p>
 
-    </div>
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Corrija os erros abaixo para continuar.
+      </div>
+    {% endif %}
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'projetos' %}" method="post">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Informações do Projeto</h3>
+
+        <div class="form-group">
+          {{ form.titulo.label_tag }}
+          {{ form.titulo }}
+          {{ form.titulo.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.descricao.label_tag }}
+          {{ form.descricao }}
+          {{ form.descricao.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.status.label_tag }}
+          {{ form.status }}
+          {{ form.status.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.equipe_projeto.label_tag }}
+          {{ form.equipe_projeto }}
+          {{ form.equipe_projeto.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.url_site.label_tag }}
+          {{ form.url_site }}
+          {{ form.url_site.errors }}
+        </div>
+      </div>
+
+      <button type="submit">Cadastrar Projeto →</button>
+    </form>
+
+  </div>
+</div>
 {% endblock %}

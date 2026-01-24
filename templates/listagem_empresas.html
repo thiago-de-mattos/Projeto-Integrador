@@ -1,292 +1,232 @@
 {% extends 'base.html' %}
 
-<h1>Empresas / Estúdios</h1>
-
-
-
 {% block content %}
+<style>
+.container-lista {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.titulo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.search-bar input,
+.search-bar select {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.search-bar button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+}
+
+.btn-primary-lista-empresa,
+.btn-primary-lista-mostrar {
+    display: inline-block;
+    margin: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.empresas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.card-empresa {
+    background: rgba(20, 24, 39, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.5rem;
+}
+
+.card-titulo,
+.card-titulo-estudio {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.conjunto {
+    margin-bottom: 0.5rem;
+}
+
+.conjunto h4 {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.conjunto p {
+    font-size: 0.85rem;
+}
+
+.btn-editar,
+.btn-editar-estudio,
+.btn-editar-responsavel {
+    display: block;
+    margin-top: 1rem;
+    padding: 0.6rem;
+    text-align: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+hr {
+    margin: 2rem 0;
+    border-color: var(--border);
+}
+</style>
+
 <div class="container-lista">
-    <h1 class="titulo">AC Jogos</h1>
+    <h1 class="titulo">Empresas / Estúdios</h1>
 
     <form method="get" class="search-bar">
-        <input
-            type="text"
-            name="q"
-            placeholder="Buscar por nome ou razão social"
-            value="{{ query }}"
-        />
-
+        <input type="text" name="q" placeholder="Buscar por nome ou razão social" value="{{ query }}">
         <select name="cidade">
             <option value="">Todas as cidades</option>
             {% for c in cidades %}
-                <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>
-                    {{ c }}
-                </option>
+                <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>{{ c }}</option>
             {% endfor %}
         </select>
-
         <button type="submit">Pesquisar</button>
     </form>
 
-    <h2 class="titulo">Lista de Empresas</h2>
-
-    <ul>
-        {% for empresa in empresas %}
-            <li>
-                <strong>{{ empresa.nome_fantasia }}</strong><br>
-                {{ empresa.cidade }} - {{ empresa.estado }}<br>
-                {{ empresa.site|default:"Sem site" }}
-            </li>
-        {% empty %}
-            <li>Nenhuma empresa encontrada.</li>
-        {% endfor %}
-    </ul>
-
-
     {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-    </div>
-    {% endfor %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
     {% endif %}
 
-    <br>
     <a href="{% url 'empresas' %}" class="btn-primary-lista-empresa">Nova Empresa</a>
     <a href="{% url 'estudios' %}" class="btn-primary-lista-empresa">Novo Estúdio</a>
     <a href="{% url 'projetos' %}" class="btn-primary-lista-empresa">Novo Projeto</a>
-    <br><br>
 
-    <!-- EMPRESAS -->
+    <hr>
+
     {% if empresas %}
-    <button type="button" onclick="toggleDiv('conteudo_empresas')" class="btn-primary-lista-mostrar">
-        Mostrar / Ocultar (Empresas)
-    </button>
-
-    <div id="conteudo_empresas" style="display:none; margin-top:15px;">
-        <h3>Dados das Empresas</h3>
+    <button onclick="toggleDiv('conteudo_empresas')" class="btn-primary-lista-mostrar">Empresas</button>
+    <div id="conteudo_empresas" style="display:none">
         <div class="empresas-lista">
             {% for empresa in empresas %}
             <div class="card-empresa">
-                <h3 class="card-titulo"> {{ empresa.nome_fantasia }}</h3>
-                <div class="conjunto">
-                    <h4>Nome Fantasia</h4>
-                    <p>{{ empresa.nome_fantasia }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Razão Social:</h4>
-                    <p>{{ empresa.razao_social }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>CNPJ:</h4>
-                    <p>{{ empresa.cnpj }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Email:</h4>
-                    <p>{{ empresa.email }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Telefone:</h4>
-                    <p>{{ empresa.telefone }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Site:</h4>
-                    <p>{{ empresa.site }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Endereço:</h4>
-                    <p>{{ empresa.endereco_completo }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>CEP:</h4>
-                    <p>{{ empresa.cep }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Cidade:</h4>
-                    <p>{{ empresa.cidade }}</p>
-                </div>
-
-                <div class="conjunto">
-                    <h4>Complemento:</h4>
-                    <p>{{ empresa.complemento }}</p>
-                </div>
-
+                <h3 class="card-titulo">{{ empresa.nome_fantasia }}</h3>
+                <div class="conjunto"><h4>CNPJ</h4><p>{{ empresa.cnpj }}</p></div>
+                <div class="conjunto"><h4>Email</h4><p>{{ empresa.email }}</p></div>
+                <div class="conjunto"><h4>Cidade</h4><p>{{ empresa.cidade }}</p></div>
                 <a href="{% url 'editar_empresas' empresa.id %}" class="btn-editar">Editar Empresa</a>
             </div>
             {% endfor %}
         </div>
+    </div>
+    {% endif %}
 
-        <br>
-        {% if responsaveis %}
-        <button type="button" onclick="toggleDiv('conteudo_responsaveis')" class="btn-primary-lista-mostrar">
-            Mostrar / Ocultar (Responsáveis)
-        </button>
+    {% if responsaveis %}
+<button onclick="toggleDiv('conteudo_responsaveis')" class="btn-primary-lista-mostrar">
+    Responsáveis
+</button>
 
-        <div id="conteudo_responsaveis" style="display:none; margin-top:15px;">
-            <h3>Responsável Cadastrado  </h3>
-            <div class="empresas-lista">
-                {% for responsavel in responsaveis %}
-                <div class="card-empresa card-responsavel">
-                    <h3 class="card-titulo">{{ responsavel.nome_completo }}</h3>
+<div id="conteudo_responsaveis" style="display:none">
+    <div class="empresas-lista">
+        {% for responsavel in responsaveis %}
+        <div class="card-empresa">
+            <h3 class="card-titulo">{{ responsavel.nome }}</h3>
 
-                    {% if responsavel.nome_social %}
-                    <div class="conjunto">
-                        <h4>Nome Social:</h4>
-                        <p>{{ responsavel.nome_social }}</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="conjunto">
-                        <h4>CPF:</h4>
-                        <p>{{ responsavel.cpf }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Email:</h4>
-                        <p>{{ responsavel.email }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Telefone:</h4>
-                        <p>{{ responsavel.telefone }}</p>
-                    </div>
-
-                    {% if responsavel.nick_discord %}
-                    <div class="conjunto">
-                        <h4>Nick Discord:</h4>
-                        <p>{{ responsavel.nick_discord }}</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="conjunto">
-                        <h4>CEP:</h4>
-                        <p>{{ responsavel.cep }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Endereço:</h4>
-                        <p>{{ responsavel.endereco }}, {{ responsavel.numero }}</p>
-                    </div>
-
-                    {% if responsavel.complemento %}
-                    <div class="conjunto">
-                        <h4>Complemento:</h4>
-                        <p>{{ responsavel.complemento }}</p>
-                    </div>
-                    {% endif %}
-
-                    <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-editar-responsavel">Editar
-                        Responsável</a>
-                </div>
-                {% endfor %}
+            <div class="conjunto">
+                <h4>Email</h4>
+                <p>{{ responsavel.email }}</p>
             </div>
-        </div>
-        {% else %}
-        <p>Nenhum responsável cadastrado ainda.</p>
-        {% endif %}
 
-        <hr>
-
-        <!-- ESTÚDIOS -->
-        <br>
-        {% if estudios %}
-        <button type="button" onclick="toggleDiv('conteudo_estudios')" class="btn-primary-lista-mostrar">
-            Mostrar / Ocultar (Estúdios)
-        </button>
-
-        <div id="conteudo_estudios" style="display:none; margin-top:15px;">
-            <h3>Estúdios Cadastrados</h3>
-            <div class="empresas-lista">
-                {% for estudio in estudios %}
-                <div class="card-empresa card-estudio">
-                    <h3 class="card-titulo-estudio">{{ estudio.nome_do_estudio }}</h3>
-                    <div class="conjunto">
-                        <h4>Nome:</h4>
-                        <p>{{ estudio.nome_do_estudio }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Email:</h4>
-                        <p>{{ estudio.email }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Telefone:</h4>
-                        <p>{{ estudio.telefone }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Endereço:</h4>
-                        <p>{{ estudio.endereco }}</p>
-                    </div>
-
-                    <a href="{% url 'editar_estudios' estudio.id %}" class="btn-editar-estudio">Editar Estúdio</a>
-                </div>
-                {% endfor %}
+            <div class="conjunto">
+                <h4>Telefone</h4>
+                <p>{{ responsavel.telefone }}</p>
             </div>
-        </div>
-  {% else %}
-        <p>Nenhum estúdio cadastrado ainda.</p>
-        {% endif %}
-        <hr>
-        <br>
-        {% if projetos %}
-        <button type="button" onclick="toggleDiv('conteudo_projetos')" class="btn-primary-lista-mostrar">
-            Mostrar  / Ocultar (Projetos)
-        </button>
 
-        <div id="conteudo_projetos" style="display:none; margin-top:15px;">
-            <h3>Projetos Cadastrados</h3>
-            <div class="empresas-lista">
-                {% for projeto in projetos %}
-                <div class="card-empresa card-projeto">
-                    <h3 class="card-titulo">{{ projeto.titulo }}</h3>
-                    
-                    <div class="conjunto">
-                        <h4>Descrição:</h4>
-                        <p>{{ projeto.descricao|truncatewords:20 }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Status:</h4>
-                        <p>{{ projeto.get_status_display }}</p>
-                    </div>
-
-                    <div class="conjunto">
-                        <h4>Equipe:</h4>
-                        <p>{{ projeto.equipe_projeto }}</p>
-                    </div>
-
-                    {% if projeto.url_site %}
-                    <div class="conjunto">
-                        <h4>Site:</h4>
-                        <p><a href="{{ projeto.url_site }}" target="_blank">Acessar Site</a></p>
-                    </div>
-                    {% endif %}
-
-                    
-                </div>
-                {% endfor %}
+            {% if responsavel.empresa %}
+            <div class="conjunto">
+                <h4>Empresa</h4>
+                <p>{{ responsavel.empresa.nome_fantasia }}</p>
             </div>
-        </div>
-        {% else %}
-        <p>Nenhum projeto cadastrado ainda.</p>
-        {% endif %}
+            {% endif %}
 
-    </div> {% endif %} </div> 
+            <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-editar-responsavel">
+                Editar Responsável
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+
+    {% if estudios %}
+    <button onclick="toggleDiv('conteudo_estudios')" class="btn-primary-lista-mostrar">Estúdios</button>
+    <div id="conteudo_estudios" style="display:none">
+        <div class="empresas-lista">
+            {% for estudio in estudios %}
+            <div class="card-empresa">
+                <h3 class="card-titulo-estudio">{{ estudio.nome_do_estudio }}</h3>
+                <div class="conjunto"><h4>Email</h4><p>{{ estudio.email }}</p></div>
+                <div class="conjunto"><h4>Telefone</h4><p>{{ estudio.telefone }}</p></div>
+                <a href="{% url 'editar_estudios' estudio.id %}" class="btn-editar-estudio">Editar Estúdio</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if projetos %}
+    <button onclick="toggleDiv('conteudo_projetos')" class="btn-primary-lista-mostrar">Projetos</button>
+    <div id="conteudo_projetos" style="display:none">
+        <div class="empresas-lista">
+            {% for projeto in projetos %}
+            <div class="card-empresa">
+                <h3 class="card-titulo">{{ projeto.titulo }}</h3>
+                <div class="conjunto"><h4>Status</h4><p>{{ projeto.get_status_display }}</p></div>
+                <div class="conjunto"><h4>Equipe</h4><p>{{ projeto.equipe_projeto }}</p></div>
+                <a href="{% url 'editar_projeto' projeto.id %}" class="btn-editar">Editar Projeto</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
 <script>
-    function toggleDiv(id) {
-        const div = document.getElementById(id);
-        div.style.display = (div.style.display === 'none' || div.style.display === '') ? 'block' : 'none';
-    }
+function toggleDiv(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
 </script>
-
 {% endblock %}

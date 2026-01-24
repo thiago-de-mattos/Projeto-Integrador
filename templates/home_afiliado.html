@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Perfil Profissional{% endblock %}
+
+{% block content %}
+<div class="container-lista">
+    <div class="welcome-header">
+        <h1>Painel do Profissional</h1>
+    </div>
+
+    {% if profissional %}
+        <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
+            <div class="card-dashboard" style="text-align: center;">
+                {% if profissional.foto_perfil %}
+                    <img src="{{ profissional.foto_perfil.url }}" alt="Foto" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 15px; object-fit: cover;">
+                {% else %}
+                    <div style="width: 150px; height: 150px; background: #333; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>
+                {% endif %}
+                
+                <h2 style="color: var(--accent);">{{ profissional.nome_completo }}</h2>
+                <p>{{ profissional.cidade_residencia }}</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                    {% if profissional.linkedin %}
+                        <a href="{{ profissional.linkedin }}" target="_blank" style="color: var(--text);">LinkedIn</a>
+                    {% endif %}
+                    {% if profissional.portfolio_url %}
+                        <a href="{{ profissional.portfolio_url }}" target="_blank" style="color: var(--text);">Portfólio</a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'editar_meu_perfil' %}" class="btn-primary" style="margin-top: 20px; background: var(--accent);">Editar Perfil</a>
+            </div>
+
+            <div>
+                <div class="card-dashboard">
+                    <h3>🏢 Onde trabalho</h3>
+                    {% if vinculos %}
+                        <ul style="list-style: none; padding: 0;">
+                        {% for vinculo in vinculos %}
+                            <li style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong style="color: var(--accent); font-size: 1.1rem;">{{ vinculo.empresa.nome_fantasia }}</strong>
+                                    <p>{{ vinculo.cargo }} - {{ vinculo.get_tipo_vinculo_display }}</p>
+                                </div>
+                                <span style="font-size: 0.9rem; color: #888;">Desde {{ vinculo.data_inicio|date:"Y" }}</span>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum vínculo empresarial registrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card-dashboard" style="text-align: center;">
+            <h3>Perfil Incompleto</h3>
+            <p>Complete seu cadastro profissional para aparecer no mapa de talentos.</p>
+            <a href="{% url 'cadastro_profissional' %}" class="btn-primary">Criar Perfil Profissional</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

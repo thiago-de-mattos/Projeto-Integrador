@@ -1,75 +1,97 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="titulo">AC Jogos</h1>
-        <h2 class="titulo">Editar Empresa: {{ empresa.nome_fantasia }}</h2>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+<style>
+.form-wrapper {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(20, 24, 39, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+}
+.form-title h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.form-title h2 {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+.form-group {
+    margin-bottom: 1.2rem;
+}
+.form-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+}
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.btn-primary {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+}
+.btn-cancel {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+</style>
+
+<div class="form-wrapper">
+    <div class="form-card">
+        <div class="form-title">
+            <h1>Editar Empresa</h1>
+            <h2>{{ empresa.nome_fantasia }}</h2>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
                 </div>
             {% endfor %}
-        {% endif %}
-        
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% csrf_token %}
-            <h2>Dados Jurídicos</h2>
-            {{ form.nome_fantasia.label_tag }}
-            {{ form.nome_fantasia }}
-            {{ form.nome_fantasia.errors }}
-            <br>
-            
-            {{ form.razao_social.label_tag }}
-            {{ form.razao_social }}
-            {{ form.razao_social.errors }}
-            <br>
-            
-            {{ form.cnpj.label_tag }}
-            {{ form.cnpj }}
-            {{ form.cnpj.errors }}
-            <br>
-            
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {{ form.email.errors }}
-            <br>
-            
-            {{ form.telefone.label_tag }}
-            {{ form.telefone }}
-            {{ form.telefone.errors }}
-            <br>
-            
-            {{ form.site.label_tag }}
-            {{ form.site }}
-            {{ form.site.errors }}
-            <br>
-            
-            {{ form.endereco_completo.label_tag }}
-            {{ form.endereco_completo }}
-            {{ form.endereco_completo.errors }}
-            <br>
-            
-            {{ form.cep.label_tag }}
-            {{ form.cep }}
-            {{ form.cep.errors }}
-            <br>
-            
-            {{ form.cidade.label_tag }}
-            {{ form.cidade }}
-            {{ form.cidade.errors }}
-            <br>
-            
-            {{ form.complemento.label_tag }}
-            {{ form.complemento }}
-            {{ form.complemento.errors }}
-            <br>
-            
-            <button type="submit" class="btn-primary">Salvar Alterações</button>
-            <a href="{% url 'listagem_empresas' %} " class="btn-cancel">Cancelar</a>
+
+            <div class="form-actions">
+                <button class="btn-primary">Salvar</button>
+                <a href="{% url 'listagem_empresas' %}" class="btn-cancel">Cancelar</a>
+            </div>
         </form>
     </div>
+</div>
 {% endblock %}

@@ -41,5 +41,5 @@ class Coletivo(AbstractUserRole):
         'exportar_dados_agregados': True,
     }
 
-class Empresa(AbstractUserRole):
-    available_permissions = {'gerenciar_empresa': True, 'gerenciar_projetos': True,}
+# class Empresa(AbstractUserRole):
+#     available_permissions = {'gerenciar_empresa': True, 'gerenciar_projetos': True,}
