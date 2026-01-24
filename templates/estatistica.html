@@ -1,38 +1,52 @@
-{% extends 'base.html' %}
+{% extends 'base_logado.html' %}
 {% load permission_tags %}
 
 {% block content %}
 
-<div class="container">
-    <h1>Mapa de Empresas e Profissionais de Jogos - RJ</h1>
 
-    <div class="cards">
-        <div class="card">
-            <h3>Empresas</h3>
-            <p class="numero">{{ total_empresas }}</p>
+<div class="stats-detalhes-container">
+    
+    <header class="stats-detalhes-header">
+        <h1 class="stats-detalhes-titulo">Relatórios Detalhados</h1>
+        <div class="stats-detalhes-alerta">
+            <span>🔒</span> Acesso restrito: Diretoria e Coletivos
         </div>
+    </header>
 
-        <div class="card">
-            <h3>Profissionais</h3>
-            <p class="numero">{{ total_profissionais }}</p>
-        </div>
+    <section class="stats-detalhes-secao">
+        <h2 class="stats-detalhes-grid-titulo">Dados do Setor - {{ ano_atual }}</h2>
 
-        <div class="card">
-            <h3>Projetos</h3>
-            <p class="numero">{{ total_projetos }}</p>
-        </div>
-    </div>
-
-    {% if user.is_authenticated %}
-        {% if user|has_role:'Diretoria' or user|has_role:'Coletivo' %}
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="{% url 'estatisticas_detalhadas' %}" class="btn">
-                    Ver Relatórios Detalhados
-                </a>
+        <div class="stats-detalhes-cards">
+            <div class="stats-detalhes-card destaque">
+                <h3>Faturamento Total</h3>
+                <p class="stats-detalhes-numero">R$ {{ faturamento_total|floatformat:0|default:"0" }}</p>
             </div>
-        {% endif %}
+
+            <div class="stats-detalhes-card">
+                <h3>Total de Empresas</h3>
+                <p class="stats-detalhes-numero">{{ total_empresas|default:"0" }}</p>
+            </div>
+
+            <div class="stats-detalhes-card">
+                <h3>Total de Funcionários</h3>
+                <p class="stats-detalhes-numero">{{ total_funcionarios|default:"0" }}</p>
+            </div>
+
+            <div class="stats-detalhes-card">
+                <h3>Projetos em Andamento</h3>
+                <p class="stats-detalhes-numero">{{ total_projetos|default:"0" }}</p>
+            </div>
+        </div>
+    </section>
+
+    {% if user.is_authenticated and user|has_role:'Diretoria' %}
+    <div class="stats-detalhes-admin">
+        <h3 style="color: #f87171; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Área Administrativa</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+            Painel exclusivo. Gerencie permissões e cadastros através do módulo de gestão.
+        </p>
+    </div>
     {% endif %}
 
 </div>
-
 {% endblock %}

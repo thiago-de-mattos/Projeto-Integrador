@@ -1,0 +1,69 @@
+{% extends 'base_logado.html' %}
+
+
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">🎮</div>
+    <h1>Cadastro de Projeto</h1>
+    <p>Cadastre um novo projeto vinculado à sua empresa</p>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Corrija os erros abaixo para continuar.
+      </div>
+    {% endif %}
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'projetos' %}" method="post">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Informações do Projeto</h3>
+
+        <div class="form-group">
+          {{ form.titulo.label_tag }}
+          {{ form.titulo }}
+          {{ form.titulo.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.descricao.label_tag }}
+          {{ form.descricao }}
+          {{ form.descricao.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.status.label_tag }}
+          {{ form.status }}
+          {{ form.status.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.equipe_projeto.label_tag }}
+          {{ form.equipe_projeto }}
+          {{ form.equipe_projeto.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.url_site.label_tag }}
+          {{ form.url_site }}
+          {{ form.url_site.errors }}
+        </div>
+      </div>
+
+      <button type="submit">Cadastrar Projeto →</button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

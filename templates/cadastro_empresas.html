@@ -1,0 +1,48 @@
+{% extends 'base_logado.html' %}
+
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">🏢</div>
+    <h1>Cadastro de Empresa</h1>
+    <p>Cadastre sua empresa parceira da ACJOGOS-RJ</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Dados Jurídicos</h3>
+
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+            {% if field.help_text %}
+              <span class="helptext">{{ field.help_text }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit">Cadastrar Empresa →</button>
+    </form>
+
+    <div class="auth-footer">
+      Já possui conta? <a href="{% url 'login' %}">Entrar</a><br>
+      É profissional? <a href="{% url 'cadastro_responsavel_empresa' %}">Cadastre-se aqui</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

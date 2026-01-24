@@ -488,7 +488,7 @@ def cadastro_empresa(request):
     else:
         form = EmpresaForm()
     
-    return render(request, 'empresas.html', {'form': form})
+    return render(request, 'cadastro_empresas.html', {'form': form})
 
 @login_required(login_url="login_teste")
 def listagem_empresas(request):
@@ -638,7 +638,7 @@ def cadastro_projetos(request):
     else:
         form = ProjetosForm()
 
-    return render(request, 'projetos.html', {'form': form})
+    return render(request, 'cadastro_projetos.html', {'form': form})
 
 
 @login_required(login_url="login")
@@ -878,7 +878,7 @@ def cadastro_responsavel_empresa(request):
     else:
         form = ResponsavelForm()
     
-    return render(request, 'responsavel_empresa.html', {'form': form})
+    return render(request, 'cadastro_responsavel_empresa.html', {'form': form})
 
 
 @login_required(login_url="login")
@@ -904,7 +904,7 @@ def pagina_projeto(request):
     return render(request, 'pagina_projeto.html')
 
 # html de teste
-def home_teste(request):
+def vitrine(request):
     """Página inicial com empresas e projetos em destaque"""
     # Usando associada_acjogos ao invés de aprovada
     empresas_destaque = Empresa.objects.filter(
@@ -926,9 +926,9 @@ def home_teste(request):
         'projetos_destaque': projetos_destaque,
         'stats': stats,
     }
-    return render(request, 'home_teste.html', context)
+    return render(request, 'vitrine.html', context)
 
-def empresas_list(request):
+def empresas_vitrine(request):
     """Lista todas as empresas com filtros"""
     # Removido filtro por 'aprovada' - ajuste conforme necessário
     # Se quiser filtrar apenas associadas, use: filter(associada_acjogos=True)
@@ -985,7 +985,7 @@ def empresas_list(request):
         'selected_porte': porte,
         'search': search,
     }
-    return render(request, 'empresa_test.html', context)
+    return render(request, 'empresa_vitrine.html', context)
 
 
 def empresa_detail(request, pk):
@@ -1000,7 +1000,7 @@ def empresa_detail(request, pk):
     return render(request, 'pages/empresa_detail.html', context)
 
 
-def projetos_list(request):
+def projetos_vitrine(request):
     """Lista todos os projetos públicos"""
     projetos = Projeto.objects.all().select_related('empresa').order_by('-data_lancamento')
     
@@ -1020,7 +1020,7 @@ def projetos_list(request):
         'selected_status': status,
         'selected_genero': genero,
     }
-    return render(request, 'projetos_teste.html', context)
+    return render(request, 'projetos_vitrine.html', context)
 
 
 def mapa(request):
@@ -1101,7 +1101,7 @@ def estatisticas_teste(request):
 def logout_view(request):
     """Logout do usuário"""
     logout(request)
-    return redirect('home_teste')
+    return redirect('vitrine')
 
 
 # API endpoints (opcional, para AJAX)
@@ -1142,12 +1142,12 @@ def login_view_teste(request):
             login(request, user)
             return redirect("home")  # ← Vai para a home antiga
         else:
-            return render(request, "login_teste.html", {
+            return render(request, "loginhtml", {
                 "error": "E-mail ou senha inválidos",
                 "email": email
             })
 
-    return render(request, "login_teste.html")
+    return render(request, "login.html")
 
 
 @never_cache
@@ -1195,9 +1195,9 @@ def register_view_teste(request):
         messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
         
         # Redirecionar para login (SEM fazer login automático)
-        return redirect("login_teste")
+        return redirect("login")
 
-    return render(request, "cadastro_teste.html")
+    return render(request, "cadastro.html")
 
 
 @login_required(login_url="login")
