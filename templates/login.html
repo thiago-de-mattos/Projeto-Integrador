@@ -1,4 +1,4 @@
-{% extends 'base_teste.html' %}
+{% extends 'base_vitrine.html' %}
 
 {% block extra_head %}
 <!-- Prevenir cache da página de login -->
@@ -6,106 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
-<style>
-  .auth-wrapper {
-    min-height: calc(100vh - 4rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at right, #3b1d5f, #050b1e);
-  }
 
-  .auth-card {
-    width: 380px;
-    padding: 40px;
-    background: rgba(10, 20, 40, 0.88);
-    border-radius: 16px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, .5);
-    color: #fff;
-    font-family: 'Inter', Arial, sans-serif;
-  }
-
-  .logo {
-    text-align: center;
-    font-size: 38px;
-    margin-bottom: 10px;
-  }
-
-  .auth-card h1 {
-    text-align: center;
-    margin: 0;
-  }
-
-  .auth-card p {
-    text-align: center;
-    color: #9bb;
-    margin: 10px 0 30px;
-  }
-
-  .auth-card label {
-    font-size: 14px;
-    margin-top: 15px;
-    display: block;
-  }
-
-  .auth-card input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    border-radius: 8px;
-    border: none;
-    background: #0f1a30;
-    color: #fff;
-  }
-
-  .auth-card button {
-    width: 100%;
-    margin-top: 25px;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #19e3ff, #4b7bff);
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #000;
-  }
-
-  .auth-card button:hover {
-    opacity: .9;
-  }
-
-  .auth-footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-  }
-
-  .auth-footer a {
-    color: #19e3ff;
-    text-decoration: none;
-  }
-
-  .error {
-    margin-top: 15px;
-    background: rgba(255, 0, 0, .15);
-    padding: 10px;
-    border-radius: 8px;
-    color: #ff9b9b;
-    font-size: 14px;
-    text-align: center;
-  }
-
-  .success {
-    margin-top: 15px;
-    background: rgba(0, 255, 0, .15);
-    padding: 10px;
-    border-radius: 8px;
-    color: #9bff9b;
-    font-size: 14px;
-    text-align: center;
-  }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -116,7 +17,7 @@
     <h1>Bem-vindo de volta</h1>
     <p>Acesse sua conta na Intranet ACJOGOS-RJ</p>
 
-    <form method="post" action="{% url 'login_teste' %}">
+    <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
 
       <label>E-mail</label>
@@ -141,7 +42,7 @@
 
     <div class="auth-footer">
       Ainda não tem conta?
-      <a href="{% url 'cadastro_teste' %}">Associe-se</a>
+      <a href="{% url 'cadastro' %}">Associe-se</a>
     </div>
   </div>
 </div>
