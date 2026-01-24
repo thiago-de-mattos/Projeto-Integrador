@@ -69,5 +69,8 @@ urlpatterns = [
      path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
      path("login_teste/", views.login_view_teste, name="login_teste"),
      path("cadastro_teste/", views.register_view_teste, name="cadastro_teste"),
+     
+      path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

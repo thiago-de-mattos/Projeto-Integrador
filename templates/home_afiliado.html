@@ -2,6 +2,342 @@
 
 {% block title %}Meu Perfil Profissional{% endblock %}
 
+{% block extra_head %}
+<style>
+    .container-lista {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    /* Welcome Header */
+    .welcome-header {
+        text-align: center;
+        padding: 2rem 0 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Card Grid */
+    .card-grid {
+        display: grid;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .card-grid {
+            grid-template-columns: 1fr 2fr;
+        }
+    }
+
+    /* Card Dashboard */
+    .card-dashboard {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .card-dashboard:hover {
+        border-color: var(--primary);
+        box-shadow: 0 8px 32px rgba(25, 227, 255, 0.15);
+    }
+
+    .card-dashboard h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+    }
+
+    .card-dashboard h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid var(--primary);
+        margin: 0 auto 1.5rem;
+        object-fit: cover;
+        box-shadow: 0 8px 32px rgba(25, 227, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 40px rgba(25, 227, 255, 0.5);
+    }
+
+    .profile-avatar-placeholder {
+        width: 180px;
+        height: 180px;
+        background: linear-gradient(135deg, rgba(25, 227, 255, 0.2) 0%, rgba(75, 123, 255, 0.2) 100%);
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        border: 4px solid var(--primary);
+        box-shadow: 0 8px 32px rgba(25, 227, 255, 0.2);
+    }
+
+    .profile-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-location {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .profile-location::before {
+        content: "📍";
+        font-size: 1.2rem;
+    }
+
+    /* Social Links */
+    .social-links {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .social-link {
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        background: rgba(25, 227, 255, 0.1);
+        border: 1px solid rgba(25, 227, 255, 0.3);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .social-link:hover {
+        background: rgba(25, 227, 255, 0.2);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        color: var(--primary);
+    }
+
+    .social-link::before {
+        font-size: 1.1rem;
+    }
+
+    .social-link.linkedin::before {
+        content: "💼";
+    }
+
+    .social-link.portfolio::before {
+        content: "🎨";
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-top: 1.5rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(25, 227, 255, 0.4);
+        color: #0a0e1a;
+    }
+
+    /* Vinculos List */
+    .vinculos-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .vinculo-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
+
+    .vinculo-item:last-child {
+        border-bottom: none;
+    }
+
+    .vinculo-item:hover {
+        background: rgba(25, 227, 255, 0.05);
+        transform: translateX(5px);
+    }
+
+    .vinculo-info h4 {
+        color: var(--primary);
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+    }
+
+    .vinculo-info p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin: 0.2rem 0;
+    }
+
+    .vinculo-cargo {
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .vinculo-tipo {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background: rgba(75, 123, 255, 0.15);
+        color: var(--secondary);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .vinculo-date {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        white-space: nowrap;
+    }
+
+    .vinculo-date::before {
+        content: "📅 ";
+        margin-right: 0.3rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--text);
+    }
+
+    .empty-state p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .empty-message {
+        color: var(--text-muted);
+        font-style: italic;
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .welcome-header h1 {
+            font-size: 2rem;
+        }
+
+        .profile-avatar,
+        .profile-avatar-placeholder {
+            width: 140px;
+            height: 140px;
+        }
+
+        .profile-avatar-placeholder {
+            font-size: 3rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+        }
+
+        .card-dashboard {
+            padding: 1.5rem;
+        }
+
+        .vinculo-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .vinculo-date {
+            align-self: flex-start;
+        }
+
+        .social-links {
+            flex-direction: column;
+        }
+
+        .social-link {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-lista">
     <div class="welcome-header">
@@ -9,53 +345,70 @@
     </div>
 
     {% if profissional %}
-        <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
-            <div class="card-dashboard" style="text-align: center;">
+        <div class="card-grid">
+            <div class="card-dashboard profile-card">
                 {% if profissional.foto_perfil %}
-                    <img src="{{ profissional.foto_perfil.url }}" alt="Foto" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 15px; object-fit: cover;">
+                    <img src="{{ profissional.foto_perfil.url }}" alt="Foto de {{ profissional.nome_completo }}" class="profile-avatar">
                 {% else %}
-                    <div style="width: 150px; height: 150px; background: #333; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>
+                    <div class="profile-avatar-placeholder">👤</div>
                 {% endif %}
                 
-                <h2 style="color: var(--accent);">{{ profissional.nome_completo }}</h2>
-                <p>{{ profissional.cidade_residencia }}</p>
-                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                    {% if profissional.linkedin %}
-                        <a href="{{ profissional.linkedin }}" target="_blank" style="color: var(--text);">LinkedIn</a>
-                    {% endif %}
-                    {% if profissional.portfolio_url %}
-                        <a href="{{ profissional.portfolio_url }}" target="_blank" style="color: var(--text);">Portfólio</a>
-                    {% endif %}
-                </div>
-                <a href="{% url 'editar_meu_perfil' %}" class="btn-primary" style="margin-top: 20px; background: var(--accent);">Editar Perfil</a>
+                <h2 class="profile-name">{{ profissional.nome_completo }}</h2>
+                <p class="profile-location">{{ profissional.cidade_residencia }}</p>
+                
+                {% if profissional.linkedin or profissional.portfolio_url %}
+                    <div class="social-links">
+                        {% if profissional.linkedin %}
+                            <a href="{{ profissional.linkedin }}" target="_blank" class="social-link linkedin">LinkedIn</a>
+                        {% endif %}
+                        {% if profissional.portfolio_url %}
+                            <a href="{{ profissional.portfolio_url }}" target="_blank" class="social-link portfolio">Portfólio</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <a href="{% url 'editar_meu_perfil' %}" class="btn-primary">✏️ Editar Perfil</a>
             </div>
 
             <div>
                 <div class="card-dashboard">
-                    <h3>🏢 Onde trabalho</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3>🏢 Onde trabalho</h3>
+                        
+                        <!-- BOTÃO TEMPORÁRIO - REMOVER DEPOIS -->
+                        {% if not vinculos %}
+                        <a href="{% url 'criar_vinculo_teste' %}" class="btn-primary" style="margin-top: 0; font-size: 0.9rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);">
+                            🧪 Criar Vínculo Teste
+                        </a>
+                        {% endif %}
+                    </div>
+                    
                     {% if vinculos %}
-                        <ul style="list-style: none; padding: 0;">
+                        <ul class="vinculos-list">
                         {% for vinculo in vinculos %}
-                            <li style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
-                                <div>
-                                    <strong style="color: var(--accent); font-size: 1.1rem;">{{ vinculo.empresa.nome_fantasia }}</strong>
-                                    <p>{{ vinculo.cargo }} - {{ vinculo.get_tipo_vinculo_display }}</p>
+                            <li class="vinculo-item">
+                                <div class="vinculo-info">
+                                    <h4>{{ vinculo.empresa.nome_fantasia }}</h4>
+                                    <p>
+                                        <span class="vinculo-cargo">{{ vinculo.cargo }}</span>
+                                        <span class="vinculo-tipo">{{ vinculo.get_tipo_vinculo_display }}</span>
+                                    </p>
                                 </div>
-                                <span style="font-size: 0.9rem; color: #888;">Desde {{ vinculo.data_inicio|date:"Y" }}</span>
+                                <span class="vinculo-date">Desde {{ vinculo.data_inicio|date:"Y" }}</span>
                             </li>
                         {% endfor %}
                         </ul>
                     {% else %}
-                        <p>Nenhum vínculo empresarial registrado.</p>
+                        <p class="empty-message">Nenhum vínculo empresarial registrado.</p>
                     {% endif %}
                 </div>
             </div>
         </div>
     {% else %}
-        <div class="card-dashboard" style="text-align: center;">
-            <h3>Perfil Incompleto</h3>
+        <div class="card-dashboard empty-state">
+            <h3>📝 Perfil Incompleto</h3>
             <p>Complete seu cadastro profissional para aparecer no mapa de talentos.</p>
-            <a href="{% url 'cadastro_profissional' %}" class="btn-primary">Criar Perfil Profissional</a>
+            <a href="{% url 'cadastro_profissional' %}" class="btn-primary">🚀 Criar Perfil Profissional</a>
         </div>
     {% endif %}
 </div>
