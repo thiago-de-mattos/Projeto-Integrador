@@ -1,0 +1,265 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+{% block content %}
+    <div class="resultados">
+        {% for projeto in projetos %}
+            <div class="card">
+                <h3>{{ projeto.nome }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <p><strong>Empresa:</strong> {{ projeto.empresa.nome }}</p>
+                <p><strong>Município:</strong> {{ projeto.empresa.municipio }}</p>
+                <p><strong>Tipo de Jogo:</strong> {{ projeto.tipo_jogo }}</p>
+            </div>
+        {% empty %}
+            <p>Nenhum projeto encontrado.</p>
+        {% endfor %}
+    </div>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+<nav class="nav-bar">
+
+    <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png?VersionId=s.86rgjwEhWjZKF.EPF0IRrXA7vJXITK&itok=Z-jYtdsg"
+        alt="Logo AC-Jogos" width="60">
+        
+    <!-- MENU DESKTOP -->
+    <ul class="lista desktop-menu">
+        <li><a href="#jogos" class="btn-primary-lista">Jogos</a></li>
+        <li><a href="#empresas" class="btn-primary-lista">Empresas</a></li>
+        <li><a href="#sobre" class="btn-primary-lista">Sobre</a></li>
+    </ul>
+
+
+
+    <!-- HAMBURGER -->
+    <button class="hamburger" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+</nav>
+
+
+<!-- MENU MOBILE -->
+<div class="menu-mobile">
+    <a href="#jogos">Jogos</a>
+    <a href="#empresas">Empresas</a>
+    <a href="#sobre">Sobre</a>
+</div>
+
+
+
+    <hr>
+
+    <section class="secao-intro">
+        <h1>Bem-vindo à AC-Jogos</h1>
+        <h2>A maior associação de desenvolvedores de jogos do Rio de Janeiro</h2>
+            <div class="jogos">
+                <i class="fa-solid fa-arrow-down"></i>
+                <button class="btn-primary-jogos">Conheça nossos jogos</button>
+                <i class="fa-solid fa-arrow-down"></i>
+            </div>
+    </section>
+<div class="conteudo-vitrine-texto" id="sobre">
+    <h2>Quem Somos</h2>
+    <p>Somos a maior rede de desenvolvedores de jogos do RJ. Com mais de 60 estúdios parceiros, transformamos ideias em oportunidades 
+        globais através de suporte técnico, estratégico e uma comunidade vibrante apaixonada pela inovação.</p>
+    
+</div>
+<div class="conteudo-vitrine-texto">
+    
+    <h2>Nossa Missão</h2>
+    <p>Fortalecemos o ecossistema de jogos no Rio de Janeiro criando conexões entre desenvolvedores, investidores e o público gamer. 
+        Atuamos em todas as frentes — de jogos digitais (PC, console e mobile) a analógicos e RPGs — promovendo parcerias e 
+        visibilidade nacional e internacional para profissionais de todas as plataformas.</p>
+</div>
+<h2 id="jogos">Veja alguns dos jogos ofertados</h2>
+<div class="conteudo">
+        <div class="carrossel" >
+            <div class="group">
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
+
+                </div>
+            </div>
+            <div aria-hidden="false" class="group">
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
+
+                </div>
+                                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
+                    
+                </div>
+            </div>
+            <div aria-hidden="false" class="group">
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
+                    
+                </div>
+                                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
+                    
+                </div>
+            </div>
+            <div aria-hidden="false" class="group">
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
+
+                </div>
+                                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
+
+                </div>
+            </div>
+            <div aria-hidden="false" class="group">
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_1.png' %}" alt="Jogo 1" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_2.png' %}" alt="Jogo 2" >
+                    
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_3.png' %}" alt="Jogo 3" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_4.png' %}" alt="Jogo 4" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_5.png' %}" alt="Jogo 5" >
+
+                </div>
+                <div class="conteudo-vitrine-imagem">
+                    <img src="{% static 'image/jogo_6.png' %}" alt="Jogo 6" >
+
+                </div>
+            </div>
+        </div>
+        
+        <h2 id="empresas">Veja algumas de nossas empresas parceiras</h2>
+        <div class="empresas" >
+            <div class="conteudo-empresas">
+                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/AltF4Logo.png" alt="">
+            </div>
+            <div class="conteudo-empresas">
+                
+                <img src="https://rj.acjogos.com.br/wp-content/uploads/2024/04/SendoEstudio.png" alt="">
+            </div>
+            
+            <div class="conteudo-empresas">
+                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/IndieHero_Logo.png" alt="">
+                
+            </div>
+
+            <div class="conteudo-empresas">
+
+                <img src="https://rj.acjogos.com.br/wp-content/uploads/2023/06/limiar-logo-margin.png" alt="">
+            </div>
+        </div>
+
+    </div>
+    
+
+    <footer>
+        &copy; Todos os Direitos Reservados a AC-Jogos
+    </footer>
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+            const menuMobile = document.querySelector('.menu-mobile');
+            
+            hamburger.addEventListener('click', () => {
+                menuMobile.classList.toggle('show');
+            });
+
+
+
+    </script>
+
+
+</body>
+</html>
+{% endblock %}
+
