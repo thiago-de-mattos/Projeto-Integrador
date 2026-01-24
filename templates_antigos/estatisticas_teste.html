@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+  <!-- Header -->
+  <div class="mb-12">
+    <h1 class="font-display text-5xl font-bold mb-4">
+      O Ecossistema em <span class="text-gradient">Números</span>
+    </h1>
+    <p class="text-xl text-muted-foreground max-w-3xl">
+      Dados atualizados sobre o setor de jogos digitais no Estado do Rio de Janeiro, baseados em nossa pesquisa socioeconômica anual.
+    </p>
+  </div>
+
+  <!-- Key Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+    <!-- Stat 1 - Crescimento -->
+    <div class="glass rounded-2xl p-6 group hover:border-primary/50 transition-all">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+        </svg>
+      </div>
+      <div class="font-display text-4xl font-bold text-foreground mb-2">23%</div>
+      <div class="font-semibold text-foreground mb-1">Crescimento Anual</div>
+      <div class="text-sm text-muted-foreground">Aumento no número de empresas em 2024</div>
+    </div>
+
+    <!-- Stat 2 - Faturamento -->
+    <div class="glass rounded-2xl p-6 group hover:border-primary/50 transition-all">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="font-display text-4xl font-bold text-foreground mb-2">R$ 45M</div>
+      <div class="font-semibold text-foreground mb-1">Faturamento Estimado</div>
+      <div class="text-sm text-muted-foreground">Volume do setor no Estado do RJ</div>
+    </div>
+
+    <!-- Stat 3 - Profissionais -->
+    <div class="glass rounded-2xl p-6 group hover:border-primary/50 transition-all">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+      </div>
+      <div class="font-display text-4xl font-bold text-foreground mb-2">850+</div>
+      <div class="font-semibold text-foreground mb-1">Profissionais</div>
+      <div class="text-sm text-muted-foreground">Trabalhando no ecossistema de games</div>
+    </div>
+
+    <!-- Stat 4 - Empresas -->
+    <div class="glass rounded-2xl p-6 group hover:border-primary/50 transition-all">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+      </div>
+      <div class="font-display text-4xl font-bold text-foreground mb-2">120+</div>
+      <div class="font-semibold text-foreground mb-1">Empresas Ativas</div>
+      <div class="text-sm text-muted-foreground">Estúdios e empresas cadastradas</div>
+    </div>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+    <!-- Chart 1 - Empresas por Porte -->
+    <div class="glass rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-bold mb-6">Empresas por Porte</h3>
+      <canvas id="empresasPorPorte"></canvas>
+    </div>
+
+    <!-- Chart 2 - Distribuição por Cidade -->
+    <div class="glass rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-bold mb-6">Distribuição por Cidade</h3>
+      <canvas id="empresasPorCidade"></canvas>
+    </div>
+
+    <!-- Chart 3 - Áreas de Atuação -->
+    <div class="glass rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-bold mb-6">Áreas de Atuação</h3>
+      <canvas id="areasAtuacao"></canvas>
+    </div>
+
+    <!-- Chart 4 - Evolução Anual -->
+    <div class="glass rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-bold mb-6">Evolução do Ecossistema</h3>
+      <canvas id="evolucaoAnual"></canvas>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="glass rounded-2xl p-12 text-center">
+    <h2 class="font-display text-3xl font-bold mb-4">
+      Faça Parte do <span class="text-gradient">Ecossistema</span>
+    </h2>
+    <p class="text-muted-foreground mb-8 max-w-2xl mx-auto">
+      Associe-se à ACJOGOS-RJ e ajude a fortalecer o setor de jogos digitais no Estado do Rio de Janeiro.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{% url 'cadastro_teste' %}" class="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground hover:shadow-lg hover:scale-105 transition-all">
+        Associe-se Agora
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+      <a href="{% url 'empresas_teste' %}" class="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+        Explorar Empresas
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Configure Chart.js defaults
+Chart.defaults.color = 'hsl(215, 20%, 55%)';
+Chart.defaults.borderColor = 'hsl(222, 35%, 18%)';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+// Chart 1 - Empresas por Porte
+new Chart(document.getElementById('empresasPorPorte'), {
+  type: 'bar',
+  data: {
+    labels: ['MEI', 'Micro (2-9)', 'Pequeno (10-49)', 'Médio (50-99)', 'Grande (100+)'],
+    datasets: [{
+      label: 'Número de Empresas',
+      data: [45, 38, 25, 8, 4],
+      backgroundColor: [
+        'hsl(185, 85%, 50%)',
+        'hsl(200, 90%, 45%)',
+        'hsl(220, 100%, 65%)',
+        'hsl(280, 85%, 65%)',
+        'hsl(320, 100%, 60%)'
+      ],
+      borderRadius: 8,
+      borderWidth: 0,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'hsl(222, 47%, 9%)',
+        titleColor: 'hsl(210, 40%, 98%)',
+        bodyColor: 'hsl(215, 20%, 55%)',
+        borderColor: 'hsl(222, 35%, 18%)',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false,
+        callbacks: {
+          label: (context) => `${context.parsed.y} empresas`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'hsl(222, 35%, 18%)' },
+        ticks: { font: { size: 11 } }
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: 'hsl(222, 35%, 18%)' },
+        ticks: { stepSize: 10 }
+      }
+    }
+  }
+});
+
+// Chart 2 - Distribuição por Cidade
+new Chart(document.getElementById('empresasPorCidade'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Duque de Caxias', 'Outras'],
+    datasets: [{
+      data: [62, 18, 8, 5, 7],
+      backgroundColor: [
+        'hsl(185, 85%, 50%)',
+        'hsl(200, 90%, 45%)',
+        'hsl(220, 100%, 65%)',
+        'hsl(280, 85%, 65%)',
+        'hsl(320, 100%, 60%)'
+      ],
+      borderWidth: 0,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 15,
+          usePointStyle: true,
+          pointStyle: 'circle'
+        }
+      },
+      tooltip: {
+        backgroundColor: 'hsl(222, 47%, 9%)',
+        titleColor: 'hsl(210, 40%, 98%)',
+        bodyColor: 'hsl(215, 20%, 55%)',
+        borderColor: 'hsl(222, 35%, 18%)',
+        borderWidth: 1,
+        padding: 12,
+        callbacks: {
+          label: (context) => `${context.label}: ${context.parsed}%`
+        }
+      }
+    }
+  }
+});
+
+// Chart 3 - Áreas de Atuação
+new Chart(document.getElementById('areasAtuacao'), {
+  type: 'bar',
+  data: {
+    labels: ['Desenvolvimento', 'Arte/Design', 'Áudio', 'QA/Testing', 'Publishing', 'Educação'],
+    datasets: [{
+      label: 'Empresas',
+      data: [65, 28, 12, 15, 8, 10],
+      backgroundColor: 'hsl(185, 85%, 50%)',
+      borderRadius: 8,
+      borderWidth: 0,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'hsl(222, 47%, 9%)',
+        titleColor: 'hsl(210, 40%, 98%)',
+        bodyColor: 'hsl(215, 20%, 55%)',
+        borderColor: 'hsl(222, 35%, 18%)',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: { color: 'hsl(222, 35%, 18%)' }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { size: 12 } }
+      }
+    }
+  }
+});
+
+// Chart 4 - Evolução Anual
+new Chart(document.getElementById('evolucaoAnual'), {
+  type: 'line',
+  data: {
+    labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+    datasets: [
+      {
+        label: 'Empresas',
+        data: [65, 72, 85, 95, 105, 120],
+        borderColor: 'hsl(185, 85%, 50%)',
+        backgroundColor: 'hsla(185, 85%, 50%, 0.1)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: 'hsl(185, 85%, 50%)',
+        pointBorderColor: 'hsl(222, 47%, 9%)',
+        pointBorderWidth: 2
+      },
+      {
+        label: 'Profissionais',
+        data: [420, 480, 560, 650, 750, 850],
+        borderColor: 'hsl(280, 85%, 65%)',
+        backgroundColor: 'hsla(280, 85%, 65%, 0.1)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: 'hsl(280, 85%, 65%)',
+        pointBorderColor: 'hsl(222, 47%, 9%)',
+        pointBorderWidth: 2
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    interaction: {
+      mode: 'index',
+      intersect: false
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          padding: 15,
+          usePointStyle: true,
+          pointStyle: 'circle'
+        }
+      },
+      tooltip: {
+        backgroundColor: 'hsl(222, 47%, 9%)',
+        titleColor: 'hsl(210, 40%, 98%)',
+        bodyColor: 'hsl(215, 20%, 55%)',
+        borderColor: 'hsl(222, 35%, 18%)',
+        borderWidth: 1,
+        padding: 12
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'hsl(222, 35%, 18%)' }
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: 'hsl(222, 35%, 18%)' }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}
