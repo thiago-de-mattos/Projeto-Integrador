@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+/* ====== CONTAINER CENTRAL ====== */
+.container {
+    max-width: 520px;
+    margin: 60px auto;
+    padding: 40px 35px;
+    background: rgba(10, 18, 35, 0.85);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+/* ====== TÍTULOS ====== */
+.titulo {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #c7d2fe;
+}
+
+/* ====== LABELS ====== */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* ====== INPUTS ====== */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+    font-size: 0.9rem;
+}
+
+input::placeholder {
+    color: #64748b;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.25);
+}
+
+/* ====== ERROS ====== */
+.errorlist,
+ul.errorlist {
+    list-style: none;
+    padding: 0;
+    margin-top: -12px;
+    margin-bottom: 12px;
+    color: #f87171;
+    font-size: 0.8rem;
+}
+
+/* ====== ALERTAS ====== */
+.alert {
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+/* ====== BOTÃO ====== */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, #22d3ee, #4ade80);
+    color: #020617;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(34,211,238,0.35);
+}
+</style>
+
+<div class="container">
+    <h1 class="titulo">AC Jogos</h1>
+    <h2 class="titulo">Cadastro do Estudio</h2>
+        
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+        
+    <form action="{% url 'estudios' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Dados do Estudio</h2>
+        {{ form.nome_do_estudio.label_tag }}
+        {{ form.nome_do_estudio }}
+        {{ form.nome_do_estudio.errors }}
+        <br>
+
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+        <br>
+        
+        {{ form.telefone.label_tag }}
+        {{ form.telefone }}
+        {{ form.telefone.errors }}
+        <br>
+        
+        {{ form.endereco.label_tag }}
+        {{ form.endereco }}
+        {{ form.endereco.errors }}
+        <br>
+        
+        <button type="submit" class="btn-primary">Enviar</button>
+    </form>
+</div>
+{% endblock %}
