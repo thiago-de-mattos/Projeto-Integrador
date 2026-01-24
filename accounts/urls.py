@@ -12,7 +12,7 @@ def logout_view(request):
 urlpatterns = [
 
 # --- Rota Principal (Redirecionador) ---
-     path('', views.home_teste, name='home_teste'),
+     path('', views.vitrine, name='vitrine'),
      path('home/', views.home, name='home',),
 
 # --- Autenticação ---
@@ -44,7 +44,7 @@ urlpatterns = [
      path('projetos/editar/<int:projeto_id>/', views.editar_projeto, name='editar_projeto'),
      
 # --- Funcionalidades Gerais ---
-     path('empresas/', views.cadastro_empresa, name='empresas'),
+     path('empresas/', views.cadastro_empresa, name='cadastro_empresas'),
      path('empresas/listagem/', views.listagem_empresas, name="listagem_empresas"),
      
      path('pagina/projeto',views.pagina_projeto , name= 'pagina_projeto'),
@@ -57,18 +57,18 @@ urlpatterns = [
      path('estatisticas/', views.estatistica, name='estatistica'),
      path('estatisticas/detalhadas/', views.estatisticas_detalhadas, name='estatistica_detalhada'),
 
-     path('estudios/', views.cadastro_estudio, name='estudios'),
+    
      
      path('responsavel/cadastrar/', views.cadastro_responsavel_empresa, name='cadastro_responsavel_empresa'),
      
 #--- htmls TESTE ---
-     path('empresas_teste/', views.empresas_list, name='empresas_teste'),
+     path('empresas_teste/', views.empresas_vitrine, name='empresas_vitrine'),
      # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
-     path('projetos_teste/', views.projetos_list, name='projetos_teste'),
+     path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
      path('mapa_teste/', views.mapa, name='mapa'),
      path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
-     path("login_teste/", views.login_view_teste, name="login_teste"),
-     path("cadastro_teste/", views.register_view_teste, name="cadastro_teste"),
+     path("login_teste/", views.login_view_teste, name="login"),
+     path("cadastro_teste/", views.register_view_teste, name="cadastro"),
      
       path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
 
