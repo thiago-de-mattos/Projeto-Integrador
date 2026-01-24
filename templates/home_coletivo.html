@@ -2,6 +2,267 @@
 
 {% block title %}Observatório ACJOGOS{% endblock %}
 
+{% block extra_head %}
+<style>
+    .container-lista {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    /* Welcome Header */
+    .welcome-header {
+        text-align: center;
+        padding: 2rem 0 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-header h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .welcome-header p {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        font-weight: 400;
+    }
+
+    /* Card Grid for Stats */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    /* Stat Cards */
+    .card-stat {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-stat::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-stat:hover {
+        border-color: var(--primary);
+        box-shadow: 0 12px 40px rgba(25, 227, 255, 0.2);
+        transform: translateY(-5px);
+    }
+
+    .card-stat:hover::before {
+        opacity: 1;
+    }
+
+    .card-stat h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+    }
+
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 700;
+        display: block;
+        line-height: 1;
+        background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+        -webkit-background-clip: text;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    /* Card Dashboard */
+    .card-dashboard {
+        background: rgba(30, 36, 53, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .card-dashboard:hover {
+        border-color: var(--primary);
+        box-shadow: 0 8px 32px rgba(25, 227, 255, 0.15);
+    }
+
+    .card-dashboard h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Table Wrapper */
+    .tabela-wrapper {
+        background: rgba(20, 26, 43, 0.4);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Table Styles */
+    .tabela-dados {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .tabela-dados thead tr {
+        background: linear-gradient(135deg, rgba(25, 227, 255, 0.1) 0%, rgba(75, 123, 255, 0.1) 100%);
+    }
+
+    .tabela-dados th {
+        padding: 1.2rem 1.5rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    .tabela-dados tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tabela-dados tbody tr:hover {
+        background: rgba(25, 227, 255, 0.08);
+        transform: scale(1.01);
+    }
+
+    .tabela-dados tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .tabela-dados td {
+        padding: 1.3rem 1.5rem;
+        color: var(--text);
+        font-size: 1rem;
+    }
+
+    .tabela-dados td strong {
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: #0a0e1a;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(25, 227, 255, 0.2);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(25, 227, 255, 0.4);
+        color: #0a0e1a;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .welcome-header h1 {
+            font-size: 2rem;
+        }
+
+        .welcome-header p {
+            font-size: 1rem;
+        }
+
+        .card-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .card-stat {
+            padding: 2rem 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .card-dashboard {
+            padding: 1.5rem;
+        }
+
+        .card-dashboard h3 {
+            font-size: 1.3rem;
+        }
+
+        .tabela-wrapper {
+            overflow-x: auto;
+        }
+
+        .tabela-dados {
+            min-width: 500px;
+        }
+
+        .tabela-dados th,
+        .tabela-dados td {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .card-dashboard > div {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-lista">
     <div class="welcome-header">
