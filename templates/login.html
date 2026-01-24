@@ -1,6 +1,11 @@
 {% extends 'base_teste.html' %}
 
 {% block extra_head %}
+<!-- Prevenir cache da página de login -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <style>
   .auth-wrapper {
     min-height: calc(100vh - 4rem);
@@ -18,15 +23,21 @@
     box-shadow: 0 0 40px rgba(0, 0, 0, .5);
     color: #fff;
     font-family: 'Inter', Arial, sans-serif;
-    text-align: center;
   }
 
   .logo {
+    text-align: center;
     font-size: 38px;
     margin-bottom: 10px;
   }
 
+  .auth-card h1 {
+    text-align: center;
+    margin: 0;
+  }
+
   .auth-card p {
+    text-align: center;
     color: #9bb;
     margin: 10px 0 30px;
   }
@@ -35,7 +46,6 @@
     font-size: 14px;
     margin-top: 15px;
     display: block;
-    text-align: left;
   }
 
   .auth-card input {
@@ -61,8 +71,13 @@
     color: #000;
   }
 
+  .auth-card button:hover {
+    opacity: .9;
+  }
+
   .auth-footer {
     margin-top: 20px;
+    text-align: center;
     font-size: 14px;
   }
 
@@ -71,54 +86,24 @@
     text-decoration: none;
   }
 
-  .alert {
-    margin-bottom: 15px;
+  .error {
+    margin-top: 15px;
+    background: rgba(255, 0, 0, .15);
     padding: 10px;
     border-radius: 8px;
-    font-size: 14px;
-  }
-
-  .alert-error {
-    background: rgba(255, 0, 0, .15);
     color: #ff9b9b;
+    font-size: 14px;
+    text-align: center;
   }
 
-  /* ===== CARDS INFERIORES ===== */
-  .role-cards {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-  }
-
-  .role-card {
-    flex: 1;
-    background: rgba(15, 26, 48, 0.8);
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    text-decoration: none;
-    color: #fff;
-  }
-
-  .role-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,.4);
-  }
-
-  .role-icon {
-    font-size: 26px;
-    margin-bottom: 8px;
-  }
-
-  .role-title {
-    font-weight: bold;
-    font-size: 15px;
-  }
-
-  .role-subtitle {
-    font-size: 13px;
-    color: #9bb;
+  .success {
+    margin-top: 15px;
+    background: rgba(0, 255, 0, .15);
+    padding: 10px;
+    border-radius: 8px;
+    color: #9bff9b;
+    font-size: 14px;
+    text-align: center;
   }
 </style>
 {% endblock %}
@@ -126,51 +111,38 @@
 {% block content %}
 <div class="auth-wrapper">
   <div class="auth-card">
-
     <div class="logo">🎮</div>
+
     <h1>Bem-vindo de volta</h1>
     <p>Acesse sua conta na Intranet ACJOGOS-RJ</p>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    {% endif %}
-
-    <form action="{% url 'login' %}" method="post">
+    <form method="post" action="{% url 'login_teste' %}">
       {% csrf_token %}
 
-      <label>Usuário</label>
-      <input type="text" name="username" placeholder="Digite seu username" required>
+      <label>E-mail</label>
+      <input type="email" name="email" placeholder="seu@email.com" 
+             value="{{ email|default:'' }}" required>
 
       <label>Senha</label>
-      <input type="password" name="senha" placeholder="••••••••" required>
+      <input type="password" name="password" placeholder="••••••••" required>
 
-      <button type="submit" value="ENTRAR">Entrar →</button>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="success">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <button type="submit">Entrar →</button>
     </form>
 
     <div class="auth-footer">
       Ainda não tem conta?
-      <a href="{% url 'cadastro' %}">Associe-se</a>
+      <a href="{% url 'cadastro_teste' %}">Associe-se</a>
     </div>
-
-    <!-- CARDS INFERIORES -->
-    <div class="role-cards">
-      <a href="{% url 'empresas' %}" class="role-card">
-        <div class="role-icon">🏢</div>
-        <div class="role-title">Empresa / Estúdio</div>
-        <div class="role-subtitle">Associado</div>
-      </a>
-
-      <a href="{% url 'cadastro_profissional' %}" class="role-card">
-        <div class="role-icon">👤</div>
-        <div class="role-title">Profissional</div>
-        <div class="role-subtitle">Afiliado</div>
-      </a>
-    </div>
-
   </div>
 </div>
 {% endblock %}
