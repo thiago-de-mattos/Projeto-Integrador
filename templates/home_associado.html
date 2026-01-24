@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Minha Empresa{% endblock %}
+
+{% block content %}
+<div class="container-lista">
+    <div class="welcome-header">
+        <h1>Área do Associado</h1>
+        <p>Gerencie seus dados e projetos.</p>
+    </div>
+
+    {% if empresa %}
+        <div class="card-dashboard">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h2>{{ empresa.nome_fantasia }}</h2>
+                    <p style="color: var(--text-muted);">{{ empresa.cidade }} - {{ empresa.tipo_empresa }}</p>
+                    <p><strong>CNPJ:</strong> {{ empresa.cnpj }}</p>
+                </div>
+                <a href="{% url 'editar_minha_empresa' %}" class="btn-primary">✏️ Editar Dados</a>
+            </div>
+        </div>
+
+        <div class="card-dashboard">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>🎮 Meus Projetos</h3>
+                <a href="{% url 'projetos' %}" class="btn-primary" style="background: var(--secondary);">+ Novo Projeto</a>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela-dados">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for projeto in projetos %}
+                        <tr>
+                            <td>{{ projeto.titulo }}</td>
+                            <td>
+                                <span style="padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1);">
+                                    {{ projeto.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_projeto' projeto.id %}" style="color: var(--primary);">Editar</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3">Nenhum projeto cadastrado ainda.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="card-dashboard" style="text-align: center; padding: 4rem;">
+            <h3>Você ainda não completou o cadastro da sua empresa.</h3>
+            <p style="margin-bottom: 20px;">Finalize seu cadastro para começar a adicionar projetos.</p>
+            <a href="{% url 'empresas' %}" class="btn-primary" style="font-size: 1.2rem;">🚀 Cadastrar Empresa Agora</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
