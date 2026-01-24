@@ -1,19 +1,16 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login as login_django
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse, HttpResponseForbidden
 from django.db.models import Sum, Avg, Count, Q
 
 #
-from django.http import JsonResponse
 import json
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth import get_user_model
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, login as login_django, logout, get_user_model
 User = get_user_model()
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from django.contrib.auth.forms import UserCreationForm
 #
 
 from rolepermissions.roles import assign_role
@@ -198,64 +195,186 @@ def cadastro_profissional(request):
 #             return render(request, 'login.html')
 
 @login_required(login_url="login")
-def home(request):
+def home(request):     
+    role = get_clean_role(request.user) # Corrigido: usa request.user
+
+    if role == 'Diretoria':
+        return redirect('home_diretoria')
+    elif role == 'Associado':
+        return redirect('home_associado')
+    elif role == 'Afiliado':
+        return redirect('home_afiliado')
+    elif role == 'Coletivo':
+        return redirect('home_coletivo')
+    
+    # Se não cair em nenhum cargo específico, renderiza a home padrão sem redirecionar
     context = {
         'username': request.user.username, 
-        'permicoes': get_clean_role(request.user),
+        'permicoes': role,
         'total_contas': Accounts.objects.count(),
         'total_empresas': Empresa.objects.count(),
         'total_projetos': Projeto.objects.count(),
         'total_estudios': Estudios.objects.count(),
     }
-    return render(request, "home.html", context) 
+    return render(request, "home.html", context)
 
 def Teste_Diretoria(request):
     username = "teste_diretoria"
-    email = "teste@gmail.com"
-    password = "123456789"
+    email = "diretoria@teste.com"
+    password = "123"
     
-    # Tenta buscar o usuário pelo username OU email
-    user = CustomUser.objects.filter(username=username).first() or CustomUser.objects.filter(email=email).first()
-    
-    if user is None:
-        # Criar novo usuário de teste
-        user = CustomUser.objects.create_user(
-            username=username,
-            email=email,
-            password=password
-        )
-        user.is_staff = False
-        user.is_superuser = False
+    # 1. Criar ou buscar o usuário
+    user, created = CustomUser.objects.get_or_create(
+        username=username, 
+        email=email
+    )
+    if created:
+        user.set_password(password)
         user.save()
-        
         assign_role(user, 'diretoria')
-        
-        return HttpResponse("""
-            <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
-                <h1 style="color: #19e3ff;">✅ Usuário de teste criado com sucesso!</h1>
-                <div style="background: #1e2435; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Username:</strong> teste_diretoria</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">E-mail:</strong> teste@gmail.com</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Senha:</strong> 123456789</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Permissão:</strong> Diretoria</p>
-                </div>
-                <a href="/login_teste/" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #19e3ff, #4b7bff); color: #0a0e1a; text-decoration: none; border-radius: 10px; font-weight: bold;">Fazer Login →</a>
-            </div>
-        """)
+
+    # 2. Popular dados globais para a Diretoria visualizar
+    # Criar uma empresa caso não exista nenhuma
+    empresa_demo, _ = Empresa.objects.get_or_create(
+        nome_fantasia="Empresa Global de Teste",
+        defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
+    )
+
+    # Criar um estúdio de teste
+    Estudios.objects.get_or_create(
+    nome_do_estudio="Estúdio Galáxia",
+    defaults={
+        'email': 'contato@galaxia.com',  # Obrigatório no Model
+        'endereco': 'Niterói, RJ',       # Use 'endereco' pois 'municipio' não existe no model
+        'telefone': '21999999999'        # Opcional, mas bom para o teste
+    }
+    )
+
+    # Criar um projeto de teste
+    Projeto.objects.get_or_create(
+        titulo="Projeto Alpha - Diretoria",
+        empresa=empresa_demo,
+        defaults={'status': 'concluido'}
+    )
+    
+    # Criar um registro em Accounts (usado na home)
+    Accounts.objects.get_or_create(
+        nome="Administrador Geral",
+        defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
+    )
+
+    return gerar_resposta_html("Diretoria", username, email, password)
+
+def Teste_Associado(request):
+    username = "teste_associado"
+    email = "associado@teste.com"
+    password = "123"
+    
+    user, created = CustomUser.objects.get_or_create(username=username, defaults={'email': email})
+    if created:
+        user.set_password(password)
+        user.save()
+        assign_role(user, 'associado')
+
+    # 1. Criar Empresa
+    empresa, _ = Empresa.objects.get_or_create(
+        cnpj='00000000000199',
+        defaults={
+            'nome_fantasia': "Indie Dev Studios",
+            'razao_social': "Indie Dev LTDA",
+            'cidade': 'Rio de Janeiro',
+            'tipo_empresa': 'Desenvolvedora'
+        }
+    )
+
+    # 2. Vincular via Profile
+    perfil, _ = Profile.objects.get_or_create(user=user)
+    perfil.empresa = empresa
+    perfil.save()
+
+    # 3. Criar Projeto (AJUSTADO AOS CAMPOS DO MODEL)
+    Projeto.objects.get_or_create(
+        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
+        empresa=empresa,
+        defaults={
+            'nome': "Quest do Rio Antigo",        # Campo 'nome' presente no model
+            'descricao': 'Um RPG focado no RJ.',  # Campo 'descricao'
+            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
+            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
+            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
+            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
+        }
+    )
+
+    return gerar_resposta_html("Associado", username, email, password)
+
+def Teste_Afiliado(request):
+    username = "teste_afiliado"
+    email_user = "afiliado@teste.com"
+    password = "123"
+    
+    # 1. Criar ou buscar o Usuário (CustomUser)
+    user, created = CustomUser.objects.get_or_create(
+        username=username, 
+        defaults={'email': email_user}
+    )
+    if created:
+        user.set_password(password)
+        user.save()
+        assign_role(user, 'afiliado')
+
+    # 2. Criar ou buscar o Perfil Profissional
+    # Usamos defaults para os campos obrigatórios do seu model
+    profissional, _ = Profissional.objects.get_or_create(
+        user=user,
+        defaults={
+            'nome_completo': 'João Silva Afiliado',
+            'cpf': '123.456.789-00',          # Obrigatório e deve seguir o regex
+            'email': 'contato_joao@teste.com', # Obrigatório no model Profissional
+            'telefone': '(21) 99999-9999',     # Obrigatório no model
+            'cidade_residencia': 'Niterói',
+            'tempo_experiencia': 5,            # Obrigatório (IntegerField)
+            'biografia': 'Especialista em Pixel Art e Game Design.', # Nome correto
+            'genero': 'M',                     # Opcional, mas bom para o teste
+        }
+    )
+
+    return gerar_resposta_html("Afiliado", username, email_user, password)
+
+def Teste_Coletivo(request):
+    username = "teste_coletivo"
+    email = "coletivo@teste.com"
+    password = "123"
+    
+    user, created = CustomUser.objects.get_or_create(
+        username=username, 
+        defaults={'email': email}
+    )
+    if created:
+        user.set_password(password)
+        user.save()
+        assign_role(user, 'coletivo')
     else:
-        return HttpResponse("""
-            <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center;">
-                <h1 style="color: #e319ff;">⚠️ Usuário de teste já existe!</h1>
-                <div style="background: #1e2435; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Username:</strong> teste_diretoria</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">E-mail:</strong> teste@gmail.com</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Senha:</strong> 123456789</p>
-                    <p style="color: #94a3b8; margin: 10px 0;"><strong style="color: #19e3ff;">Permissão:</strong> Diretoria</p>
-                </div>
-                <a href="/login_teste/" style="display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #19e3ff, #4b7bff); color: #0a0e1a; text-decoration: none; border-radius: 10px; font-weight: bold;">Fazer Login →</a>
+        # Opcional: Garante que o e-mail e a role estejam atualizados 
+        # mesmo que o usuário já existisse de um teste anterior
+        user.email = email
+        user.save()
+        assign_role(user, 'coletivo')
+    return gerar_resposta_html("Coletivo", username, email, password)
+
+def gerar_resposta_html(role_name, username, email, password):
+    return HttpResponse(f"""
+        <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center; background: #0a0e1a; min-height: 100vh; color: white;">
+            <h1 style="color: #19e3ff;">✅ Usuário {role_name} pronto!</h1>
+            <div style="background: #141827; padding: 20px; border-radius: 10px; max-width: 400px; margin: 20px auto; border: 1px solid #19e3ff;">
+                <p><strong style="color: #19e3ff;">Username:</strong> {username}</p>
+                <p><strong style="color: #19e3ff;">E-mail:</strong> {email}</p>
+                <p><strong style="color: #19e3ff;">Senha:</strong> {password}</p>
             </div>
-            """
-            )
+            <a href="/login_teste/" style="display: inline-block; padding: 12px 30px; background: #19e3ff; color: #0a0e1a; text-decoration: none; border-radius: 10px; font-weight: bold;">Ir para o Login</a>
+        </div>
+    """)
+
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
@@ -279,6 +398,66 @@ def visao_diretoria(request):
         }
     
     return render(request, 'visao_diretoria.html', context)
+
+# Home específica para Diretoria
+@login_required
+def home_diretoria(request):
+    context = {
+        'username': request.user.username,
+        'permicoes': 'Diretoria',
+        'total_empresas': Empresa.objects.count(),
+        'total_projetos': Projeto.objects.count(),
+        'total_estudios': Estudios.objects.count(),
+    }
+    return render(request, 'home_diretoria.html', context)
+
+# Home específica para Associados
+@has_role_decorator('associado')
+def home_associado(request):
+    perfil = Profile.objects.filter(user=request.user).first()
+    minha_empresa = perfil.empresa if perfil else None
+    meus_projetos = []
+    if minha_empresa:
+        meus_projetos = Projeto.objects.filter(empresa=minha_empresa)
+    
+    context = {
+        'empresa': minha_empresa,
+        'projetos': meus_projetos,
+        'permicoes': 'Associado'
+    }
+    return render(request, 'home_associado.html', context)
+
+# Home específica para Afiliados
+@has_role_decorator('afiliado')
+def home_afiliado(request):
+    perfil_profissional = Profissional.objects.filter(user=request.user).first()
+    meus_vinculos = VinculoProfissionalEmpresa.objects.filter(profissional=perfil_profissional)
+    
+    context = {
+        'profissional': perfil_profissional,
+        'vinculos': meus_vinculos,
+        'permicoes': 'Afiliado',
+        'title': 'Meu Painel de Profissional'
+    }
+    return render(request, 'home_afiliado.html', context)
+
+# Home específica para Coletivo
+@has_role_decorator('coletivo')
+def home_coletivo(request):
+    total_empresas = Empresa.objects.count()
+    total_projetos = Projeto.objects.count()
+    
+    empresas_por_cidade = Empresa.objects.values('cidade').annotate(total=Count('id')).order_by('-total')[:5]
+
+    context = {
+        'permicoes': 'Coletivo',
+        'total_empresas': total_empresas,
+        'total_projetos': total_projetos,
+        'ranking_cidades': empresas_por_cidade,
+        'username': request.user.username,
+        'titulo_painel': 'Painel de Observação Institucional'
+    }
+    return render(request, 'home_coletivo.html', context)
 
 @login_required(login_url="login")
 def cadastro_empresa(request):

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-lista">
+    <section class="welcome-header" style="text-align: center;">
+        <h1>Olá, {{ username }}! (Diretoria)</h1>
+        <p>Bem-vindo ao painel de visão geral do ecossistema.</p>
+    </section>
+
+    <div class="card-dashboard" style="background: rgba(25, 227, 255, 0.1); border: 1px solid var(--primary); margin-bottom: 30px; text-align: center; padding: 20px;">
+        <h3 style="color: var(--primary); margin-bottom: 15px;">⚡ Gestão do Sistema</h3>
+        <p style="margin-bottom: 15px;">Você tem acesso total aos dados de empresas, projetos e usuários.</p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Acessar Painel de Controle</a>
+            <a href="{% url 'cadastro_teste' %}" class="btn-primary" style="background: var(--secondary);">Cadastrar Usuário</a>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        <div class="card-stat">
+            <h3>Empresas</h3>
+            <span class="stat-number">{{ total_empresas }}</span>
+        </div>
+        <div class="card-stat">
+            <h3>Projetos</h3>
+            <span class="stat-number">{{ total_projetos }}</span>
+        </div>
+        <div class="card-stat">
+            <h3>Estudios</h3>
+            <span class="stat-number">{{ total_estudios }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
