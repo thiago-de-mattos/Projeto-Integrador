@@ -12,6 +12,40 @@
     </p>
   </div>
 
+
+<!-- Projetos Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+{% for jogo in projetos %}
+<a href="{{ jogo.url_site }}" target="_blank"
+   class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1 block">
+
+  <div class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
+    🎮
+  </div>
+
+  <div class="p-4">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">
+        {{ jogo.status }}
+      </span>
+    </div>
+
+    <h3 class="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+      {{ jogo.titulo }}
+    </h3>
+
+    <p class="text-sm text-muted-foreground mb-3">
+      {{ jogo.descricao }}
+    </p>
+  </div>
+</a>
+
+{% empty %}
+<p>Nenhum projeto cadastrado.</p>
+{% endfor %}
+
+</div>
+
   <!-- Projetos Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
     <!-- Projeto 1 - Horizon Chase Turbo -->
@@ -129,7 +163,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Explore o Mapa Section -->
   <section class="bg-card-gradient rounded-2xl border border-border overflow-hidden">
     <div class="grid md:grid-cols-2 gap-0">
