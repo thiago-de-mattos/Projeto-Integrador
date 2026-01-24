@@ -1,4 +1,4 @@
-{% extends 'base_teste.html' %}
+{% extends 'base_vitrine.html' %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -27,15 +27,13 @@
 
     <!-- CTA Buttons -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-fade-in">
-      <a href="{% url 'empresas_teste' %}" class="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-xl text-lg font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all">
+      <a href="{% url 'empresas_vitrine' %}" class="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-xl text-lg font-bold bg-gradient-to-r from-primary to-blue-500 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all">
         Explorar Empresas
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
         </svg>
       </a>
-      <a href="{% url 'mapa' %}" class="inline-flex items-center justify-center gap-2 h-14 px-10 rounded-xl text-lg font-semibold border-2 border-primary/50 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary transition-all">
-        Ver Mapa Interativo
-      </a>
+
     </div>
 
     <!-- Stats Cards -->
@@ -92,7 +90,7 @@
         Conheça os estúdios e empresas que estão transformando o cenário de games no Estado do Rio de Janeiro.
       </p>
     </div>
-    <a href="{% url 'empresas_teste' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+    <a href="{% url 'empresas_vitrine' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
       Ver todas
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -298,7 +296,7 @@
           Jogos desenvolvidos no Rio de Janeiro que conquistaram o mundo.
         </p>
       </div>
-      <a href="{% url 'projetos_teste' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
+      <a href="{% url 'projetos_vitrine' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold border-2 border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary transition-all">
         Ver todos
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
