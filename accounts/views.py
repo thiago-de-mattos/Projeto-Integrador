@@ -11,6 +11,8 @@ User = get_user_model()
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.forms import UserCreationForm
+from datetime import date
+
 #
 
 from rolepermissions.roles import assign_role
@@ -230,35 +232,35 @@ def Teste_Diretoria(request):
         user.save()
         assign_role(user, 'diretoria')
 
-    # 2. Popular dados globais para a Diretoria visualizar
-    # Criar uma empresa caso não exista nenhuma
-    empresa_demo, _ = Empresa.objects.get_or_create(
-        nome_fantasia="Empresa Global de Teste",
-        defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
-    )
+    # # 2. Popular dados globais para a Diretoria visualizar
+    # # Criar uma empresa caso não exista nenhuma
+    # empresa_demo, _ = Empresa.objects.get_or_create(
+    #     nome_fantasia="Empresa Global de Teste",
+    #     defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
+    # )
 
-    # Criar um estúdio de teste
-    Estudios.objects.get_or_create(
-    nome_do_estudio="Estúdio Galáxia",
-    defaults={
-        'email': 'contato@galaxia.com',  # Obrigatório no Model
-        'endereco': 'Niterói, RJ',       # Use 'endereco' pois 'municipio' não existe no model
-        'telefone': '21999999999'        # Opcional, mas bom para o teste
-    }
-    )
+    # # Criar um estúdio de teste
+    # Estudios.objects.get_or_create(
+    # nome_do_estudio="Estúdio Galáxia",
+    # defaults={
+    #     'email': 'contato@galaxia.com',  # Obrigatório no Model
+    #     'endereco': 'Niterói, RJ',       # Use 'endereco' pois 'municipio' não existe no model
+    #     'telefone': '21999999999'        # Opcional, mas bom para o teste
+    # }
+    # )
 
-    # Criar um projeto de teste
-    Projeto.objects.get_or_create(
-        titulo="Projeto Alpha - Diretoria",
-        empresa=empresa_demo,
-        defaults={'status': 'concluido'}
-    )
+    # # Criar um projeto de teste
+    # Projeto.objects.get_or_create(
+    #     titulo="Projeto Alpha - Diretoria",
+    #     empresa=empresa_demo,
+    #     defaults={'status': 'concluido'}
+    # )
     
-    # Criar um registro em Accounts (usado na home)
-    Accounts.objects.get_or_create(
-        nome="Administrador Geral",
-        defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
-    )
+    # # Criar um registro em Accounts (usado na home)
+    # Accounts.objects.get_or_create(
+    #     nome="Administrador Geral",
+    #     defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
+    # )
 
     return gerar_resposta_html("Diretoria", username, email, password)
 
@@ -379,6 +381,7 @@ def visao_diretoria(request):
     contas = Accounts.objects.all()
     empresas = Empresa.objects.all()
     projetos = Projeto.objects.all()
+    estudios=Estudios.objects.all()
 
     try:
         permicoes = list(get_user_roles(request.user))
@@ -392,6 +395,7 @@ def visao_diretoria(request):
         'projetos': projetos,
         'username': request.user.username,
         'permicoes': permicoes_limpa,
+        'estudios':estudios,
         }
     
     return render(request, 'visao_diretoria.html', context)
@@ -427,8 +431,12 @@ def home_associado(request):
 # Home específica para Afiliados
 @has_role_decorator('afiliado')
 def home_afiliado(request):
+    
     perfil_profissional = Profissional.objects.filter(user=request.user).first()
     meus_vinculos = VinculoProfissionalEmpresa.objects.filter(profissional=perfil_profissional)
+
+    # Listar TODOS os vínculos do sistema (para comparação)
+    todos_vinculos = VinculoProfissionalEmpresa.objects.all()
     
     context = {
         'profissional': perfil_profissional,
@@ -1224,3 +1232,54 @@ def editar_projeto(request, projeto_id):
         'form': form,
         'projeto': projeto
     })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+@login_required
+def criar_vinculo_teste(request):
+    """View temporária para criar vínculo de teste - REMOVER EM PRODUÇÃO"""
+    
+    perfil = Profissional.objects.filter(user=request.user).first()
+    
+    if not perfil:
+        messages.error(request, 'Você precisa ter um perfil profissional primeiro.')
+        return redirect('home')
+    
+    # Pegar primeira empresa disponível
+    empresa = Empresa.objects.first()
+    
+    if not empresa:
+        messages.error(request, 'Não há empresas cadastradas no sistema.')
+        return redirect('home')
+    
+    # Verificar se já existe um vínculo para evitar duplicatas
+    vinculo_existe = VinculoProfissionalEmpresa.objects.filter(
+        profissional=perfil,
+        empresa=empresa
+    ).exists()
+    
+    if vinculo_existe:
+        messages.warning(request, 'Você já tem um vínculo com esta empresa.')
+        return redirect('home_afiliado')
+    
+    # Criar vínculo de teste
+    vinculo = VinculoProfissionalEmpresa.objects.create(
+        profissional=perfil,
+        empresa=empresa,
+        cargo="Desenvolvedor de Jogos",
+        tipo_vinculo="CLT",  # Ajuste se necessário baseado nas suas choices
+        data_inicio=date(2024, 1, 1)
+    )
+    
+    messages.success(request, f'✅ Vínculo de teste criado com sucesso! Você agora trabalha na {empresa.nome_fantasia}')
+    return redirect('home_afiliado')
