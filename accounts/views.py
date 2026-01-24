@@ -224,10 +224,7 @@ def Teste_Diretoria(request):
     password = "123"
     
     # 1. Criar ou buscar o usuário
-    user, created = CustomUser.objects.get_or_create(
-        username=username, 
-        email=email
-    )
+    user, created = CustomUser.objects.get_or_create(username=username, defaults={'email': email})
     if created:
         user.set_password(password)
         user.save()
