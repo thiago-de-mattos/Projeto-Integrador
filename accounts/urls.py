@@ -39,7 +39,6 @@ urlpatterns = [
      path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
      path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
      path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
-     path('estudio/editar_estudio/<int:pk>/', views.editar_estudios, name='editar_estudios'),
      path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
      path('projetos/editar/<int:projeto_id>/', views.editar_projeto, name='editar_projeto'),
      
