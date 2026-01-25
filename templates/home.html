@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'base_logado.html' %}
 {% load static %}
 
 {% block title %}Home - ACJOGOS-RJ{% endblock %}
-
-
 
 {% block content %}
 
@@ -26,28 +24,11 @@
 
     </section>
 
-    {% if permicoes == "Diretoria" %}
-    <div class="diretoria">
-        <h3>Área Administrativa</h3>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Acessar Painel</a>
-            <a href="{% url 'cadastro_teste' %}" class="btn-primary">Cadastrar Novo Usuário</a>
-            <a href="{% url 'listagem_empresas' %}" class="btn-primary">Visualizar Empresas</a>
-        </div>
-    </div>
-    {% endif %}
-
     <div class="card-grid">
         <div class="card-stat">
-            <h3>🏢 Empresas</h3>
+            <h3>🏢 Empresas e Estúdios</h3>
             <p>Cadastradas no sistema</p>
             <span class="stat-number">{{ total_empresas }}</span>
-        </div>
-
-        <div class="card-stat">
-            <h3>🎨 Estúdios</h3>
-            <p>Cadastrados no sistema</p>
-            <span class="stat-number">{{ total_estudios }}</span>
         </div>
 
         <div class="card-stat">
