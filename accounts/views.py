@@ -267,16 +267,22 @@ def setup_completo(request):
     # Reaproveita a lógica existente, mas sem retornar o HTML imediatamente
     
     # Diretoria
-    u_dir, _ = CustomUser.objects.get_or_create(username="diretoria_geral", defaults={'email': "diretoria@teste.com"})
+    u_dir, _ = CustomUser.objects.get_or_create(username="diretoria_geral", email="diretoria@teste.com")
     u_dir.set_password("123")
     u_dir.save()
     assign_role(u_dir, 'diretoria')
     
     # Coletivo
-    u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", defaults={'email': "coletivo@teste.com"})
+    u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", email="coletivo@teste.com")
     u_col.set_password("123")
     u_col.save()
     assign_role(u_col, 'coletivo')
+
+    # Afiliado
+    u_afil, _ = CustomUser.objects.get_or_create(username="afiliado_geral", email="afiliado@teste.com", defaults={'first_name': 'Carlos', 'last_name': 'Afiliado'})
+    u_afil.set_password("123")
+    u_afil.save()
+    assign_role(u_afil, 'afiliado')
 
     created_log = []
 
@@ -287,6 +293,8 @@ def setup_completo(request):
         {"nome": "Serrana Arts", "user": "assoc_serra", "cidade": "Petrópolis", "porte": "MEI", "tipo": "Asset Store", "projeto": "Imperial City Sim", "genero": "Simulação"},
         {"nome": "Caxias Code", "user": "assoc_caxias", "cidade": "Duque de Caxias", "porte": "Médio Porte", "tipo": "Outsourcing", "projeto": "Baixada Defense", "genero": "Estratégia"},
         {"nome": "Maricá VR", "user": "assoc_marica", "cidade": "Maricá", "porte": "Pequeno Porte", "tipo": "Desenvolvedora", "projeto": "Maricá Verse", "genero": "Aventura"},
+        {"nome": "Petrópolis Devs", "user": "assoc_petropolis", "cidade": "Petrópolis", "porte": "Pequeno Porte", "tipo": "Desenvolvedora", "projeto": "Serra Run", "genero": "Arcade"},
+        {"nome": "Cabo Frio Studio", "user": "assoc_cabofrio", "cidade": "Cabo Frio", "porte": "Micro Empresa", "tipo": "Desenvolvedora", "projeto": "Ocean Explorer", "genero": "Simulação"},
     ]
 
     for idx, data in enumerate(lista_empresas):
