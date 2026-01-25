@@ -64,7 +64,6 @@ urlpatterns = [
      path('empresas_teste/', views.empresas_vitrine, name='empresas_vitrine'),
      # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
      path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
-     path('mapa_teste/', views.mapa, name='mapa'),
      path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
      path("login_teste/", views.login_view_teste, name="login"),
      path("cadastro_teste/", views.register_view_teste, name="cadastro"),
