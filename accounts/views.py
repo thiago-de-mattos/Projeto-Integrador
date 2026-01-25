@@ -13,8 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth.forms import UserCreationForm
 from datetime import date
 
-#
-
+# Role Permissions
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_role, get_user_roles
 from rolepermissions.decorators import has_role_decorator
@@ -117,6 +116,33 @@ def cadastro_empresa(request):
     
     context = {'form': form}
     return render(request, 'cadastro_empresa.html', context)
+
+# isto esta duplicado
+@login_required(login_url="login")
+def cadastro_empresa(request):
+    """Passo 1: Cadastra os dados da empresa"""
+    if request.method == 'POST':
+        form = EmpresaForm(request.POST, request.FILES)
+        if form.is_valid():
+            empresa = form.save()
+
+            perfil, _ = Profile.objects.get_or_create(user=request.user)
+            perfil.empresa = empresa
+            perfil.save()
+
+            request.session['empresa_id'] = empresa.id
+            
+            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
+ 
+            return redirect('cadastro_responsavel_empresa')
+        else:
+            print("FORM ERRORS:", form.errors)
+            messages.error(request, "Erro no formulário. Verifique os campos.")
+    else:
+        form = EmpresaForm()
+    
+    return render(request, 'cadastro_empresas.html', {'form': form})
+
 
 @login_required(login_url="login")
 def cadastro_profissional(request):
@@ -537,31 +563,6 @@ def home_coletivo(request):
         'titulo_painel': 'Painel de Observação Institucional'
     }
     return render(request, 'home_coletivo.html', context)
-
-@login_required(login_url="login")
-def cadastro_empresa(request):
-    """Passo 1: Cadastra os dados da empresa"""
-    if request.method == 'POST':
-        form = EmpresaForm(request.POST, request.FILES)
-        if form.is_valid():
-            empresa = form.save()
-
-            perfil, _ = Profile.objects.get_or_create(user=request.user)
-            perfil.empresa = empresa
-            perfil.save()
-
-            request.session['empresa_id'] = empresa.id
-            
-            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
- 
-            return redirect('cadastro_responsavel_empresa')
-        else:
-            print("FORM ERRORS:", form.errors)
-            messages.error(request, "Erro no formulário. Verifique os campos.")
-    else:
-        form = EmpresaForm()
-    
-    return render(request, 'cadastro_empresas.html', {'form': form})
 
 @login_required(login_url="login_teste")
 def listagem_empresas(request):
