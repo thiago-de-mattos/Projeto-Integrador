@@ -1007,7 +1007,7 @@ def empresas_vitrine(request):
     
     # Filtro por tipo
     if tipo != 'Todos':
-        empresas = empresas.filter(tipo=tipo)
+        empresas = empresas.filter(tipo_empresa=tipo)
     
     # Listas para filtros - usando 'municipio'
     cidades = Empresa.objects.values_list('municipio', flat=True).distinct().order_by('municipio')
@@ -1022,9 +1022,9 @@ def empresas_vitrine(request):
     ]
     
     # Serializar para Alpine.js - usando campos corretos
-    empresas_json = json.dumps(list(empresas.values(
-        'id', 'nome', 'nome_fantasia', 'tipo_empresa', 'municipio', 'porte_empresa', 'associada_acjogos'
-    )), default=str)
+    empresas_json = list(empresas.values(
+        'id','nome','nome_fantasia','tipo_empresa','municipio','porte_empresa','associada_acjogos'
+    ))
     
     context = {
         'empresas': empresas,

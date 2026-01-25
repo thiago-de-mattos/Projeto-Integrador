@@ -102,8 +102,8 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
 
   {% for empresa in empresas %}
-  <a href="{{ empresa.site }}" target="_blank" class="group block">
-
+  <!--<a href="{{ empresa.site }}" target="_blank" class="group block">
+  -->
     <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 
                 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
 
@@ -187,9 +187,11 @@
 <!-- Projetos Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
     {% for jogo in projetos %}
-    <a href="{{ jogo.url_site }}" target="_blank"
+    <!--<a href="{{ jogo.url_site }}" target="_blank"
       class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1 block">
-
+    -->
+    <a target="_blank"
+      class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1 block"> 
       <div
         class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
         🎮
