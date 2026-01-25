@@ -2,48 +2,54 @@
 {% load permission_tags %}
 
 {% block content %}
-<div class="stats-detalhes-container">
-    
-    <header class="stats-detalhes-header">
-        <h1 class="stats-detalhes-titulo">Relatórios Detalhados</h1>
-        <div class="stats-detalhes-alerta">
-            <span role="img" aria-label="lock">🔒</span> Acesso restrito: Diretoria e Coletivos
-        </div>
+<div class="stats-container">
+    <header class="stats-header">
+        <h1>Estatísticas do Setor de Games - RJ</h1>
+        <p class="stats-ano">Dados de {{ ano_referencia }}</p>
     </header>
 
-    <section class="stats-detalhes-secao">
-        <h2 class="stats-detalhes-grid-titulo">Dados do Setor - {{ ano_atual }}</h2>
-
-        <div class="stats-detalhes-cards">
-            <div class="stats-detalhes-card destaque">
-                <h3>Faturamento Total</h3>
-                <p class="stats-detalhes-numero">R$ {{ faturamento_total|floatformat:0|default:"0" }}</p>
-            </div>
-
-            <div class="stats-detalhes-card">
-                <h3>Total de Empresas</h3>
-                <p class="stats-detalhes-numero">{{ total_empresas|default:"0" }}</p>
-            </div>
-
-            <div class="stats-detalhes-card">
-                <h3>Total de Funcionários</h3>
-                <p class="stats-detalhes-numero">{{ total_funcionarios|default:"0" }}</p>
-            </div>
-
-            <div class="stats-detalhes-card">
-                <h3>Projetos em Andamento</h3>
-                <p class="stats-detalhes-numero">{{ total_projetos|default:"0" }}</p>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total de Empresas</h3>
+            <p class="stat-numero">{{ total_empresas }}</p>
         </div>
-    </section>
 
-    {% if user.is_authenticated and user|has_role:'Diretoria' %}
-    <div class="stats-detalhes-admin">
-        <h3 class="stats-admin-titulo">Painel Administrativo</h3>
-        <p>Dados sensíveis visíveis apenas para a Diretoria.</p>
-        <div class="button-group">
-            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Exportar Relatório CSV</a>
+        <div class="stat-card">
+            <h3>Empresas Ativas</h3>
+            <p class="stat-numero">{{ empresas_ativas }}</p>
         </div>
+
+        <div class="stat-card">
+            <h3>Profissionais Ativos</h3>
+            <p class="stat-numero">{{ total_profissionais }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total de Projetos</h3>
+            <p class="stat-numero">{{ total_projetos }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Em Desenvolvimento</h3>
+            <p class="stat-numero">{{ projetos_desenvolvimento }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Jogos Lançados</h3>
+            <p class="stat-numero">{{ projetos_lancados }}</p>
+        </div>
+    </div>
+
+    {% if pode_ver_detalhadas %}
+    <div class="acesso-detalhado">
+        <div class="badge-permissao">
+            🔓 Você tem acesso especial
+        </div>
+        <h3>Estatísticas Detalhadas Disponíveis</h3>
+        <p>Acesse dados completos de faturamento, investimentos e análises do setor</p>
+        <a href="{% url 'estatistica_detalhada' %}" class="btn-detalhadas">
+            📊 Ver Estatísticas Detalhadas
+        </a>
     </div>
     {% endif %}
 </div>

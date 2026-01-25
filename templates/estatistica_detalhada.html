@@ -1,5 +1,5 @@
 {% extends 'base_logado.html' %}
-{% load permission_tags %}
+{% load static %}
 
 {% block content %}
 <div class="stats-detalhes-container">
@@ -17,7 +17,7 @@
         <div class="stats-detalhes-cards">
             <div class="stats-detalhes-card destaque">
                 <h3>Faturamento Total</h3>
-                <p class="stats-detalhes-numero">R$ {{ faturamento_total|floatformat:0|default:"0" }}</p>
+                <p class="stats-detalhes-numero">R$ {{ stats_ano_atual.faturamento_total|floatformat:2|default:"0,00" }}</p>
             </div>
 
             <div class="stats-detalhes-card">
@@ -26,23 +26,57 @@
             </div>
 
             <div class="stats-detalhes-card">
-                <h3>Total de Funcionários</h3>
-                <p class="stats-detalhes-numero">{{ total_funcionarios|default:"0" }}</p>
+                <h3>Total de Funcionários ({{ ano_atual }})</h3>
+                <p class="stats-detalhes-numero">{{ stats_ano_atual.total_funcionarios|default:"0" }}</p>
             </div>
 
             <div class="stats-detalhes-card">
-                <h3>Projetos em Andamento</h3>
+                <h3>Profissionais Ativos</h3>
+                <p class="stats-detalhes-numero">{{ total_profissionais|default:"0" }}</p>
+                <small>{{ vinculos_ativos }} vínculos ativos</small>
+            </div>
+
+            <div class="stats-detalhes-card">
+                <h3>Empresas Ativas</h3>
+                <p class="stats-detalhes-numero">{{ empresas_ativas|default:"0" }}</p>
+            </div>
+
+            <div class="stats-detalhes-card">
+                <h3>Total de Projetos</h3>
                 <p class="stats-detalhes-numero">{{ total_projetos|default:"0" }}</p>
             </div>
         </div>
     </section>
 
-    {% if user.is_authenticated and user|has_role:'Diretoria' %}
+    <!-- Seção de Projetos -->
+    <section class="stats-detalhes-secao">
+        <h2 class="stats-detalhes-grid-titulo">Projetos por Status</h2>
+        <div class="stats-lista">
+            {% for item in projetos_por_status %}
+            <div class="stats-item">
+                <span class="status-label">{{ item.status }}</span>
+                <span class="status-count">{{ item.total }}</span>
+            </div>
+            {% empty %}
+            <p>Sem dados de projetos</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if is_diretoria %}
     <div class="stats-detalhes-admin">
-        <h3 class="stats-admin-titulo">Painel Administrativo</h3>
+        <h3 class="stats-admin-titulo">🔐 Painel Administrativo</h3>
         <p>Dados sensíveis visíveis apenas para a Diretoria.</p>
-        <div class="button-group">
-            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Exportar Relatório CSV</a>
+        
+        <div class="stats-admin-cards">
+            <div class="admin-card">
+                <h4>Faturamento Médio</h4>
+                <p>R$ {{ stats_ano_atual.faturamento_medio|floatformat:2|default:"0,00" }}</p>
+            </div>
+            <div class="admin-card">
+                <h4>Investimento Total</h4>
+                <p>R$ {{ stats_ano_atual.investimento_total|floatformat:2|default:"0,00" }}</p>
+            </div>
         </div>
     </div>
     {% endif %}
