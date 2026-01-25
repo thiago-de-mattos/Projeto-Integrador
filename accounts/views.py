@@ -302,13 +302,13 @@ def setup_completo(request):
     # Reaproveita a lógica existente, mas sem retornar o HTML imediatamente
     
     # Diretoria
-    u_dir, _ = CustomUser.objects.get_or_create(username="diretoria_geral", defaults={'email': "diretoria@acjogos.teste"})
+    u_dir, _ = CustomUser.objects.get_or_create(username="diretoria_geral", defaults={'email': "diretoria@teste.com"})
     u_dir.set_password("123")
     u_dir.save()
     assign_role(u_dir, 'diretoria')
     
     # Coletivo
-    u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", defaults={'email': "coletivo@acjogos.teste"})
+    u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", defaults={'email': "coletivo@teste.com"})
     u_col.set_password("123")
     u_col.save()
     assign_role(u_col, 'coletivo')
@@ -345,7 +345,6 @@ def setup_completo(request):
                 'tipo_empresa': data['tipo'],
                 'porte_empresa': data['porte'],
                 'associada_acjogos': True, # Para aparecer na vitrine
-                'ativo': True
             }
         )
 
