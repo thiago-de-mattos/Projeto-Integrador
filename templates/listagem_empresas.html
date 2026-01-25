@@ -31,7 +31,7 @@
 
     {% if empresas %}
     <button onclick="toggleDiv('conteudo_empresas')" class="btn-toggle-section">🏢 Ver Empresas</button>
-    <div id="conteudo_empresas" style="display:none">
+    <div id="conteudo_empresas" class="is-hidden">
         <div class="business-grid">
             {% for empresa in empresas %}
             <div class="entity-card">
@@ -48,7 +48,7 @@
 
     {% if responsaveis %}
     <button onclick="toggleDiv('conteudo_responsaveis')" class="btn-toggle-section">👤 Ver Responsáveis</button>
-    <div id="conteudo_responsaveis" style="display:none">
+    <div id="conteudo_empresas" class="is-hidden">
         <div class="business-grid">
             {% for responsavel in responsaveis %}
             <div class="entity-card">
@@ -67,7 +67,7 @@
 
     {% if projetos %}
     <button onclick="toggleDiv('conteudo_projetos')" class="btn-toggle-section">🚀 Ver Projetos</button>
-    <div id="conteudo_projetos" style="display:none">
+    <div id="conteudo_empresas" class="is-hidden">
         <div class="business-grid">
             {% for projeto in projetos %}
             <div class="entity-card">
@@ -83,9 +83,12 @@
 </div>
 
 <script>
-function toggleDiv(id) {
-    const el = document.getElementById(id);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+function toggleDiv(divId) {
+    const elemento = document.getElementById(divId);
+    if (elemento) {
+        // .toggle adiciona a classe se não existir, e remove se já existir
+        elemento.classList.toggle('is-hidden');
+    }
 }
 </script>
 {% endblock %}

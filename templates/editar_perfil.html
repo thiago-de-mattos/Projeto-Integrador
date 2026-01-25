@@ -2,73 +2,65 @@
 
 {% block title %}Editar Meu Perfil - ACJOGOS-RJ{% endblock %}
 
-
 {% block content %}
-<div class="container">
-    <h1 class="titulo">✨ Editar Perfil</h1>
+<div class="perfil-container animate-fade-in">
+    <h1 class="page-title">Editar Perfil</h1>
 
     <form method="POST" enctype="multipart/form-data" class="form-perfil">
         {% csrf_token %}
-        
-        <div class="form-section">
-            <div class="form-group">
-                <label>👤 Usuário:</label>
-                <input type="text" value="{{ user.username }}" disabled>
-                <small class="helptext">O nome de usuário não pode ser alterado.</small>
-            </div>
 
-            <div class="form-group">
-                <label for="{{ form.telefone_contato.id_for_label }}">📱 Telefone:</label>
-                {{ form.telefone_contato }}
-            </div>
-        </div>
-
-        <div class="form-section">
-            <div class="form-group foto-perfil-secao">
-                <label>📸 Sua Foto de Perfil</label>
-                
-                <div class="avatar-wrapper">
-                    <div class="avatar-preview">
-                        {% if form.instance.foto_perfil %}
-                            <img src="{{ form.instance.foto_perfil.url }}" alt="Foto de Perfil" id="preview-img">
-                        {% else %}
-                            <div class="avatar-placeholder">
-                                <img src="" id="preview-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                                <span id="avatar-icon" style="font-size: 3rem;">👤</span>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="avatar-controls">
-                        <label for="{{ form.foto_perfil.id_for_label }}" class="btn-upload">
-                            📷 Alterar Foto
-                        </label>
-                        <input type="file" name="foto_perfil" id="{{ form.foto_perfil.id_for_label }}" class="input-file-oculto" accept="image/*">
-
-                        {% if form.instance.foto_perfil %}
-                            <input type="checkbox" name="foto_perfil-clear" id="foto_perfil-clear_id" class="checkbox-limpar">
-                            <label for="foto_perfil-clear_id" class="btn-remover">
-                                🗑️ Remover Foto
-                            </label>
-                        {% endif %}
-                    </div>
+        <div class="avatar-edit-section">
+            <div class="avatar-edit-section">
+                <label class="section-label">Sua Foto de Perfil</label>
                 </div>
-                {% if form.foto_perfil.errors %}
-                    <div class="errorlist">{{ form.foto_perfil.errors }}</div>
+            
+            <div class="avatar-wrapper">
+                <img src="{% if form.instance.foto_perfil %}{{ form.instance.foto_perfil.url }}{% endif %}" 
+                    alt="Foto de Perfil" 
+                    id="preview-img" 
+                    class="avatar-perfil-round {% if not form.instance.foto_perfil %}is-hidden{% endif %}">
+                
+                <div id="avatar-icon" class="avatar-perfil-round {% if form.instance.foto_perfil %}is-hidden{% endif %}" 
+                    style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); font-size: 3rem; margin: 0 auto;">
+                    👤
+                </div>
+            </div>
+
+            <div class="upload-controls">
+                {{ form.foto_perfil }}
+
+                {% if form.instance.foto_perfil %}
+                    <button type="button" class="btn-remover" onclick="acionarRemocao()">
+                        🗑️ Remover Foto Atual
+                    </button>
                 {% endif %}
             </div>
         </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">💾 Salvar Perfil</button>
-            <a href="{% url 'home' %}" class="btn-cancel">
-                ← Cancelar
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
+
+        <div class="form-group">
+            <label>👤 Usuário:</label>
+            <input type="text" value="{{ user.username }}" disabled>
+            <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">O nome de usuário é fixo.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.telefone_contato.id_for_label }}">📱 Telefone de Contato:</label>
+            {{ form.telefone_contato }}
+        </div>
+
+        <div class="button-group-center">
+            <button type="submit" class="btn-primary" style="min-width: 150px;">💾 Salvar</button>
+            <a href="{% url 'home' %}" class="btn-primary btn-secondary" style="min-width: 150px; text-align: center;">
+                Cancelar
             </a>
         </div>
     </form>
 </div>
 
 <script> 
+    // Script de Preview Melhorado
     const inputFoto = document.querySelector('input[type="file"]');
     const previewImg = document.getElementById('preview-img');
     const avatarIcon = document.getElementById('avatar-icon');
@@ -76,21 +68,37 @@
     if (inputFoto) {
         inputFoto.addEventListener('change', function() {
             const file = this.files[0];
-            
             if (file) {
                 const reader = new FileReader();
-
                 reader.onload = function(e) {
                     previewImg.src = e.target.result;
-                    previewImg.style.display = 'block';
-                    if (avatarIcon) {
-                        avatarIcon.style.display = 'none';
-                    }
+                    previewImg.classList.remove('is-hidden');
+                    if (avatarIcon) avatarIcon.classList.add('is-hidden');
                 }
-
                 reader.readAsDataURL(file);
             }
         });
+    }
+
+    function removerFoto() {
+    if (confirm("Deseja realmente remover sua foto de perfil?")) {
+        // Marca o checkbox escondido do Django
+        const checkbox = document.getElementById('foto_perfil-clear_id');
+        if (checkbox) checkbox.checked = true;
+        
+        // Submete o formulário automaticamente para aplicar a mudança
+        document.querySelector('.form-perfil').submit();
+    }
+}
+
+    function acionarRemocao() {
+        // Localiza o checkbox que o Django criou e o CSS escondeu
+        const checkboxReal = document.getElementById('foto_perfil-clear_id');
+        if (checkboxReal) {
+            checkboxReal.checked = true;
+            // Submete o formulário para processar a remoção
+            document.querySelector('.form-perfil').submit();
+        }
     }
 </script>
 {% endblock %}

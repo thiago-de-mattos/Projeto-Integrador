@@ -2,19 +2,18 @@
 
 {% block title %}Painel de Controle - ACJOGOS-RJ{% endblock %}
 
-
 {% block content %}
 <div class="container-lista">
     
     <div class="painel-header">
-        <h2>Painel de Controle - Diretoria </h2>
-        <p>Olá, <strong>{{ username }}</strong>! Aqui você pode visualizar todos os registros do sistema</p>
+        <h2>Painel de Controle - Diretoria</h2>
+        <p>Olá, <strong>{{ username }}</strong>! Gerencie todos os registros do sistema nesta visão unificada.</p>
     </div>
 
-    <!-- Seção de Empresas -->
     <div class="section-title">
-        
-        <h3>Empresas e Estúdios Cadastrados</h3>
+        <h3>🏢 Empresas e Estúdios Cadastrados</h3>
+        <div class="button-group" style="margin-top: 0;"> <a href="{% url 'listagem_empresas' %}" class="btn-primary" style="font-size: 0.8rem;">🔍 Filtros Avançados</a>
+        </div>
     </div>
 
     <div class="tabela-wrapper">
@@ -33,44 +32,29 @@
                     <td><strong>{{ empresa.nome_fantasia }}</strong></td>
                     <td>
                         {% if not empresa.ativo %}
-                            <span class="status-badge" style="background: #ffc107; color: #000;">Aguardando Aprovação</span>
+                            <span class="status-badge pending">Aguardando Aprovação</span>
                         {% else %}
-                            <span class="status-badge">Cadastro Validado</span>
+                            <span class="status-badge validated">Cadastro Validado</span>
                         {% endif %}
                     </td>
                     <td>{{ empresa.cidade }}/{{ empresa.estado }}</td>
-                    
                     <td>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <a href="{% url 'editar_empresas' empresa.pk %}" class="btn-action">editar</a>
-
-                            {% if not empresa.ativo %}
-                            <form method="POST" style="margin: 0;">
-                                {% csrf_token %}
-                                <input type="hidden" name="aprovar_id" value="{{ empresa.id }}">
-                                <button type="submit" class="btn-action">aprovar</button>
-                            </form>
-                            {% else %}
-                                <span style="color: var(--rj-green); font-size: 0.8rem; font-weight: bold;">✔ APROVADO</span>
-                            {% endif %}
-                        </div>
+                        <a href="{% url 'editar_empresas' empresa.pk %}" class="btn-action btn-visualizar">Editar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" style="text-align: center; padding: 20px;">Nenhuma empresa encontrada.</td>
+                    <td colspan="4" class="text-center" style="padding: 20px;">Nenhuma empresa encontrada.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <hr>
+    <hr class="mt-30">
 
-    <!-- Seção de Projetos -->
     <div class="section-title">
-        
-        <h3>Projetos em Desenvolvimento</h3>
+        <h3>🚀 Projetos em Desenvolvimento</h3>
     </div>
 
     <div class="tabela-wrapper">
@@ -90,12 +74,12 @@
                     <td><span class="status-badge">{{ projeto.get_status_display }}</span></td>
                     <td>{{ projeto.equipe_projeto }}</td>
                     <td>
-                        <a href="{% url 'editar_projeto' projeto.pk %}" class="btn-action btn-visualizar">editar</a>
+                        <a href="{% url 'editar_projeto' projeto.pk %}" class="btn-action btn-visualizar">Gerenciar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4">Nenhum projeto encontrado.</td>
+                    <td colspan="4" class="text-center" style="padding: 20px;">Nenhum projeto encontrado.</td>
                 </tr>
                 {% endfor %}
             </tbody>

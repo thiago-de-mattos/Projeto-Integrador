@@ -2,14 +2,12 @@
 {% load permission_tags %}
 
 {% block content %}
-
-
 <div class="stats-detalhes-container">
     
     <header class="stats-detalhes-header">
         <h1 class="stats-detalhes-titulo">Relatórios Detalhados</h1>
         <div class="stats-detalhes-alerta">
-            <span>🔒</span> Acesso restrito: Diretoria e Coletivos
+            <span role="img" aria-label="lock">🔒</span> Acesso restrito: Diretoria e Coletivos
         </div>
     </header>
 
@@ -41,12 +39,12 @@
 
     {% if user.is_authenticated and user|has_role:'Diretoria' %}
     <div class="stats-detalhes-admin">
-        <h3 style="color: #f87171; margin-bottom: 0.5rem; font-size: 1.1rem;">🛡️ Área Administrativa</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
-            Painel exclusivo. Gerencie permissões e cadastros através do módulo de gestão.
-        </p>
+        <h3 class="stats-admin-titulo">Painel Administrativo</h3>
+        <p>Dados sensíveis visíveis apenas para a Diretoria.</p>
+        <div class="button-group">
+            <a href="{% url 'visao_diretoria' %}" class="btn-primary">Exportar Relatório CSV</a>
+        </div>
     </div>
     {% endif %}
-
 </div>
 {% endblock %}
