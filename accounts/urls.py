@@ -30,10 +30,7 @@ urlpatterns = [
      path('diretoria/gestao/', views.visao_diretoria, name='visao_diretoria'),
 
      #Usuario de teste 
-     path('setup/diretoria/', views.Teste_Diretoria, name='setup_diretoria'),
-     path('setup/associado/', views.Teste_Associado, name='setup_associado'),
-     path('setup/afiliado/', views.Teste_Afiliado, name='setup_afiliado'),
-     path('setup/coletivo/', views.Teste_Coletivo, name='setup_coletivo'),
+     path('setup/geral/', views.setup_completo, name='setup_completo'),
 
 # --- Edições ---
      path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
