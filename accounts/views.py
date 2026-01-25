@@ -327,7 +327,121 @@ def Teste_Associado(request):
             'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
         }
     )
+    
+    # 1. Criar Empresa
+    empresa, _ = Empresa.objects.get_or_create(
+        cnpj='00000000000200',
+        defaults={
+            'nome_fantasia': "Indie Dev Studios",
+            'razao_social': "Indie Dev LTDA",
+            'cidade': 'Rio de Janeiro',
+            'tipo_empresa': 'Desenvolvedora'
+        }
+    )
 
+    # 2. Vincular via Profile
+    perfil, _ = Profile.objects.get_or_create(user=user)
+    perfil.empresa = empresa
+    perfil.save()
+
+    Projeto.objects.get_or_create(
+        titulo="Quest do Rio Bonito", # Usando título (o model tem __str__ retornando titulo)
+        empresa=empresa,
+        defaults={
+            'nome': "Quest do Rio Bonito",        # Campo 'nome' presente no model
+            'descricao': 'Um RPG focado no lol.',  # Campo 'descricao'
+            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
+            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
+            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
+            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
+        }
+    )
+    
+    # 1. Criar Empresa
+    empresa, _ = Empresa.objects.get_or_create(
+        cnpj='00000000000201',
+        defaults={
+            'nome_fantasia': "Indie Dev Studios",
+            'razao_social': "Indie Dev LTDA",
+            'cidade': 'Rio de Janeiro',
+            'tipo_empresa': 'Desenvolvedora'
+        }
+    )
+
+    # 2. Vincular via Profile
+    perfil, _ = Profile.objects.get_or_create(user=user)
+    perfil.empresa = empresa
+    perfil.save()
+
+    Projeto.objects.get_or_create(
+        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
+        empresa=empresa,
+        defaults={
+            'nome': "Quest do Rio Tiroteiro",        # Campo 'nome' presente no model
+            'descricao': 'Um RPG focado no Rio.',  # Campo 'descricao'
+            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
+            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
+            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
+            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
+        }
+    )
+    
+    # 1. Criar Empresa
+    empresa, _ = Empresa.objects.get_or_create(
+        cnpj='00000000000202',
+        defaults={
+            'nome_fantasia': "Indie Dev Studios",
+            'razao_social': "Indie Dev LTDA",
+            'cidade': 'Rio de Janeiro',
+            'tipo_empresa': 'Desenvolvedora'
+        }
+    )
+
+    # 2. Vincular via Profile
+    perfil, _ = Profile.objects.get_or_create(user=user)
+    perfil.empresa = empresa
+    perfil.save()
+
+    Projeto.objects.get_or_create(
+        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
+        empresa=empresa,
+        defaults={
+            'nome': "Quest do Rio TV",        # Campo 'nome' presente no model
+            'descricao': 'Um RPG focado no TV.',  # Campo 'descricao'
+            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
+            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
+            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
+            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
+        }
+    )
+    # 1. Criar Empresa
+    empresa, _ = Empresa.objects.get_or_create(
+        cnpj='00000000000204',
+        defaults={
+            'nome_fantasia': "Indie Dev Studios",
+            'razao_social': "Indie Dev LTDA",
+            'cidade': 'Rio de Janeiro',
+            'tipo_empresa': 'Desenvolvedora'
+        }
+    )
+
+    # 2. Vincular via Profile
+    perfil, _ = Profile.objects.get_or_create(user=user)
+    perfil.empresa = empresa
+    perfil.save()
+
+    Projeto.objects.get_or_create(
+        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
+        empresa=empresa,
+        defaults={
+            'nome': "Quest do Rio Relogio",        # Campo 'nome' presente no model
+            'descricao': 'Um RPG focado no ada.',  # Campo 'descricao'
+            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
+            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
+            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
+            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
+        }
+    )
     return gerar_resposta_html("Associado", username, email, password)
 
 def Teste_Afiliado(request):
@@ -872,7 +986,6 @@ def vitrine(request):
     
     # Ajustar conforme seu modelo de Projeto
     projetos_destaque = Projeto.objects.all().select_related('empresa').order_by('-data_lancamento')[:4]
-    
     # Estatísticas gerais
     stats = {
         'total_empresas': Empresa.objects.filter(associada_acjogos=True).count(),
@@ -880,10 +993,15 @@ def vitrine(request):
         'total_cidades': Empresa.objects.filter(associada_acjogos=True).values('municipio').distinct().count(),
     }
     
+    projetos = Projeto.objects.all().select_related('empresa').order_by('-data_lancamento')
+    empresa = Empresa.objects.all()
     context = {
         'empresas_destaque': empresas_destaque,
         'projetos_destaque': projetos_destaque,
         'stats': stats,
+        'projetos': projetos,
+        'empresas': empresa,
+        
     }
     return render(request, 'vitrine.html', context)
 

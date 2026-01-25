@@ -98,189 +98,69 @@
     </a>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Card Empresa 1 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🎮
-          </div>
-          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-            Destaque
-          </span>
-        </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          Aquiris Game Studio
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Rio de Janeiro
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            50-100
-          </span>
-        </div>
-      </div>
-    </a>
+<!-- Projetos Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
 
-    <!-- Card Empresa 2 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🐌
-          </div>
-          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-            Destaque
-          </span>
-        </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          Rogue Snail
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento Indie</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Niterói
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            10-20
-          </span>
-        </div>
-      </div>
-    </a>
+  {% for empresa in empresas %}
+  <a href="{{ empresa.site }}" target="_blank" class="group block">
 
-    <!-- Card Empresa 3 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            ⚔️
-          </div>
-        </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          Swordtales
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Rio de Janeiro
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            5-10
-          </span>
-        </div>
-      </div>
-    </a>
+    <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 
+                hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
 
-    <!-- Card Empresa 4 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🎭
-          </div>
-          <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-            Destaque
-          </span>
+      <!-- Header -->
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl 
+                    group-hover:scale-110 transition-transform">
+          🏢
         </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          JoyMasher
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento Indie</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Rio de Janeiro
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            2-5
-          </span>
-        </div>
-      </div>
-    </a>
 
-    <!-- Card Empresa 5 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            👁️
-          </div>
-        </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          Behold Studios
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Rio de Janeiro
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            10-20
-          </span>
-        </div>
+        <span class="px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
+          Empresa
+        </span>
       </div>
-    </a>
 
-    <!-- Card Empresa 6 -->
-    <a href="#" class="group block">
-      <div class="bg-card-gradient rounded-xl border border-border p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🎨
-          </div>
-        </div>
-        <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-          Dumativa
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">Desenvolvimento</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            </svg>
-            Petrópolis
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            5-10
-          </span>
-        </div>
+      <!-- Nome -->
+      <h3 class="font-display font-semibold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+        {{ empresa.nome_fantasia }}
+      </h3>
+
+      <!-- Tipo / Site -->
+      <p class="text-sm text-muted-foreground mb-4">
+        {{ empresa.site }}
+      </p>
+
+      <!-- Infos -->
+      <div class="flex items-center gap-4 text-sm text-muted-foreground">
+
+        <!-- Cidade -->
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          </svg>
+          {{ empresa.cidade }}
+        </span>
+
+        <!-- Funcionários (exemplo) -->
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          {{ empresa.qtd_funcionarios|default:"--" }}
+        </span>
+
       </div>
-    </a>
+
+    </div>
+  </a>
+
+  {% empty %}
+    <p>Nenhuma empresa cadastrada.</p>
+  {% endfor %}
+
+</div>
+
   </div>
 </section>
 
@@ -304,48 +184,37 @@
       </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Projeto 1 -->
-      <div class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1">
-        <div class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
-          🏎️
-        </div>
-        <div class="p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">
-              Lançado
-            </span>
-            <div class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              <span class="text-sm font-bold text-foreground">4.8</span>
-            </div>
-          </div>
-          <h3 class="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-            Horizon Chase Turbo
-          </h3>
-          <p class="text-sm text-muted-foreground mb-3">Aquiris</p>
-          <div class="flex gap-2">
-            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">PC</span>
-            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">PS4</span>
-            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">Switch</span>
-            <span class="px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">+1</span>
-          </div>
-        </div>
+<!-- Projetos Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+    {% for jogo in projetos %}
+    <a href="{{ jogo.url_site }}" target="_blank"
+      class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1 block">
+
+      <div
+        class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
+        🎮
       </div>
 
-      <!-- Projeto 2 -->
-      <div class="bg-card-gradient rounded-xl border border-border overflow-hidden group hover:border-primary/50 transition-all hover:-translate-y-1">
-        <div class="aspect-video bg-secondary flex items-center justify-center text-6xl group-hover:scale-105 transition-transform">
-          🔫
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">
+            {{ jogo.status }}
+          </span>
         </div>
-        <div class="p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-1 rounded text-xs font-medium bg-purple-500/20 text-purple-400">
-              Em Desenvolvimento
-            </span>
-            <div class="flex items-center gap-1">
-              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                
+
+        <h3 class="font-display font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+          {{ jogo.titulo }}
+        </h3>
+
+        <p class="text-sm text-muted-foreground mb-3">
+          {{ jogo.descricao }}
+        </p>
+      </div>
+    </a>
+
+    {% empty %}
+    <p>Nenhum projeto cadastrado.</p>
+    {% endfor %}
+
+  </div>
 {% endblock %}
