@@ -123,17 +123,36 @@ def cadastro_profissional(request):
     
     if request.method == 'POST':
         form = CadastroProfissionalForm(request.POST)
-        
+       
+        if not form.is_valid():
+            print("FORMULÁRIO INVÁLIDO!")
+            print("Erros:", form.errors)
+            print("Dados recebidos:", request.POST)
+            
+            # Adiciona mensagem de erro geral
+            messages.error(
+                request, 
+                'Existem erros no formulário. Por favor, corrija os campos destacados abaixo.'
+            )
+
+            # Mostra cada erro individualmente (opcional - já aparece no campo)
+            for field, errors in form.errors.items():
+                for error in errors:
+                    print(f"  - {field}: {error}")
+    
         if form.is_valid():
             try:
-                # Pega o email e senha
+                # 1. Pegar dados do formulário
                 email = form.cleaned_data['email']
                 password = form.cleaned_data['password']
                 
-                # Cria o User
+                print(f"Criando usuário: {email}")
+                
+                # 2. Criar o User
                 username = email.split('@')[0]
                 base_username = username
                 counter = 1
+                
                 while User.objects.filter(username=username).exists():
                     username = f"{base_username}{counter}"
                     counter += 1
@@ -141,33 +160,47 @@ def cadastro_profissional(request):
                 user = User.objects.create_user(
                     username=username,
                     email=email,
-                    password=password
+                    password=password,
+                    first_name=form.cleaned_data.get('nome_completo', '').split()[0] if form.cleaned_data.get('nome_completo') else ''
                 )
+                print(f"User criado: {user.username}")
                 
-                # Salva o Profissional
+                # 3. Atribuir role DIRETAMENTE
+                assign_role(user, 'afiliado')
+                print(f" Role 'afiliado' atribuída")
+                
+                # 4. Salvar o Profissional
                 profissional = form.save(commit=False)
                 profissional.user = user
                 profissional.email = email
                 profissional.save()
+                print(f"Profissional criado: {profissional.nome_completo}")
                 
-                # Cria o Profile
+                # 5. Criar o Profile
                 profile = Profile.objects.create(
                     user=user,
                     tipo_usuario='PROFISSIONAL',
                     profissional=profissional
                 )
+                print(f"Profile criado")
                 
-                # Signal vai dar cargo "Afiliado" automaticamente
+                # 6. Mensagem de sucesso
+                messages.success(
+                    request, 
+                    f' Cadastro realizado com sucesso! Bem-vindo(a), {profissional.nome_completo}! Você já pode fazer login.'
+                )
                 
-                messages.success(request, 'Cadastro realizado! Você já pode fazer login.')
-                return redirect('login')
+                return redirect('home/diretoria/')
                 
             except Exception as e:
-                messages.error(request, f'Erro ao cadastrar: {str(e)}')
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f'{field}: {error}')
+                print(f" ERRO AO CADASTRAR: {e}")
+                import traceback
+                traceback.print_exc()
+                
+                messages.error(
+                    request, 
+                    f' Erro ao cadastrar: {str(e)}. Tente novamente ou entre em contato com o suporte.'
+                )
     else:
         form = CadastroProfissionalForm()
     
@@ -1065,41 +1098,6 @@ def projetos_vitrine(request):
         'selected_genero': genero,
     }
     return render(request, 'projetos_vitrine.html', context)
-
-
-def mapa(request):
-    """Mapa interativo das empresas"""
-    # Ajuste conforme os campos de latitude/longitude do seu modelo
-    empresas = Empresa.objects.filter(
-        latitude__isnull=False,
-        longitude__isnull=False
-    )
-    
-    # Serializar coordenadas para o mapa
-    empresas_coords = []
-    for emp in empresas:
-        empresas_coords.append({
-            'nome': emp.nome,
-            'cidade': emp.municipio,  # Usando municipio
-            'lat': float(emp.latitude),
-            'lng': float(emp.longitude),
-            'porte': emp.porte_empresa,  # Usando porte_empresa
-        })
-    
-    # Estatísticas para o mapa
-    stats = {
-        'regioes': 8,
-        'cidades': empresas.values('municipio').distinct().count(),
-        'empresas': empresas.count(),
-        'profissionais': Profile.objects.filter(user__is_active=True).count(),
-    }
-    
-    context = {
-        'empresas_coords_json': json.dumps(empresas_coords),
-        'stats': stats,
-    }
-    return render(request, 'mapa.html', context)
-
 
 def estatisticas_teste(request):
     """Página de estatísticas do ecossistema"""

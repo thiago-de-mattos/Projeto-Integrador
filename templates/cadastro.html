@@ -1,4 +1,4 @@
-{% extends 'base_vitrine.html' %}
+{% extends 'base_logado.html' %}
 
 {% block content %}
  
@@ -34,23 +34,19 @@
             <button type="submit">Criar conta →</button>
         </form>
 
-        <div class="footer">
-            Já tem conta?
-            <a href="{% url 'login' %}">Entrar</a>
-        </div>
-
         <div class="options">
-            <div class="option-card">
+            <a href="{% url 'cadastro_empresa' %}" class="option-card">
                 <div class="option-icon">🏢</div>
                 <div class="option-title">Empresa/Estúdio</div>
                 <div class="option-sub">Associado</div>
-            </div>
-    
-            <div class="option-card">
+            </a>
+            
+            <a href="{% url 'cadastro_profissional' %}" class="option-card">
                 <div class="option-icon">👤</div>
                 <div class="option-title">Profissional</div>
                 <div class="option-sub">Afiliado</div>
-            </div>
+            </a>
+        </div>
         </div>
     </div>
 </div>

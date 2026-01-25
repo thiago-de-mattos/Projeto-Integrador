@@ -140,7 +140,7 @@
     border-radius: 8px;
     border: none;
     background: #0f1a30;
-    color: #fff;
+    color: #ffffff;
   }
 
   .auth-card button {
@@ -2813,9 +2813,6 @@ select {
     }
 
 
-
-
-
     /* ====== CONTAINER PRINCIPAL ====== */
     .stats-detalhes-container {
         max-width: 1200px;
@@ -2944,85 +2941,6 @@ select {
         .stats-detalhes-titulo { font-size: 2.2rem; }
         .stats-detalhes-container { padding: 2rem 1rem; }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     .dashboard-container {
     max-width: 1200px;
