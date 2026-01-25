@@ -3161,22 +3161,114 @@ select {
     -webkit-text-fill-color: transparent;
 }
 
-/* Barra de Busca e Filtros */
+/* --- RESET E ALINHAMENTO DA BARRA --- */
 .filter-wrapper {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: hsl(var(--secondary) / 0.5);
+    border: 1px solid hsl(var(--border));
+    border-radius: 12px;
+    margin-bottom: 30px;
 }
 
-.filter-input,
-.filter-select {
-    flex: 1;
-    padding: 0.75rem 1rem;
+/* --- O BOTÃO FILTRAR (CIANO) --- */
+.btn-filtrar-novo {
+    background-color: hsl(var(--primary)) !important;
+    color: #000 !important; /* Texto preto para alto contraste no ciano */
+    border: none;
+    padding: 0 30px;
+    height: 45px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-filtrar-novo:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+    transform: translateY(-2px);
+}
+
+/* --- O BOTÃO LIMPAR (VERMELHO) --- */
+.btn-limpar-novo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #ff4444 !important;
+    border: 1px solid #ff4444;
+    padding: 0 15px;
+    height: 45px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-limpar-novo:hover {
+    background: #ff4444;
+    color: white !important;
+}
+
+/* Estilo para o Input de Busca com Ícone */
+.input-search-icon {
+    /* Adiciona a lupa como SVG (cor hsl(var(--primary))) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(25, 227, 255)' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center; /* Posiciona a lupa à esquerda */
+    background-size: 20px;
+    padding-left: 45px !important; /* Abre espaço para o ícone não bater no texto */
+    transition: all 0.3s ease;
+}
+
+.input-search-icon:focus {
+    background-position: 10px center;
+    border-color: hsl(var(--primary)) !important;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.2);
+}
+
+/* --- AJUSTE DOS INPUTS PARA CASAR A ALTURA --- */
+.filter-input, .filter-select {
+    height: 45px !important;
+    border: 1px solid hsl(var(--border)) !important;
+    background-color: hsl(var(--background)) !important;
+    color: white !important;
+}
+
+.filter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px;
     border-radius: 12px;
-    background: var(--surface-light);
-    border: 1px solid var(--border);
-    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+}
+
+.filter-select {
+    background-color: hsl(var(--secondary)) !important; /* Fundo escuro mas visível */
+    color: #ffffff !important;
+    border: 1px solid hsl(var(--primary)) !important; /* Borda Ciano */
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 180px;
+    outline: none;
+    font-weight: 500;
+}
+
+/* Resolve a "invisibilidade" das opções no Chrome/Windows */
+.filter-select option {
+    background-color: #0a0e1a; /* Cor de fundo do seu site */
+    color: white;
+    padding: 10px;
 }
 
 .btn-search {
@@ -3710,6 +3802,27 @@ hr {
             height: 100px;
             margin-bottom: 15px;
         }
+    }
+
+    /* Placeholder para quando não há foto */
+    .no-photo-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: hsl(var(--secondary)); /* Fundo escuro do tema */
+        border: 2px dashed hsl(var(--muted-foreground) / 0.5); /* Borda tracejada elegante */
+        color: hsl(var(--muted-foreground));
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    /* Efeito ao passar o mouse no placeholder */
+    .no-photo-placeholder:hover {
+        border-color: hsl(var(--primary));
+        color: hsl(var(--primary));
     }
 
 /* --- ESTILIZAÇÃO DO EDITAR PERFIL --- */
