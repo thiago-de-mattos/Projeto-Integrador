@@ -4,16 +4,19 @@
 {% block title %}Painel de Controle - ACJOGOS-RJ{% endblock %}
 
 {% block content %}
-<div class="container-lista">
-
+<div class="welcome-logo-container">
     {% if user.profile.foto_perfil %}
-        <div class="welcome-logo-container">
-            <img src="{{ user.profile.foto_perfil.url }}" 
-                 alt="Foto de {{ username }}" 
-                 class="avatar-perfil-round">
-        </div>
+        <img src="{{ user.profile.foto_perfil.url }}" 
+             alt="Foto de {{ username }}" 
+             class="avatar-perfil-round">
+    {% else %}
+        <a href="{% url 'editar_meu_perfil' %}" class="no-photo-link">
+            <div class="avatar-perfil-round no-photo-placeholder">
+                <span>Sem Foto</span>
+            </div>
+        </a>
     {% endif %}
-
+</div>
     <section class="titulo-diretoria">      
         <h1>Olá, {{ username }}! 🎮</h1>
         <p>Acesso: <strong class="text-primary">Diretoria</strong></p>
