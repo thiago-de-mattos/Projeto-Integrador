@@ -2,7 +2,6 @@
 
 {% block title %}Observatório ACJOGOS{% endblock %}
 
-
 {% block content %}
 <div class="container-lista">
     <div class="welcome-header">
@@ -13,23 +12,23 @@
     <div class="card-grid">
         <div class="card-stat">
             <h3>Total de Empresas</h3>
-            <span class="stat-number" style="color: var(--primary);">{{ total_empresas }}</span>
+            <span class="stat-number primary">{{ total_empresas }}</span>
         </div>
         <div class="card-stat">
             <h3>Projetos Ativos</h3>
-            <span class="stat-number" style="color: var(--secondary);">{{ total_projetos }}</span>
+            <span class="stat-number secondary">{{ total_projetos }}</span>
         </div>
     </div>
 
-    <div class="card-dashboard" style="margin-top: 30px;">
-        <h3>🌍 Concentração por Município</h3>
+    <div class="card-dashboard mt-30">
+        <h3 class="mb-4">🌍 Concentração por Município</h3>
         <div class="tabela-wrapper">
             <table class="tabela-dados">
                 <thead>
                     <tr>
                         <th>Cidade</th>
                         <th>Nº de Empresas</th>
-                        <th>% do Total</th>
+                        <th class="progress-cell">% do Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,8 +37,8 @@
                         <td><strong>{{ item.cidade }}</strong></td>
                         <td>{{ item.total }}</td>
                         <td>
-                            <div style="width: 100px; height: 8px; background: #333; border-radius: 4px; overflow: hidden;">
-                                <div style="width: 100%; height: 100%; background: var(--primary);"></div>
+                            <div class="stat-bar-container">
+                                <div class="stat-bar-fill" style="width: {{ item.percentual }}%;"></div>
                             </div>
                         </td>
                     </tr>
@@ -49,11 +48,13 @@
         </div>
     </div>
 
-    <div class="card-dashboard" style="text-align: center;">
+    <div class="tools-section mt-30">
         <h3>Ferramentas de Pesquisa</h3>
-        <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+        <p>Acesse dados detalhados para análise estratégica.</p>
+        
+        <div class="button-group">
             <a href="{% url 'listagem_empresas' %}" class="btn-primary">🔍 Buscar Empresas</a>
-            <a href="{% url 'estatistica_detalhada' %}" class="btn-primary" style="background: var(--accent);">📊 Relatório Completo</a>
+            <a href="{% url 'estatistica_detalhada' %}" class="btn-primary btn-secondary">📊 Relatório Completo</a>
         </div>
     </div>
 </div>

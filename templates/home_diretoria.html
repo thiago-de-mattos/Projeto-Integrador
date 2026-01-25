@@ -3,48 +3,65 @@
 
 {% block title %}Painel de Controle - ACJOGOS-RJ{% endblock %}
 
-
-
-
 {% block content %}
-
 <div class="container-lista">
 
-    <section class="titulo-diretoria">
+    {% if user.profile.foto_perfil %}
         <div class="welcome-logo-container">
-            <img src="https://ggjv4.s3.us-west-1.amazonaws.com/files/styles/sidebar_full/s3/jam_sites/2025/162364/site_poster/logo-vert-fullcolor.png" 
-                alt="Logomarca da AC Jogos" class="welcome-logo">
+            <img src="{{ user.profile.foto_perfil.url }}" 
+                 alt="Foto de {{ username }}" 
+                 class="avatar-perfil-round">
         </div>
-        
+    {% endif %}
+
+    <section class="titulo-diretoria">      
         <h1>Olá, {{ username }}! 🎮</h1>
-        <p>Bem-vindo ao <strong>Painel de Controle</strong> do ecossistema</p>
+        <p>Acesso: <strong class="text-primary">Diretoria</strong></p>
     </section>
 
-    <div class="diretoria">
-        <h3>⚡ Gestão do Sistema</h3>
-        <p>Você tem acesso total aos dados de empresas, projetos e usuários.</p>
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+    <div class="card-dashboard text-center">
+        <h3 class="mb-4">⚡ Gestão do Sistema</h3>
+        <p class="text-muted mb-4">Gerencie os dados de projetos e usuários.</p>
+        
+        <div class="button-group">
             <a href="{% url 'visao_diretoria' %}" class="btn-primary">Acessar Painel de Controle</a>
             <a href="{% url 'cadastro' %}" class="btn-primary btn-secondary">Cadastrar Usuário</a>
-            <a href="{% url 'listagem_empresas' %}" class="btn-primary">Visualizar Empresas</a>
         </div>
     </div>
 
-    <div class="card-grid">
+    <div class="card-grid mt-30">
         <div class="card-stat">
             <h3>🏢 Empresas</h3>
-            <p>Cadastradas no sistema</p>
-            <span class="stat-number">{{ total_empresas }}</span>
+            
+            <div style="margin-top: 15px;">
+                <p>Cadastradas</p>
+                <span class="stat-number">{{ total_empresas }}</span>
+            </div>
+
+            <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <p>Pendentes</p>
+                <span class="stat-number" style="color: #ffaa00 !important;">{{ cadastros_pendentes }}</span>
+            </div>
         </div>
-
-
 
         <div class="card-stat">
-            <h3>🎮 Projetos</h3>
-            <p>Jogos em desenvolvimento</p>
-            <span class="stat-number">{{ total_projetos }}</span>
+            <h3>🎮 Jogos</h3>
+            <div class="stat-item">
+                <p>Total</p>
+                <span class="stat-number">{{ total_projetos }}</span>
+            </div>
+            <div class="stat-item" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 10px;">
+                <p>Ativos</p>
+                <span class="stat-number">{{ projetos_ativos }}</span>
+            </div>
+        </div>
+
+        <div class="card-stat">
+            <h3>👨‍💻 Profissionais</h3>
+            <p>Talentos no mapa:</p>
+            <span class="stat-number">{{ total_profissionais }}</span>
         </div>
     </div>
-</div>
 
+</div>
 {% endblock %}

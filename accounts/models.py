@@ -85,6 +85,8 @@ class Empresa(models.Model):
     associada_acjogos = models.BooleanField('Associada à ACJOGOS-RJ', default=False)
     data_cadastro = models.DateTimeField('Cadastrado em', auto_now_add=True)
     data_atualizacao = models.DateTimeField('Atualizado em', auto_now=True)
+    validada = models.BooleanField(default=False)
+    ativo = models.BooleanField('Ativo', default=False)
     
     def __str__(self):
         return self.nome_fantasia
