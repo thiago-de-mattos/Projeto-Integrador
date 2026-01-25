@@ -1,12 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto, Profile, Estudios, Responsavel_Empresa, Profissional
+from .models import Empresa, Projeto, Profile, Responsavel_Empresa, Profissional
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-
-
 
 class ResponsavelForm(forms.ModelForm):
     class Meta:
@@ -168,23 +166,6 @@ class EmpresaForm(forms.ModelForm):
         # Este loop adiciona automaticamente a classe 'form-input' a todos os campos
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-input'})
-
-class EstudioForm(forms.ModelForm):
-    class Meta:
-        model = Estudios
-        fields = [
-            'nome_do_estudio',
-            'email',
-            'telefone',
-            'endereco',
-        ]
-
-        widgets={
-            'nome_do_estudio':forms.TextInput(attrs={'placeholder':'Digite o nome da empresa'}),
-            'email':forms.EmailInput(attrs={'placeholder':'Digite o email da empresa'}),
-            'telefone':forms.TextInput(attrs={'placeholder':'Digite o telefone da empresa'}),
-            'endereco':forms.TextInput(attrs={'placeholder':'Digite o endereco da empresa'}),
-            }
         
         
 class ProjetosForm(forms.ModelForm):

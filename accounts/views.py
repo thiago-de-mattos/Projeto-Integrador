@@ -21,11 +21,11 @@ from rolepermissions.decorators import has_role_decorator
 
 from .models import (
     CustomUser, Empresa, Projeto, Accounts, Profile, 
-    DadosAnuaisEmpresa, Estudios, Responsavel_Empresa, 
+    DadosAnuaisEmpresa, Responsavel_Empresa, 
     Profissional, VinculoProfissionalEmpresa
     )
 from .forms import (
-    EmpresaForm, EstudioForm, ProjetosForm, 
+    EmpresaForm, ProjetosForm, 
     ProfileForm, ResponsavelForm, CadastroEmpresaForm, CadastroProfissionalForm
 )
 
@@ -217,7 +217,6 @@ def home(request):
         'total_contas': Accounts.objects.count(),
         'total_empresas': Empresa.objects.count(),
         'total_projetos': Projeto.objects.count(),
-        'total_estudios': Estudios.objects.count(),
     }
     return render(request, "home.html", context)
 
@@ -233,35 +232,25 @@ def Teste_Diretoria(request):
         user.save()
         assign_role(user, 'diretoria')
 
-    # # 2. Popular dados globais para a Diretoria visualizar
-    # # Criar uma empresa caso não exista nenhuma
-    # empresa_demo, _ = Empresa.objects.get_or_create(
-    #     nome_fantasia="Empresa Global de Teste",
-    #     defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
-    # )
+    # 2. Popular dados globais para a Diretoria visualizar
+    # Criar uma empresa caso não exista nenhuma
+    empresa_demo, _ = Empresa.objects.get_or_create(
+        nome_fantasia="Empresa Global de Teste",
+        defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
+    )
 
-    # # Criar um estúdio de teste
-    # Estudios.objects.get_or_create(
-    # nome_do_estudio="Estúdio Galáxia",
-    # defaults={
-    #     'email': 'contato@galaxia.com',  # Obrigatório no Model
-    #     'endereco': 'Niterói, RJ',       # Use 'endereco' pois 'municipio' não existe no model
-    #     'telefone': '21999999999'        # Opcional, mas bom para o teste
-    # }
-    # )
-
-    # # Criar um projeto de teste
-    # Projeto.objects.get_or_create(
-    #     titulo="Projeto Alpha - Diretoria",
-    #     empresa=empresa_demo,
-    #     defaults={'status': 'concluido'}
-    # )
+    # Criar um projeto de teste
+    Projeto.objects.get_or_create(
+        titulo="Projeto Alpha - Diretoria",
+        empresa=empresa_demo,
+        defaults={'status': 'concluido'}
+    )
     
-    # # Criar um registro em Accounts (usado na home)
-    # Accounts.objects.get_or_create(
-    #     nome="Administrador Geral",
-    #     defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
-    # )
+    # Criar um registro em Accounts (usado na home)
+    Accounts.objects.get_or_create(
+        nome="Administrador Geral",
+        defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
+    )
 
     return gerar_resposta_html("Diretoria", username, email, password)
 
@@ -382,7 +371,6 @@ def visao_diretoria(request):
     contas = Accounts.objects.all()
     empresas = Empresa.objects.all()
     projetos = Projeto.objects.all()
-    estudios=Estudios.objects.all()
 
     try:
         permicoes = list(get_user_roles(request.user))
@@ -396,7 +384,6 @@ def visao_diretoria(request):
         'projetos': projetos,
         'username': request.user.username,
         'permicoes': permicoes_limpa,
-        'estudios':estudios,
         }
     
     return render(request, 'visao_diretoria.html', context)
@@ -409,7 +396,6 @@ def home_diretoria(request):
         'permicoes': 'Diretoria',
         'total_empresas': Empresa.objects.count(),
         'total_projetos': Projeto.objects.count(),
-        'total_estudios': Estudios.objects.count(),
     }
     return render(request, 'home_diretoria.html', context)
 
@@ -499,12 +485,10 @@ def listagem_empresas(request):
 
     if perfil.empresa_id:
         empresas = Empresa.objects.filter(id=perfil.empresa_id)
-        estudios = Estudios.objects.filter(empresa_id=perfil.empresa_id)
         responsaveis = Responsavel_Empresa.objects.filter(empresa_id=perfil.empresa_id)
         projetos = Projeto.objects.filter(empresa=perfil.empresa)  # ✅ CORRETO
     else:
         empresas = Empresa.objects.none()
-        estudios = Estudios.objects.none()
         responsaveis = Responsavel_Empresa.objects.none()
         projetos = Projeto.objects.none()
 
@@ -519,69 +503,11 @@ def listagem_empresas(request):
 
     return render(request, 'listagem_empresas.html', {
         'empresas': empresas,
-        'estudios': estudios,
         'responsaveis': responsaveis,
         'projetos': projetos,
         'query': query,
         'cidades': cidades,
         'cidade_selecionada': cidade,
-    })
-
-
-
-@login_required(login_url="login")
-def cadastro_estudio(request):
-    perfil, _ = Profile.objects.get_or_create(user=request.user)
-
-    if not perfil.empresa_id:
-        messages.error(request, "Cadastre uma empresa antes de criar um estúdio.")
-        return redirect('empresas')
-
-    if request.method == 'POST':
-        form = EstudioForm(request.POST)
-        if form.is_valid():
-            estudio = form.save(commit=False)
-            estudio.empresa_id = perfil.empresa_id
-
-            estudio.save()
-            messages.success(
-                request,
-                f'Estúdio {estudio.nome_do_estudio} cadastrado com sucesso!'
-            )
-            return redirect('listagem_empresas')
-    else:
-        form = EstudioForm()
-
-    return render(request, 'estudios.html', {'form': form})
-
-@login_required(login_url="login")
-def editar_estudios(request, pk):
-    estudio = get_object_or_404(Estudios, pk=pk)
-
-    if has_role(request.user, "diretoria"):
-        permitido = True
-    else:
-        perfil, _ = Profile.objects.get_or_create(user=request.user)
-        permitido = (perfil.empresa_id == estudio.empresa_id)
-
-    if not permitido:
-        return HttpResponseForbidden("Você não pode editar este estúdio.")
-
-    if request.method == "POST":
-        form = EstudioForm(request.POST, instance=estudio)
-        if form.is_valid():
-            estudio_editado = form.save(commit=False)
-            estudio_editado.empresa = estudio.empresa
-
-            estudio_editado.save()
-            messages.success(request, "Estúdio atualizado com sucesso.")
-            return redirect("listagem_empresas")
-    else:
-        form = EstudioForm(instance=estudio)
-
-    return render(request, "editar_estudios.html", {
-        "form": form,
-        "estudio": estudio
     })
 
 @login_required(login_url="login")
