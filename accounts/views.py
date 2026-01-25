@@ -61,6 +61,7 @@ def get_clean_role(user):
 #     return render(request, 'cadastro.html', context)
 
     # Pedro veja se esse vai te servir o de cima verifique tambem veja o template empresa.html onde vc fez a logica de adicionar empresa
+@login_required(login_url="login")
 def cadastro_empresa(request):
     """Cadastro de empresa - Cria User + Profile + Empresa"""
     
@@ -117,7 +118,7 @@ def cadastro_empresa(request):
     context = {'form': form}
     return render(request, 'cadastro_empresa.html', context)
 
-
+@login_required(login_url="login")
 def cadastro_profissional(request):
     """Cadastro de profissional - Cria User + Profile + Profissional"""
     
@@ -253,6 +254,7 @@ def home(request):
     }
     return render(request, "home.html", context)
 
+@login_required(login_url="login")
 def Teste_Diretoria(request):
     username = "teste_diretoria"
     email = "diretoria@teste.com"
@@ -287,6 +289,7 @@ def Teste_Diretoria(request):
 
     return gerar_resposta_html("Diretoria", username, email, password)
 
+@login_required(login_url="login")
 def setup_completo(request):
     """
     Cria uma massa de dados completa para teste:
@@ -417,6 +420,7 @@ def setup_completo(request):
         </div>
     """)
 
+@login_required(login_url="login")
 def gerar_resposta_html(role_name, username, email, password):
     return HttpResponse(f"""
         <div style="font-family: Arial, sans-serif; padding: 40px; text-align: center; background: #0a0e1a; min-height: 100vh; color: white;">
@@ -462,7 +466,6 @@ def visao_diretoria(request):
         }
     
     return render(request, 'visao_diretoria.html', context)
-
 # Home específica para Diretoria
 @login_required
 @has_role_decorator('diretoria')
@@ -483,8 +486,8 @@ def home_diretoria(request):
     }
     return render(request, 'home_diretoria.html', context)
 
-
 # Home específica para Associados
+@login_required(login_url="login")
 @has_role_decorator('associado')
 def home_associado(request):
     perfil = Profile.objects.filter(user=request.user).first()
@@ -501,6 +504,7 @@ def home_associado(request):
     return render(request, 'home_associado.html', context)
 
 # Home específica para Afiliados
+@login_required(login_url="login")
 @has_role_decorator('afiliado')
 def home_afiliado(request):
     
@@ -519,6 +523,7 @@ def home_afiliado(request):
     return render(request, 'home_afiliado.html', context)
 
 # Home específica para Coletivo
+@login_required(login_url="login")
 @has_role_decorator('coletivo')
 def home_coletivo(request):
     total_empresas = Empresa.objects.count()
@@ -701,8 +706,8 @@ def editar_minha_empresa(request):
     return render(request, "editar_empresas.html", {"form": form, "empresa": empresa})
 
 @login_required(login_url="login")
+@never_cache
 def estatistica(request):
-
     ano_atual = timezone.now().year
     
     total_empresas = Empresa.objects.count()
@@ -715,12 +720,20 @@ def estatistica(request):
     projetos_desenvolvimento = Projeto.objects.filter(status='DESENVOLVIMENTO').count()
     jogos_lancados = Projeto.objects.filter(status='LANCADO').count()
     
-    total_profissionais = Profissional.objects.count()
+    total_profissionais = Profissional.objects.filter(
+        vinculos__data_fim__isnull=True,
+        vinculos__status_aprovacao='APROVADO'
+    ).distinct().count()
     
     dados_ano_atual = DadosAnuaisEmpresa.objects.filter(ano_referencia=ano_atual)
     total_jogos_lancados_2024 = dados_ano_atual.aggregate(
         total=Sum('jogos_lancados')
     )['total'] or 0
+    
+    pode_ver_detalhadas = (
+        has_role(request.user, 'Diretoria') or
+        has_role(request.user, 'Coletivo')
+    )
     
     context = {
         'total_empresas': total_empresas,
@@ -731,21 +744,27 @@ def estatistica(request):
         'total_profissionais': total_profissionais,
         'total_jogos_2024': total_jogos_lancados_2024,
         'ano_referencia': ano_atual,
+        'pode_ver_detalhadas': pode_ver_detalhadas,
     }
     
     return render(request, 'estatistica.html', context)
 
+
 @login_required(login_url="login")
+@never_cache
 def estatisticas_detalhadas(request):
     user = request.user
     
     tem_permissao = (
         has_role(user, 'Diretoria') or
-        has_role(user, 'GestorACJOGOS') or
-        has_role(user, 'PoderPublico')
+        has_role(user, 'Coletivo')
     )
     
-    ano_atual = 2024
+    if not tem_permissao:
+        messages.error(request, 'Você não tem permissão para acessar esta página.')
+        return redirect('home')
+    
+    ano_atual = timezone.now().year
     
     total_empresas = Empresa.objects.count()
     empresas_ativas = Empresa.objects.filter(
@@ -759,7 +778,11 @@ def estatisticas_detalhadas(request):
         total=Count('id')
     ).order_by('-total')
     
-    total_profissionais = Profissional.objects.count()
+    total_profissionais = Profissional.objects.filter(
+        vinculos__data_fim__isnull=True,
+        vinculos__status_aprovacao='APROVADO'
+    ).distinct().count()
+    
     vinculos_ativos = VinculoProfissionalEmpresa.objects.filter(
         data_fim__isnull=True,
         status_aprovacao='APROVADO'
@@ -788,7 +811,7 @@ def estatisticas_detalhadas(request):
     
     dados_por_empresa = DadosAnuaisEmpresa.objects.filter(
         ano_referencia=ano_atual
-    ).select_related('empresa').order_by('-faturamento_anual')
+    ).select_related('empresa').order_by('-faturamento_anual')[:50]
     
     empresas_por_porte = Empresa.objects.values('porte_empresa').annotate(
         total=Count('id')
@@ -804,6 +827,8 @@ def estatisticas_detalhadas(request):
         total_jogos_lancados=Sum('jogos_lancados')
     ).order_by('ano_referencia')
     
+    is_diretoria = has_role(user, 'Diretoria')
+    
     context = {
         'ano_atual': ano_atual,
         'total_empresas': total_empresas,
@@ -818,6 +843,7 @@ def estatisticas_detalhadas(request):
         'empresas_por_porte': empresas_por_porte,
         'empresas_por_tipo': empresas_por_tipo,
         'historico_anos': historico_anos,
+        'is_diretoria': is_diretoria,
     }
 
     return render(request, 'estatistica_detalhada.html', context)
@@ -861,7 +887,6 @@ def vitrine(request):
     return render(request, 'vitrine.html')
 
 @login_required(login_url="login_teste")
-
 def cadastro_responsavel_empresa(request):
 
     empresa_id = request.session.get('empresa_id')
@@ -952,6 +977,7 @@ def vitrine(request):
     }
     return render(request, 'vitrine.html', context)
 
+@login_required(login_url="login")
 def empresas_vitrine(request):
     """Lista todas as empresas com filtros"""
     # Removido filtro por 'aprovada' - ajuste conforme necessário
@@ -1010,7 +1036,6 @@ def empresas_vitrine(request):
         'search': search,
     }
     return render(request, 'empresa_vitrine.html', context)
-
 
 def empresa_detail(request, pk):
     """Detalhes de uma empresa específica"""
@@ -1086,12 +1111,17 @@ def estatisticas_teste(request):
     }
     return render(request, 'estatisticas_teste.html', context)
 
-
+@never_cache
 def logout_view(request):
+   def logout_view(request):
     """Logout do usuário"""
     logout(request)
-    return redirect('vitrine')
-
+    response = redirect('vitrine')
+    # Previne cache da página
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 # API endpoints (opcional, para AJAX)
 def api_empresas(request):
@@ -1222,18 +1252,6 @@ def editar_projeto(request, projeto_id):
         'form': form,
         'projeto': projeto
     })
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 @login_required
 def criar_vinculo_teste(request):
