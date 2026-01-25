@@ -89,7 +89,7 @@
           <a href="{% url 'estatistica' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Estatísticas</a>
           <a href="{% url 'editar_meu_perfil' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Perfil</a>
 
-          {% if "Diretoria" in permicoes %}
+          {% load permission_tags %} {% if user|has_role:'diretoria' %}
             <a href="{% url 'visao_diretoria' %}" class="px-4 py-2 rounded-lg text-sm text-accent hover:bg-secondary/50">
               Painel Direção
             </a>
