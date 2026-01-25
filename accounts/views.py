@@ -844,7 +844,7 @@ def estatisticas_detalhadas(request):
     }
 
     return render(request, 'estatistica_detalhada.html', context)
-
+#tem mais uma desse em baixo
 @login_required(login_url="login")
 def vitrine_projetos(request):
     query = request.GET.get("q", "")
@@ -974,7 +974,6 @@ def vitrine(request):
     }
     return render(request, 'vitrine.html', context)
 
-@login_required(login_url="login")
 def empresas_vitrine(request):
     """Lista todas as empresas com filtros"""
     # Removido filtro por 'aprovada' - ajuste conforme necessário
