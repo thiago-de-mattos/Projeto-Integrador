@@ -10,18 +10,38 @@
         <p>Olá, <strong>{{ username }}</strong>! Gerencie todos os registros do sistema nesta visão unificada.</p>
     </div>
 
-    <div class="section-title">
-        <h3>🏢 Empresas e Estúdios Cadastrados</h3>
-        <div class="button-group" style="margin-top: 0;"> <a href="{% url 'listagem_empresas' %}" class="btn-primary" style="font-size: 0.8rem;">🔍 Filtros Avançados</a>
+    <form method="get" class="filter-wrapper">
+    
+        <input type="text" 
+            name="q" 
+            class="filter-input input-search-icon" 
+            placeholder="Nome da empresa ou projeto..." 
+            value="{{ query }}">
+
+        <select name="cidade" class="filter-select">
+            <option value="" {% if not cidade_selecionada %}selected{% endif %}>📍 Todas as Cidades</option>
+            {% for c in cidades %}
+                {% if c %}
+                    <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>{{ c }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn-filtrar-novo">Filtrar</button>
+            
+            {% if query or cidade_selecionada %}
+                <a href="{% url 'visao_diretoria' %}" class="btn-clean">
+                    ✕ Limpar
+                </a>
+            {% endif %}
         </div>
-    </div>
+    </form>
 
     <div class="tabela-wrapper">
         <table class="tabela-dados">
             <thead>
                 <tr>
                     <th>Nome Fantasia</th>
-                    <th>Status</th>
                     <th>Cidade/UF</th>
                     <th>Ações</th>
                 </tr>
@@ -30,13 +50,6 @@
                 {% for empresa in empresas %}
                 <tr>
                     <td><strong>{{ empresa.nome_fantasia }}</strong></td>
-                    <td>
-                        {% if not empresa.ativo %}
-                            <span class="status-badge pending">Aguardando Aprovação</span>
-                        {% else %}
-                            <span class="status-badge validated">Cadastro Validado</span>
-                        {% endif %}
-                    </td>
                     <td>{{ empresa.cidade }}/{{ empresa.estado }}</td>
                     <td>
                         <a href="{% url 'editar_empresas' empresa.pk %}" class="btn-action btn-visualizar">Editar</a>
