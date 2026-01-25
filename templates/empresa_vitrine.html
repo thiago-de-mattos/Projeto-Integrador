@@ -1,12 +1,13 @@
 {% extends 'base_logado.html' %}
 
 {% block content %}
+{{ empresas_json|json_script:"empresas-data" }}
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20" 
          x-data="{
-           search: '{{ search }}',
-           selectedCity: '{{ selected_cidade }}',
-           selectedPorte: '{{ selected_porte }}',
-           empresas: {{ empresas_json|safe }}
+           search: '',
+           selectedCity: 'Todas',
+           selectedPorte: 'Todos',
+           empresas: JSON.parse(document.getElementById('empresas-data').textContent)
          }">
   
   <!-- Header -->
