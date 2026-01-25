@@ -17,7 +17,7 @@
         </div>
         
         <h1>Olá, {{ username }}! 🎮</h1>
-        <p>Bem-vindo ao <strong>Painel de Controle</strong> do ecossistema</p>
+        <p>Acesso <strong>Diretoria</strong></p>
     </section>
 
     <div class="diretoria">
@@ -33,18 +33,29 @@
     <div class="card-grid">
         <div class="card-stat">
             <h3>🏢 Empresas</h3>
-            <p>Cadastradas no sistema</p>
+            <p>Cadastradas no sistema:</p>
             <span class="stat-number">{{ total_empresas }}</span>
+            <p>Cadastros pendentes para validação:</p>
+            <span class="stat-number">{{ cadastros_pendentes }}</span>
         </div>
-
-
 
         <div class="card-stat">
-            <h3>🎮 Projetos</h3>
-            <p>Jogos em desenvolvimento</p>
+            <h3>🎮 Jogos</h3>
+            <p>Cadastrados no sistema:</p>
             <span class="stat-number">{{ total_projetos }}</span>
+            <p>Projetos ativos:</p>
+            <span class="stat-number">{{ projetos_ativos }}</span>
+            <p>Em desenvolvimento agora:</p>
+            <span class="stat-number">{{ em_desenvolvimento }}</span>
         </div>
     </div>
+
+    <div class="card-stat">
+            <h3>👨‍⚕️ Profissionais</h3>
+            <p>Cadastrados no sistema:</p>
+            <span class="stat-number">{{ total_profissionais }}</span>
+    </div>
+
 </div>
 
 {% endblock %}

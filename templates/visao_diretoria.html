@@ -14,7 +14,7 @@
     <!-- Seção de Empresas -->
     <div class="section-title">
         
-        <h3>Empresas Cadastradas</h3>
+        <h3>Empresas e Estúdios Cadastrados</h3>
     </div>
 
     <div class="tabela-wrapper">
@@ -22,8 +22,8 @@
             <thead>
                 <tr>
                     <th>Nome Fantasia</th>
-                    <th>CNPJ</th>
-                    <th>Cidade</th>
+                    <th>Status</th>
+                    <th>Cidade/UF</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -31,22 +31,39 @@
                 {% for empresa in empresas %}
                 <tr>
                     <td><strong>{{ empresa.nome_fantasia }}</strong></td>
-                    <td>{{ empresa.cnpj }}</td>
-                    <td>{{ empresa.cidade }}/{{ empresa.estado }}</td>
                     <td>
-                        <a href="{% url 'editar_empresas' empresa.pk %}" class="btn-action">Editar</a>
+                        {% if not empresa.ativo %}
+                            <span class="status-badge" style="background: #ffc107; color: #000;">Aguardando Aprovação</span>
+                        {% else %}
+                            <span class="status-badge">Cadastro Validado</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ empresa.cidade }}/{{ empresa.estado }}</td>
+                    
+                    <td>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <a href="{% url 'editar_empresas' empresa.pk %}" class="btn-action">editar</a>
+
+                            {% if not empresa.ativo %}
+                            <form method="POST" style="margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="aprovar_id" value="{{ empresa.id }}">
+                                <button type="submit" class="btn-action">aprovar</button>
+                            </form>
+                            {% else %}
+                                <span style="color: var(--rj-green); font-size: 0.8rem; font-weight: bold;">✔ APROVADO</span>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4">Nenhum registro encontrado.</td>
+                    <td colspan="4" style="text-align: center; padding: 20px;">Nenhuma empresa encontrada.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-
 
     <hr>
 

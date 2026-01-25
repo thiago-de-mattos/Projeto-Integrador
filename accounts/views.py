@@ -364,13 +364,22 @@ def gerar_resposta_html(role_name, username, email, password):
         </div>
     """)
 
+# Ação específica para Diretoria
 @login_required(login_url="login")
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
 
+    if request.method == 'POST' and 'aprovar_id' in request.POST:
+        empresa_id = request.POST.get('aprovar_id')
+        empresa = get_object_or_404(Empresa, id=empresa_id)
+        empresa.ativo = True
+        empresa.save()
+        messages.success(request, f'Empresa {empresa.nome_fantasia} aprovada!')
+        return redirect('visao_diretoria')
+
     contas = Accounts.objects.all()
-    empresas = Empresa.objects.all()
-    projetos = Projeto.objects.all()
+    empresas = Empresa.objects.order_by('ativo', '-nome_fantasia') # Pendentes aparecem primeiro
+    projetos = Projeto.objects.order_by('-id')
 
     try:
         permicoes = list(get_user_roles(request.user))
@@ -390,14 +399,24 @@ def visao_diretoria(request):
 
 # Home específica para Diretoria
 @login_required
+@has_role_decorator('diretoria')
 def home_diretoria(request):
+
+    status_ativos = ['PLANEJAMENTO', 'DESENVOLVIMENTO', 'LANCADO']
     context = {
         'username': request.user.username,
-        'permicoes': 'Diretoria',
-        'total_empresas': Empresa.objects.count(),
+        # Card: Empresas
+        'total_empresas' : Empresa.objects.count(),
+        'cadastros_pendentes' : Empresa.objects.filter(validada=False).count(),
+        # Card: Projetos
         'total_projetos': Projeto.objects.count(),
+        'projetos_ativos': Projeto.objects.filter(status__in=status_ativos).count(),
+        'em_desenvolvimento': Projeto.objects.filter(status='DESENVOLVIMENTO').count(),
+        # Card: Profissionais
+        'total_profissionais': Profissional.objects.count(),
     }
     return render(request, 'home_diretoria.html', context)
+
 
 # Home específica para Associados
 @has_role_decorator('associado')
@@ -516,6 +535,15 @@ def editar_empresas(request, pk):
 
     if has_role(request.user, "diretoria"):
         permitido = True
+        if request.method == 'POST':
+            form = EmpresaForm(request.POST, request.FILES, instance=empresa)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Dados da empresa atualizados!")
+                return redirect('visao_diretoria')
+            else:
+                form = EmpresaForm(instance=empresa)
+
     else:
         perfil, _ = Profile.objects.get_or_create(user=request.user)
         permitido = (perfil.empresa_id == empresa.id)
