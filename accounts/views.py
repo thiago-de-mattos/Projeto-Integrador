@@ -287,216 +287,135 @@ def Teste_Diretoria(request):
 
     return gerar_resposta_html("Diretoria", username, email, password)
 
-def Teste_Associado(request):
-    username = "teste_associado"
-    email = "associado@teste.com"
-    password = "123"
+def setup_completo(request):
+    """
+    Cria uma massa de dados completa para teste:
+    1. Diretoria e Coletivo (fixos)
+    2. 5 Empresas (Associados) com projetos variados
+    3. 5 Profissionais (Afiliados) com perfis variados
+    """
     
-    user, created = CustomUser.objects.get_or_create(username=username, defaults={'email': email})
-    if created:
-        user.set_password(password)
-        user.save()
-        assign_role(user, 'associado')
-
-    # 1. Criar Empresa
-    empresa, _ = Empresa.objects.get_or_create(
-        cnpj='00000000000199',
-        defaults={
-            'nome_fantasia': "Indie Dev Studios",
-            'razao_social': "Indie Dev LTDA",
-            'cidade': 'Rio de Janeiro',
-            'tipo_empresa': 'Desenvolvedora'
-        }
-    )
-
-    # 2. Vincular via Profile
-    perfil, _ = Profile.objects.get_or_create(user=user)
-    perfil.empresa = empresa
-    perfil.save()
-
-    # 3. Criar Projeto (AJUSTADO AOS CAMPOS DO MODEL)
-    Projeto.objects.get_or_create(
-        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
-        empresa=empresa,
-        defaults={
-            'nome': "Quest do Rio Antigo",        # Campo 'nome' presente no model
-            'descricao': 'Um RPG focado no RJ.',  # Campo 'descricao'
-            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
-            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
-            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
-            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
-        }
-    )
+    # --- 1. SETUP DIRETORIA & COLETIVO ---
+    # Reaproveita a lógica existente, mas sem retornar o HTML imediatamente
     
-    # 1. Criar Empresa
-    empresa, _ = Empresa.objects.get_or_create(
-        cnpj='00000000000200',
-        defaults={
-            'nome_fantasia': "Indie Dev Studios",
-            'razao_social': "Indie Dev LTDA",
-            'cidade': 'Rio de Janeiro',
-            'tipo_empresa': 'Desenvolvedora'
-        }
-    )
-
-    # 2. Vincular via Profile
-    perfil, _ = Profile.objects.get_or_create(user=user)
-    perfil.empresa = empresa
-    perfil.save()
-
-    Projeto.objects.get_or_create(
-        titulo="Quest do Rio Bonito", # Usando título (o model tem __str__ retornando titulo)
-        empresa=empresa,
-        defaults={
-            'nome': "Quest do Rio Bonito",        # Campo 'nome' presente no model
-            'descricao': 'Um RPG focado no lol.',  # Campo 'descricao'
-            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
-            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
-            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
-            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
-        }
-    )
+    # Diretoria
+    u_dir, _ = CustomUser.objects.get_or_create(username="diretoria_geral", defaults={'email': "diretoria@acjogos.teste"})
+    u_dir.set_password("123")
+    u_dir.save()
+    assign_role(u_dir, 'diretoria')
     
-    # 1. Criar Empresa
-    empresa, _ = Empresa.objects.get_or_create(
-        cnpj='00000000000201',
-        defaults={
-            'nome_fantasia': "Indie Dev Studios",
-            'razao_social': "Indie Dev LTDA",
-            'cidade': 'Rio de Janeiro',
-            'tipo_empresa': 'Desenvolvedora'
-        }
-    )
+    # Coletivo
+    u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", defaults={'email': "coletivo@acjogos.teste"})
+    u_col.set_password("123")
+    u_col.save()
+    assign_role(u_col, 'coletivo')
 
-    # 2. Vincular via Profile
-    perfil, _ = Profile.objects.get_or_create(user=user)
-    perfil.empresa = empresa
-    perfil.save()
+    created_log = []
 
-    Projeto.objects.get_or_create(
-        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
-        empresa=empresa,
-        defaults={
-            'nome': "Quest do Rio Tiroteiro",        # Campo 'nome' presente no model
-            'descricao': 'Um RPG focado no Rio.',  # Campo 'descricao'
-            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
-            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
-            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
-            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
-        }
-    )
+    # --- 2. GERADOR DE EMPRESAS (ASSOCIADOS) ---
+    lista_empresas = [
+        {"nome": "Pixel Rio Studio", "user": "assoc_pixel", "cidade": "Rio de Janeiro", "porte": "Pequeno Porte", "tipo": "Desenvolvedora", "projeto": "Cangaço Cyberpunk", "genero": "RPG"},
+        {"nome": "Niterói Games", "user": "assoc_niteroi", "cidade": "Niterói", "porte": "Microempresa", "tipo": "Editora", "projeto": "Ponte Rio-Niterói Racer", "genero": "Corrida"},
+        {"nome": "Serrana Arts", "user": "assoc_serra", "cidade": "Petrópolis", "porte": "MEI", "tipo": "Asset Store", "projeto": "Imperial City Sim", "genero": "Simulação"},
+        {"nome": "Caxias Code", "user": "assoc_caxias", "cidade": "Duque de Caxias", "porte": "Médio Porte", "tipo": "Outsourcing", "projeto": "Baixada Defense", "genero": "Estratégia"},
+        {"nome": "Maricá VR", "user": "assoc_marica", "cidade": "Maricá", "porte": "Pequeno Porte", "tipo": "Desenvolvedora", "projeto": "Maricá Verse", "genero": "Aventura"},
+    ]
+
+    for idx, data in enumerate(lista_empresas):
+        # Cria User
+        email = f"{data['user']}@teste.com"
+        user, created = CustomUser.objects.get_or_create(username=data['user'], defaults={'email': email})
+        if created:
+            user.set_password("123")
+            user.save()
+            assign_role(user, 'associado')
+        
+        # Cria Empresa
+        cnpj_falso = f"00000000000{500+idx}"
+        empresa, _ = Empresa.objects.get_or_create(
+            nome_fantasia=data['nome'],
+            defaults={
+                'razao_social': f"{data['nome']} Ltda",
+                'cnpj': cnpj_falso,
+                'cidade': data['cidade'], # Usando cidade conforme seu model
+                'municipio': data['cidade'], # Redundância caso use municipio na vitrine
+                'tipo_empresa': data['tipo'],
+                'porte_empresa': data['porte'],
+                'associada_acjogos': True, # Para aparecer na vitrine
+                'ativo': True
+            }
+        )
+
+        # Vincula Profile
+        perfil, _ = Profile.objects.get_or_create(user=user)
+        perfil.empresa = empresa
+        perfil.save()
+
+        # Cria Projeto
+        Projeto.objects.get_or_create(
+            titulo=data['projeto'],
+            empresa=empresa,
+            defaults={
+                'nome': data['projeto'],
+                'descricao': f"Um jogo incrível desenvolvido em {data['cidade']}.",
+                'tipo_jogo': data['genero'],
+                'genero_principal': data['genero'], # Caso use esse campo na vitrine
+                'equipe_projeto': 'Equipe Principal',
+                'status': 'LANCADO' if idx % 2 == 0 else 'DESENVOLVIMENTO',
+                'publico_alvo': 'GERAL'
+            }
+        )
+        created_log.append(f"Empresa criada: {data['nome']} (User: {data['user']})")
+
+    # --- 3. GERADOR DE PROFISSIONAIS (AFILIADOS) ---
+    lista_pros = [
+        {"nome": "Ana Artist", "user": "afiliado_ana", "cargo": "2D Artist", "cidade": "Rio de Janeiro"},
+        {"nome": "Carlos Coder", "user": "afiliado_carlos", "cargo": "Programador Unity", "cidade": "São Gonçalo"},
+        {"nome": "Bruno Sound", "user": "afiliado_bruno", "cargo": "Sound Designer", "cidade": "Rio de Janeiro"},
+        {"nome": "Diana Design", "user": "afiliado_diana", "cargo": "Game Designer", "cidade": "Niterói"},
+    ]
+
+    for idx, data in enumerate(lista_pros):
+        email = f"{data['user']}@teste.com"
+        user, created = CustomUser.objects.get_or_create(username=data['user'], defaults={'email': email})
+        if created:
+            user.set_password("123")
+            user.save()
+            assign_role(user, 'afiliado')
+
+        # Cria Profissional
+        profissional, _ = Profissional.objects.get_or_create(
+            user=user,
+            defaults={
+                'nome_completo': data['nome'],
+                'cpf': f"111.222.333-{10+idx}",
+                'email': email,
+                'telefone': '(21) 90000-0000',
+                'cidade_residencia': data['cidade'],
+                'tempo_experiencia': 3 + idx,
+                'biografia': f"Sou especialista em {data['cargo']}.",
+            }
+        )
+        created_log.append(f"Profissional criado: {data['nome']} (User: {data['user']})")
+
+    # --- RETORNO VISUAL ---
+    html_log = "".join([f"<li style='margin-bottom: 5px;'>✅ {item}</li>" for item in created_log])
     
-    # 1. Criar Empresa
-    empresa, _ = Empresa.objects.get_or_create(
-        cnpj='00000000000202',
-        defaults={
-            'nome_fantasia': "Indie Dev Studios",
-            'razao_social': "Indie Dev LTDA",
-            'cidade': 'Rio de Janeiro',
-            'tipo_empresa': 'Desenvolvedora'
-        }
-    )
-
-    # 2. Vincular via Profile
-    perfil, _ = Profile.objects.get_or_create(user=user)
-    perfil.empresa = empresa
-    perfil.save()
-
-    Projeto.objects.get_or_create(
-        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
-        empresa=empresa,
-        defaults={
-            'nome': "Quest do Rio TV",        # Campo 'nome' presente no model
-            'descricao': 'Um RPG focado no TV.',  # Campo 'descricao'
-            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
-            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
-            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
-            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
-        }
-    )
-    # 1. Criar Empresa
-    empresa, _ = Empresa.objects.get_or_create(
-        cnpj='00000000000204',
-        defaults={
-            'nome_fantasia': "Indie Dev Studios",
-            'razao_social': "Indie Dev LTDA",
-            'cidade': 'Rio de Janeiro',
-            'tipo_empresa': 'Desenvolvedora'
-        }
-    )
-
-    # 2. Vincular via Profile
-    perfil, _ = Profile.objects.get_or_create(user=user)
-    perfil.empresa = empresa
-    perfil.save()
-
-    Projeto.objects.get_or_create(
-        titulo="Quest do Rio Antigo", # Usando título (o model tem __str__ retornando titulo)
-        empresa=empresa,
-        defaults={
-            'nome': "Quest do Rio Relogio",        # Campo 'nome' presente no model
-            'descricao': 'Um RPG focado no ada.',  # Campo 'descricao'
-            'tipo_jogo': 'Aventura',              # Em vez de 'tipo_projeto'
-            'equipe_projeto': 'Equipe de Teste', # OBRIGATÓRIO (não aceita blank no model)
-            'status': 'DESENVOLVIMENTO',          # Valor exato do STATUS_CHOICES
-            'publico_alvo': 'GERAL',              # Valor exato do PUBLICO_CHOICES
-        }
-    )
-    return gerar_resposta_html("Associado", username, email, password)
-
-def Teste_Afiliado(request):
-    username = "teste_afiliado"
-    email_user = "afiliado@teste.com"
-    password = "123"
-    
-    # 1. Criar ou buscar o Usuário (CustomUser)
-    user, created = CustomUser.objects.get_or_create(
-        username=username, 
-        defaults={'email': email_user}
-    )
-    if created:
-        user.set_password(password)
-        user.save()
-        assign_role(user, 'afiliado')
-
-    # 2. Criar ou buscar o Perfil Profissional
-    # Usamos defaults para os campos obrigatórios do seu model
-    profissional, _ = Profissional.objects.get_or_create(
-        user=user,
-        defaults={
-            'nome_completo': 'João Silva Afiliado',
-            'cpf': '123.456.789-00',          # Obrigatório e deve seguir o regex
-            'email': 'contato_joao@teste.com', # Obrigatório no model Profissional
-            'telefone': '(21) 99999-9999',     # Obrigatório no model
-            'cidade_residencia': 'Niterói',
-            'tempo_experiencia': 5,            # Obrigatório (IntegerField)
-            'biografia': 'Especialista em Pixel Art e Game Design.', # Nome correto
-            'genero': 'M',                     # Opcional, mas bom para o teste
-        }
-    )
-
-    return gerar_resposta_html("Afiliado", username, email_user, password)
-
-def Teste_Coletivo(request):
-    username = "teste_coletivo"
-    email = "coletivo@teste.com"
-    password = "123"
-    
-    user, created = CustomUser.objects.get_or_create(
-        username=username, 
-        defaults={'email': email}
-    )
-    if created:
-        user.set_password(password)
-        user.save()
-        assign_role(user, 'coletivo')
-    else:
-        # Opcional: Garante que o e-mail e a role estejam atualizados 
-        # mesmo que o usuário já existisse de um teste anterior
-        user.email = email
-        user.save()
-        assign_role(user, 'coletivo')
-    return gerar_resposta_html("Coletivo", username, email, password)
+    return HttpResponse(f"""
+        <div style="font-family: Arial, sans-serif; padding: 40px; background: #0a0e1a; min-height: 100vh; color: white;">
+            <h1 style="color: #19e3ff;">🚀 Banco de Dados Alimentado!</h1>
+            <p>Os seguintes registros foram criados ou atualizados:</p>
+            <ul style="background: #141827; padding: 20px 40px; border-radius: 10px; border: 1px solid #19e3ff;">
+                <li style="color: #ffd700; font-weight: bold;">👑 Diretoria: diretoria_geral / 123</li>
+                <li style="color: #ffd700; font-weight: bold;">👁️ Coletivo: coletivo_geral / 123</li>
+                <hr style="border-color: #333;">
+                {html_log}
+            </ul>
+            <br>
+            <a href="/login_teste/" style="padding: 15px 30px; background: #19e3ff; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold;">Ir para Login</a>
+            <a href="/vitrine/" style="padding: 15px 30px; background: #333; color: #fff; text-decoration: none; border-radius: 5px; margin-left: 10px;">Ver Vitrine</a>
+        </div>
+    """)
 
 def gerar_resposta_html(role_name, username, email, password):
     return HttpResponse(f"""
