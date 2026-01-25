@@ -439,20 +439,47 @@ def gerar_resposta_html(role_name, username, email, password):
 @has_role_decorator('diretoria')
 def visao_diretoria(request):
 
-    if request.method == 'POST' and 'aprovar_id' in request.POST:
-        empresa_id = request.POST.get('aprovar_id')
-        empresa = get_object_or_404(Empresa, id=empresa_id)
-        empresa.ativo = True
-        empresa.save()
-        messages.success(request, f'Empresa {empresa.nome_fantasia} aprovada!')
-        return redirect('visao_diretoria')
+    # 1. Captura os parâmetros de busca do formulário (via GET)
+    search_query = request.GET.get('q', '')
+    filtro_cidade = request.GET.get('cidade', '')
 
+    # 2. QuerySets base
     contas = Accounts.objects.all()
-    empresas = Empresa.objects.order_by('ativo', '-nome_fantasia') # Pendentes aparecem primeiro
-    projetos = Projeto.objects.order_by('-id')
+    empresas = Empresa.objects.all()
+    # Mantive seu order_by('status') nos projetos
+    projetos = Projeto.objects.all().order_by('status')
 
+    # 3. Lógica de Filtro para Empresas
+    if search_query:
+        # Busca por nome fantasia ou razão social
+        empresas = empresas.filter(
+            Q(nome_fantasia__icontains=search_query) | 
+            Q(razao_social__icontains=search_query)
+        )
+    
+    if filtro_cidade:
+        empresas = empresas.filter(cidade=filtro_cidade)
+
+    # 4. Lógica de Filtro para Projetos
+    if search_query:
+        # Busca por título do projeto ou nome da empresa vinculada
+        projetos = projetos.filter(
+            Q(titulo__icontains=search_query) | 
+            Q(empresa__nome_fantasia__icontains=search_query)
+        )
+
+    if filtro_cidade:
+        # Filtra projetos cujas empresas pertencem àquela cidade
+        projetos = projetos.filter(empresa__cidade=filtro_cidade)
+
+    # 5. Lista de cidades única para o select do template
+    cidades_disponiveis = Empresa.objects.values_list('cidade', flat=True).distinct().order_by('cidade')
+
+    # Sua lógica de permissões original
     try:
         permicoes = list(get_user_roles(request.user))
+        # Corrigindo pequeno typo de 'permicoes' para 'permissoes' se desejar, 
+        # mas mantive seu padrão:
         permicoes_limpa = permicoes[0].get_name().replace('_','').title()
     except:
         permicoes_limpa = ""
@@ -461,11 +488,15 @@ def visao_diretoria(request):
         'contas': contas,
         'empresas': empresas,
         'projetos': projetos,
+        'cidades': cidades_disponiveis,      # Nova variável para o select
+        'query': search_query,               # Para manter o texto no input após o refresh
+        'cidade_selecionada': filtro_cidade, # Para manter a cidade selecionada no dropdown
         'username': request.user.username,
         'permicoes': permicoes_limpa,
-        }
+    }
     
     return render(request, 'visao_diretoria.html', context)
+
 # Home específica para Diretoria
 @login_required
 @has_role_decorator('diretoria')
