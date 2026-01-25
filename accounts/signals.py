@@ -21,11 +21,11 @@ def atribuir_cargo_automatico(sender, instance, created, **kwargs):
         tipo = instance.tipo_usuario
         
         if tipo == 'EMPRESA':
-            assign_role(user, 'Associado')
+            assign_role(user, 'associado')
         
         elif tipo == 'PROFISSIONAL':
-            assign_role(user, 'Afiliado')
+            assign_role(user, 'afiliado')
         
         elif tipo == 'PODER_PUBLICO':
-            assign_role(user, 'Coletivo')
+            assign_role(user, 'coletivo')
         
