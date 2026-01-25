@@ -2,16 +2,44 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from rolepermissions.roles import assign_role, remove_role, get_user_roles
-from .models import Accounts
+from .models import *
 
 User = get_user_model()
 
+@admin.register(Empresa)
+class EmpresaAdmin(admin.ModelAdmin):
+    list_display = ('nome_fantasia', 'cidade', 'tipo_empresa', 'associada_acjogos')
+    search_fields = ('nome_fantasia', 'cnpj', 'cidade')
+    list_filter = ('tipo_empresa', 'associada_acjogos')
 
 @admin.register(Accounts)
 class AccountsAdmin(admin.ModelAdmin):
     list_display = ('nome', 'empresa', 'cargo')
     search_fields = ('nome', 'empresa')
 
+@admin.register(Projeto)
+class ProjetoAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'empresa', 'status', 'data_lancamento')
+    list_filter = ('status',)
+    search_fields = ('titulo',)
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'tipo_usuario')
+    list_filter = ('tipo_usuario',)
+
+
+@admin.register(Profissional)
+class ProfissionalAdmin(admin.ModelAdmin):
+    list_display = ('nome_completo', 'email', 'cidade_residencia')
+    search_fields = ('nome_completo', 'email')
+
+
+@admin.register(VinculoProfissionalEmpresa)
+class VinculoAdmin(admin.ModelAdmin):
+    list_display = ('profissional', 'empresa', 'cargo', 'status_aprovacao')
+    list_filter = ('status_aprovacao',)
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
