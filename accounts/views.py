@@ -271,18 +271,12 @@ def setup_completo(request):
     u_dir.set_password("123")
     u_dir.save()
     assign_role(u_dir, 'diretoria')
-    
+
     # Coletivo
     u_col, _ = CustomUser.objects.get_or_create(username="coletivo_geral", email="coletivo@teste.com")
     u_col.set_password("123")
     u_col.save()
     assign_role(u_col, 'coletivo')
-
-    # Afiliado
-    u_afil, _ = CustomUser.objects.get_or_create(username="afiliado_geral", email="afiliado@teste.com", defaults={'first_name': 'Carlos', 'last_name': 'Afiliado'})
-    u_afil.set_password("123")
-    u_afil.save()
-    assign_role(u_afil, 'afiliado')
 
     created_log = []
 
