@@ -84,8 +84,6 @@
       <div class="flex items-center gap-2">
         {% if user.is_authenticated %}
           <a href="{% url 'home' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Início</a>
-          <a href="{% url 'empresas_vitrine' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Empresas</a>
-          <a href="{% url 'projetos_vitrine' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Projetos</a>
           <a href="{% url 'estatistica' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Estatísticas</a>
           <a href="{% url 'editar_meu_perfil' %}" class="px-4 py-2 rounded-lg text-sm hover:bg-secondary/50">Perfil</a>
 

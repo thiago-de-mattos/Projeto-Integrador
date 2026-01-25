@@ -255,41 +255,6 @@ def home(request):
     return render(request, "home.html", context)
 
 @login_required(login_url="login")
-def Teste_Diretoria(request):
-    username = "teste_diretoria"
-    email = "diretoria@teste.com"
-    password = "123"
-    
-    # 1. Criar ou buscar o usuário
-    user, created = CustomUser.objects.get_or_create(username=username, defaults={'email': email})
-    if created:
-        user.set_password(password)
-        user.save()
-        assign_role(user, 'diretoria')
-
-    # 2. Popular dados globais para a Diretoria visualizar
-    # Criar uma empresa caso não exista nenhuma
-    empresa_demo, _ = Empresa.objects.get_or_create(
-        nome_fantasia="Empresa Global de Teste",
-        defaults={'cnpj': '11.111.111/0001-11', 'cidade': 'Rio de Janeiro'}
-    )
-
-    # Criar um projeto de teste
-    Projeto.objects.get_or_create(
-        titulo="Projeto Alpha - Diretoria",
-        empresa=empresa_demo,
-        defaults={'status': 'concluido'}
-    )
-    
-    # Criar um registro em Accounts (usado na home)
-    Accounts.objects.get_or_create(
-        nome="Administrador Geral",
-        defaults={'cargo': 'Diretor Histórico', 'empresa': 'ACJOGOS-RJ'}
-    )
-
-    return gerar_resposta_html("Diretoria", username, email, password)
-
-@login_required(login_url="login")
 def setup_completo(request):
     """
     Cria uma massa de dados completa para teste:
@@ -1191,7 +1156,7 @@ def login_view_teste(request):
             login(request, user)
             return redirect("home")  # ← Vai para a home antiga
         else:
-            return render(request, "loginhtml", {
+            return render(request, "login.html", {
                 "error": "E-mail ou senha inválidos",
                 "email": email
             })
