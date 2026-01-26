@@ -88,10 +88,44 @@ urlpatterns = [
     path('empresas_teste/', views.empresas_vitrine, name='empresas_vitrine'),
     path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
 
+# --- Edições ---
+     path('perfil/editar/', views.editar_meu_perfil, name='editar_meu_perfil'),
+     path('empresa/editar/', views.editar_minha_empresa, name='editar_minha_empresa'),
+     path('empresas/editar/<int:pk>/',views.editar_empresas,name='editar_empresas'),
+     path('responsavel/editar/<int:id>/', views.editar_responsavel_empresa, name='editar_responsavel_empresa'),
+     path('projetos/editar/<int:projeto_id>/', views.editar_projeto, name='editar_projeto'),
+     
+# --- Funcionalidades Gerais ---
+     path('empresas/', views.cadastro_empresa, name='cadastro_empresas'),
+     path('empresas/listagem/', views.listagem_empresas, name="listagem_empresas"),
+     
+     path('projetos/', views.cadastro_projetos, name='projetos'),
+     path('vitrine/', views.vitrine, name='vitrine'),
+
+     path('estatisticas/', views.estatistica, name='estatistica'),
+     path('estatisticas/detalhadas/', views.estatisticas_detalhadas, name='estatistica_detalhada'),
+     path('responsavel/cadastrar/', views.cadastro_responsavel_empresa, name='cadastro_responsavel_empresa'),
+     
+#--- htmls TESTE ---
+     path('empresas_teste/', views.empresas_vitrine, name='empresas_vitrine'),
+     # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
+     path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
+     path("login", views.login, name="login"),
+     path("cadastro_teste/", views.register_view_teste, name="cadastro"),
+     
+      path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
+          path(
+        'profissional/editar/<int:id>/',
+        views.editar_profissional,
+        name='editar_profissional'
+    ),
+
+
 # ========================================
 # TESTE/DEBUG
 # ========================================
     path('setup/geral/', views.setup_completo, name='setup_completo'),
     path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

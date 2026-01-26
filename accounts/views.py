@@ -995,26 +995,28 @@ def api_stats(request):
 
 @never_cache
 def login_view(request):
-    """View de login - renomeada para evitar conflito com a função login() do Django"""
-    
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
 
         try:
-            user = User.objects.get(email=email)
-            user = authenticate(request, username=user.username, password=password)
+            user_obj = User.objects.get(email=email)
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
         except User.DoesNotExist:
             user = None
 
-        if user is not None:
-            auth_login(request, user)  # ← Usa auth_login ao invés de login
+        if user:
+            auth_login(request, user)
             return redirect("home")
-        else:
-            return render(request, "login.html", {
-                "error": "E-mail ou senha inválidos",
-                "email": email
-            })
+
+        return render(request, "login.html", {
+            "error": "E-mail ou senha inválidos",
+            "email": email
+        })
 
     return render(request, "login.html")
 
