@@ -158,10 +158,6 @@ class UserAdmin(BaseUserAdmin):
 
     actions = (
         'tornar_diretoria',
-        'tornar_associado',
-        'tornar_afiliado',
-        'tornar_coletivo',
-        'remover_cargo',
     )
 
     def _limpar_roles(self, user):
@@ -175,29 +171,4 @@ class UserAdmin(BaseUserAdmin):
         self.message_user(request, f'{queryset.count()} usuário(s) atualizados.')
     tornar_diretoria.short_description = 'Tornar Diretoria'
 
-    def tornar_associado(self, request, queryset):
-        for user in queryset:
-            self._limpar_roles(user)
-            assign_role(user, 'associado')
-        self.message_user(request, f'{queryset.count()} usuário(s) atualizados.')
-    tornar_associado.short_description = 'Tornar Associado'
-
-    def tornar_afiliado(self, request, queryset):
-        for user in queryset:
-            self._limpar_roles(user)
-            assign_role(user, 'afiliado')
-        self.message_user(request, f'{queryset.count()} usuário(s) atualizados.')
-    tornar_afiliado.short_description = 'Tornar Afiliado'
-
-    def tornar_coletivo(self, request, queryset):
-        for user in queryset:
-            self._limpar_roles(user)
-            assign_role(user, 'coletivo')
-        self.message_user(request, f'{queryset.count()} usuário(s) atualizados.')
-    tornar_coletivo.short_description = 'Tornar Coletivo'
-
-    def remover_cargo(self, request, queryset):
-        for user in queryset:
-            self._limpar_roles(user)
-        self.message_user(request, f'Cargo removido de {queryset.count()} usuário(s).')
-    remover_cargo.short_description = 'Remover Cargo'
+    

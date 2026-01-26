@@ -40,25 +40,6 @@ def get_clean_role(user):
     except:
         return ""
 
-# def cadastro(request):
-
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-
-#         if form.is_valid():
-#             user = form.save()
-#             messages.success(request, 'Usuário cadastrado com sucesso!')
-#             return redirect('login')
-        
-#         else:
-#             messages.error(request, 'Houve um erro no cadastro. Verifique os campos.')
-
-#     else:
-#         form = CustomUserCreationForm()
-#     context = {'form': form}
-    
-#     return render(request, 'cadastro.html', context)
-
     # Pedro veja se esse vai te servir o de cima verifique tambem veja o template empresa.html onde vc fez a logica de adicionar empresa
 @login_required(login_url="login")
 def cadastro_empresa(request):
@@ -131,33 +112,6 @@ def cadastro_empresa(request):
         form = CadastroEmpresaForm()
 
     return render(request, 'empresas/criar_empresa.html', {'form': form})
-
-# isto esta duplicado
-@login_required(login_url="login")
-def cadastro_empresa(request):
-    """Passo 1: Cadastra os dados da empresa"""
-    if request.method == 'POST':
-        form = EmpresaForm(request.POST, request.FILES)
-        if form.is_valid():
-            empresa = form.save()
-
-            perfil, _ = Profile.objects.get_or_create(user=request.user)
-            perfil.empresa = empresa
-            perfil.save()
-
-            request.session['empresa_id'] = empresa.id
-            
-            messages.success(request, f"Empresa {empresa.nome_fantasia} cadastrada com sucesso!")
- 
-            return redirect('cadastro_responsavel_empresa')
-        else:
-            print("FORM ERRORS:", form.errors)
-            messages.error(request, "Erro no formulário. Verifique os campos.")
-    else:
-        form = EmpresaForm()
-    
-    return render(request, 'cadastro_empresas.html', {'form': form})
-
 
 @login_required(login_url="login")
 def cadastro_profissional(request):
@@ -248,28 +202,6 @@ def cadastro_profissional(request):
     
     context = {'form': form}
     return render(request, 'cadastro_profissional.html', context)
-
-# def login_view(request):
-#     if request.method=='GET':
-#         return render(request, 'login.html')
-#     else:
-#         username=request.POST.get('username')
-#         senha=request.POST.get('senha')
-        
-#         if not username or not senha:
-#             messages.error(request,'Preencha os campos')
-#             return render(request,'login.html')
-        
-#         user=authenticate(username=username,password=senha)
-        
-#         if user:
-#             login_django(request,user)
-#             print(f"DEBUG: Usuário {user.username} logado com sucesso!")
-#             return redirect('home')
-        
-#         else:
-#             messages.error(request, 'Usuário ou senha inválidos')
-#             return render(request, 'login.html')
 
 @never_cache
 @login_required(login_url="login")
@@ -869,44 +801,6 @@ def estatisticas_detalhadas(request):
     }
 
     return render(request, 'estatistica_detalhada.html', context)
-#tem mais uma desse em baixo
-@login_required(login_url="login")
-def vitrine_projetos(request):
-    query = request.GET.get("q", "")
-    genero = request.GET.get("genero", "")
-
-    projetos = Projeto.objects.prefetch_related("empresas").all()
-
-    if query:
-        projetos = projetos.filter(
-            Q(titulo__icontains=query) |
-            Q(descricao__icontains=query)
-        )
-
-    if genero:
-        projetos = projetos.filter(genero_principal__iexact=genero)
-
-    generos = (
-        Projeto.objects
-        .exclude(genero_principal__isnull=True)
-        .exclude(genero_principal__exact="")
-        .values_list("genero_principal", flat=True)
-        .distinct()
-        .order_by("genero_principal")
-    )
-
-    context = {
-        "projetos": projetos,
-        "query": query,
-        "generos": generos,
-        "genero_selecionado": genero,
-    }
-
-    return render(request, "vitrine_projetos.html", context)
-
-# @login_required(login_url="login")
-def vitrine(request):
-    return render(request, 'vitrine.html')
 
 @login_required(login_url="login_teste")
 def cadastro_responsavel_empresa(request):
@@ -966,11 +860,6 @@ def editar_responsavel_empresa(request, id):
     
     return render(request, 'editar_responsavel.html', {'form': form})
 
-# @login_required(login_url="login")
-def pagina_projeto(request):
-    return render(request, 'pagina_projeto.html')
-
-# html de teste
 def vitrine(request):
     """Página inicial com empresas e projetos em destaque"""
     # Usando associada_acjogos ao invés de aprovada
@@ -1092,53 +981,11 @@ def projetos_vitrine(request):
     }
     return render(request, 'projetos_vitrine.html', context)
 
-def estatisticas_teste(request):
-    """Página de estatísticas do ecossistema"""
-    empresas = Empresa.objects.all()
-    
-    # Estatísticas gerais
-    stats = {
-        'crescimento_anual': 23,
-        'faturamento_estimado': '45M',
-        'total_profissionais': Profile.objects.filter(user__is_active=True).count(),
-        'total_empresas': empresas.count(),
-    }
-    
-    # Distribuição por porte - usando porte_empresa
-    por_porte = {}
-    portes_choices = [
-        'MEI', 'Microempresa', 'Pequeno Porte', 'Médio Porte', 'Grande Porte'
-    ]
-    for porte in portes_choices:
-        por_porte[porte] = empresas.filter(porte_empresa=porte).count()
-    
-    # Distribuição por cidade (top 5) - usando municipio
-    por_cidade = empresas.values('municipio').annotate(
-        total=Count('id')
-    ).order_by('-total')[:5]
-    
-    # Distribuição por tipo de empresa
-    por_tipo = {}
-    tipos = empresas.values_list('tipo_empresa', flat=True).distinct()
-    for tipo in tipos:
-        if tipo:
-            por_tipo[tipo] = empresas.filter(tipo_empresa=tipo).count()
-    
-    context = {
-        'stats': stats,
-        'por_porte': por_porte,
-        'por_cidade': list(por_cidade),
-        'por_tipo': por_tipo,
-    }
-    return render(request, 'estatisticas_teste.html', context)
-
 @never_cache
 def logout_view(request):
-   def logout_view(request):
     """Logout do usuário"""
     logout(request)
     response = redirect('vitrine')
-    # Previne cache da página
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
@@ -1165,7 +1012,7 @@ def api_stats(request):
     return JsonResponse(stats)
 
 @never_cache
-def login_view_teste(request):
+def login(request):
     # Se o usuário já está logado, redireciona para home
     
     if request.method == "POST":
@@ -1192,8 +1039,6 @@ def login_view_teste(request):
 
 @never_cache
 def register_view_teste(request):
-
-    
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
