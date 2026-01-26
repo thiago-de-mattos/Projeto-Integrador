@@ -111,7 +111,7 @@ urlpatterns = [
      # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
      path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
      path("login", views.login, name="login"),
-     path("cadastro_teste/", views.register_view_teste, name="cadastro"),
+     # path("cadastro_teste/", views.register_view_teste, name="cadastro"),
      
       path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
           path(
