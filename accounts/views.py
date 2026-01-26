@@ -499,7 +499,6 @@ def home_diretoria(request):
         'username': request.user.username,
         # Card: Empresas
         'total_empresas' : Empresa.objects.count(),
-        'cadastros_pendentes' : Empresa.objects.filter(validada=False).count(),
         # Card: Projetos
         'total_projetos': Projeto.objects.count(),
         'projetos_ativos': Projeto.objects.filter(status__in=status_ativos).count(),
