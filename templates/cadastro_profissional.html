@@ -25,31 +25,6 @@
     <form method="post">
       {% csrf_token %}
       <div class="form-section">
-        <h3>🔐 Dados de Acesso</h3>
-        
-        {% for field in form %}
-          {% if field.name == 'email' or field.name == 'password' %}
-            <div class="form-group {% if field.errors %}has-error{% endif %}">
-              {{ field.label_tag }}
-              {{ field }}
-              
-              {% if field.errors %}
-                <div class="field-errors">
-                  {% for error in field.errors %}
-                    <span class="error-message"> {{ error }}</span>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            
-              {% if field.help_text %}
-                <span class="helptext">{{ field.help_text }}</span>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      <div class="form-section">
         <h3>👤 Dados Pessoais</h3>
 
         {% for field in form %}
