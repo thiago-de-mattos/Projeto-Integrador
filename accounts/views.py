@@ -6,7 +6,7 @@ from django.db.models import Sum, Avg, Count, Q
 import json
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, login as login_django, logout, get_user_model
+from django.contrib.auth import authenticate, login, login as login_django, logout, get_user_model,login as auth_login
 User = get_user_model()
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
@@ -25,7 +25,7 @@ from .models import (
     )
 from .forms import (
     EmpresaForm, ProjetosForm, 
-    ProfileForm, ResponsavelForm, CadastroEmpresaForm, CadastroProfissionalForm
+    ProfileForm, ResponsavelForm, CadastroEmpresaForm, CadastroProfissionalForm,EntidadeParceiraForm,UsuarioBaseForm
 )
 
 class CustomUserCreationForm(UserCreationForm):
@@ -41,168 +41,150 @@ def get_clean_role(user):
         return ""
 
     # Pedro veja se esse vai te servir o de cima verifique tambem veja o template empresa.html onde vc fez a logica de adicionar empresa
-@login_required(login_url="login")
+
 def cadastro_empresa(request):
-    """Cadastro de empresa - Cria User + Profile + Empresa"""
+   
+    """
+    Completa o cadastro da Empresa e atribui role 'associado'
+    """
+    
+    # Verificar se passou pelo cadastro base
+    usuario_base_id = request.session.get('usuario_base_id')
+    tipo_usuario = request.session.get('tipo_usuario')
+    
+    # ✅ REDIRECT CORRIGIDO - usa URL específica
+    if not usuario_base_id or tipo_usuario != 'empresa':
+        return redirect('criar_usuario_base_empresa')  # ← Nome correto da URL
+    
+    try:
+        user = User.objects.get(id=usuario_base_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Usuário não encontrado. Reinicie o cadastro.')
+        return redirect('cadastro')
     
     if request.method == 'POST':
-        form = CadastroEmpresaForm(request.POST)
+        form = CadastroEmpresaForm(request.POST, request.FILES)
         
         if form.is_valid():
             try:
-                # Pega o email e senha dos campos extras
-                email = form.cleaned_data['email']
-                password = form.cleaned_data['password']
-                
-                # Cria o User
-                username = email.split('@')[0]
-                base_username = username
-                counter = 1
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}{counter}"
-                    counter += 1
-                
-                user = User.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password
-                )
-                
-                # Salva a Empresa
+                # Salvar a Empresa
                 empresa = form.save(commit=False)
-                empresa.email = email
+                empresa.email = user.email
                 empresa.save()
                 
-                # Cria o Profile e vincula
+                # Criar Profile vinculando User e Empresa
                 profile = Profile.objects.create(
                     user=user,
                     tipo_usuario='EMPRESA',
                     empresa=empresa
                 )
                 
-                # Signal vai dar cargo "Associado" e deixar pendente
+                # ✅ ATRIBUIR ROLE 'ASSOCIADO'
+                assign_role(user, 'associado')
                 
-                messages.success(request, 'Empresa cadastrada! Aguarde aprovação da Diretoria.')
+                # Limpar sessão
+                del request.session['usuario_base_id']
+                del request.session['tipo_usuario']
+                
+                messages.success(
+                    request,
+                    f'✅ Empresa "{empresa.nome_fantasia}" cadastrada com sucesso! '
+                    'Você recebeu a função de Associado. Faça login para continuar.'
+                )
+                
                 return redirect('login')
                 
             except Exception as e:
-                messages.error(request, f'Erro ao cadastrar: {str(e)}')
+                messages.error(request, f'Erro ao salvar empresa: {str(e)}')
+        
         else:
-            # Se form inválido, mostra os erros
+            # Mostrar erros
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
-    # Verifica se o usuário já tem empresa
-    if Empresa.objects.filter(usuario=request.user).exists():
-        messages.warning(
-            request,
-            "Você já possui uma empresa cadastrada e não pode criar outra."
-        )
-        return redirect('minha_empresa')  # ou dashboard
-
-    if request.method == "POST":
-        form = EmpresaForm(request.POST)
-        if form.is_valid():
-            empresa = form.save(commit=False)
-            empresa.usuario = request.user
-            empresa.save()
-            messages.success(request, "Empresa cadastrada com sucesso!")
-            return redirect('minha_empresa')
+    
     else:
         form = CadastroEmpresaForm()
+    
+    context = {
+        'form': form,
+        'user_email': user.email
+    }
 
-    return render(request, 'empresas/criar_empresa.html', {'form': form})
+    return render(request, 'cadastro_empresas.html', {'form': form})
 
-@login_required(login_url="login")
 def cadastro_profissional(request):
-    """Cadastro de profissional - Cria User + Profile + Profissional"""
+
+    usuario_base_id = request.session.get('usuario_base_id')
+    tipo_usuario = request.session.get('tipo_usuario')
+    
+    # ✅ REDIRECT CORRIGIDO - usa URL específica
+    if not usuario_base_id or tipo_usuario != 'profissional':
+        messages.error(request, 'Complete primeiro o cadastro inicial.')
+        return redirect('criar_usuario_base_profissional')  # ← Nome correto da URL
+    
+    try:
+        user = User.objects.get(id=usuario_base_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Usuário não encontrado. Reinicie o cadastro.')
+        return redirect('cadastro')
     
     if request.method == 'POST':
-        form = CadastroProfissionalForm(request.POST)
-       
-        if not form.is_valid():
-            print("FORMULÁRIO INVÁLIDO!")
-            print("Erros:", form.errors)
-            print("Dados recebidos:", request.POST)
-            
-            # Adiciona mensagem de erro geral
-            messages.error(
-                request, 
-                'Existem erros no formulário. Por favor, corrija os campos destacados abaixo.'
-            )
-
-            # Mostra cada erro individualmente (opcional - já aparece no campo)
-            for field, errors in form.errors.items():
-                for error in errors:
-                    print(f"  - {field}: {error}")
-    
+        form = CadastroProfissionalForm(request.POST, request.FILES)
+        
         if form.is_valid():
             try:
-                # 1. Pegar dados do formulário
-                email = form.cleaned_data['email']
-                password = form.cleaned_data['password']
-                
-                print(f"Criando usuário: {email}")
-                
-                # 2. Criar o User
-                username = email.split('@')[0]
-                base_username = username
-                counter = 1
-                
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}{counter}"
-                    counter += 1
-                
-                user = User.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password,
-                    first_name=form.cleaned_data.get('nome_completo', '').split()[0] if form.cleaned_data.get('nome_completo') else ''
-                )
-                print(f"User criado: {user.username}")
-                
-                # 3. Atribuir role DIRETAMENTE
-                assign_role(user, 'afiliado')
-                print(f" Role 'afiliado' atribuída")
-                
-                # 4. Salvar o Profissional
+                # Salvar o Profissional
                 profissional = form.save(commit=False)
                 profissional.user = user
-                profissional.email = email
+                profissional.email = user.email
                 profissional.save()
-                print(f"Profissional criado: {profissional.nome_completo}")
                 
-                # 5. Criar o Profile
+                # Criar Profile vinculando User e Profissional
                 profile = Profile.objects.create(
                     user=user,
                     tipo_usuario='PROFISSIONAL',
                     profissional=profissional
                 )
-                print(f"Profile criado")
                 
-                # 6. Mensagem de sucesso
+                # ✅ ATRIBUIR ROLE 'AFILIADO'
+                assign_role(user, 'afiliado')
+                
+                # Atualizar first_name se fornecido
+                if profissional.nome_completo:
+                    user.first_name = profissional.nome_completo.split()[0]
+                    user.save()
+                
+                # Limpar sessão
+                del request.session['usuario_base_id']
+                del request.session['tipo_usuario']
+                
                 messages.success(
-                    request, 
-                    f' Cadastro realizado com sucesso! Bem-vindo(a), {profissional.nome_completo}! Você já pode fazer login.'
+                    request,
+                    f'✅ Bem-vindo(a), {profissional.nome_completo}! '
+                    'Você recebeu a função de Afiliado. Faça login para continuar.'
                 )
                 
-                return redirect('home_afiliado')
+                return redirect('login')
                 
             except Exception as e:
-                print(f" ERRO AO CADASTRAR: {e}")
-                import traceback
-                traceback.print_exc()
-                
-                messages.error(
-                    request, 
-                    f' Erro ao cadastrar: {str(e)}. Tente novamente ou entre em contato com o suporte.'
-                )
+                messages.error(request, f'Erro ao salvar profissional: {str(e)}')
+        
+        else:
+            # Mostrar erros
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    
     else:
         form = CadastroProfissionalForm()
     
-    context = {'form': form}
+    context = {
+        'form': form,
+        'user_email': user.email
+    }
+    
     return render(request, 'cadastro_profissional.html', context)
-
 @never_cache
 @login_required(login_url="login")
 def home(request):     
@@ -1012,8 +994,8 @@ def api_stats(request):
     return JsonResponse(stats)
 
 @never_cache
-def login(request):
-    # Se o usuário já está logado, redireciona para home
+def login_view(request):
+    """View de login - renomeada para evitar conflito com a função login() do Django"""
     
     if request.method == "POST":
         email = request.POST.get("email")
@@ -1026,8 +1008,8 @@ def login(request):
             user = None
 
         if user is not None:
-            login(request, user)
-            return redirect("home")  # ← Vai para a home antiga
+            auth_login(request, user)  # ← Usa auth_login ao invés de login
+            return redirect("home")
         else:
             return render(request, "login.html", {
                 "error": "E-mail ou senha inválidos",
@@ -1037,52 +1019,15 @@ def login(request):
     return render(request, "login.html")
 
 
-@never_cache
-def register_view_teste(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        password2 = request.POST.get("password2")
 
-        # Validação: senhas coincidem
-        if password != password2:
-            return render(request, "cadastro_teste.html", {
-                "error": "As senhas não coincidem",
-                "username": username,
-                "email": email
-            })
-
-        # Validação: email já existe
-        if User.objects.filter(email=email).exists():
-            return render(request, "cadastro_teste.html", {
-                "error": "Este e-mail já está cadastrado",
-                "username": username,
-                "email": email
-            })
-        
-        # Validação: username já existe
-        if User.objects.filter(username=username).exists():
-            return render(request, "cadastro_teste.html", {
-                "error": "Este nome de usuário já está em uso",
-                "username": username,
-                "email": email
-            })
-
-        # Criar usuário com username correto
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
-        )
-
-        # Mensagem de sucesso
-        messages.success(request, "Conta criada com sucesso! Faça login para continuar.")
-        
-        # Redirecionar para login (SEM fazer login automático)
-        return redirect("login")
-
-    return render(request, "cadastro.html")
+def cadastro(request):
+    """
+    Página inicial onde o usuário escolhe:
+    - Empresa/Estúdio (Associado)
+    - Profissional (Afiliado)
+    - Instituição (Coletivo)
+    """
+    return render(request, 'cadastro.html')
 
 
 @login_required(login_url="login")
@@ -1177,3 +1122,153 @@ def editar_profissional(request, id):
         'editar_profissional.html',
         {'form': form, 'profissional': profissional}
     )
+    
+def cadastrar_entidade_parceira(request):
+    """
+    Completa o cadastro da Instituição e atribui role 'coletivo'
+    """
+    
+    # Verificar se passou pelo cadastro base
+    usuario_base_id = request.session.get('usuario_base_id')
+    tipo_usuario = request.session.get('tipo_usuario')
+    
+    # ✅ REDIRECT CORRIGIDO - usa URL específica
+    if not usuario_base_id or tipo_usuario != 'instituicao':
+        messages.error(request, 'Complete primeiro o cadastro inicial.')
+        return redirect('criar_usuario_base_instituicao')  # ← Nome correto da URL
+    
+    try:
+        user = User.objects.get(id=usuario_base_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Usuário não encontrado. Reinicie o cadastro.')
+        return redirect('cadastro')
+    
+    if request.method == 'POST':
+        form = EntidadeParceiraForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            try:
+                # Salvar a EntidadeParceira
+                instituicao = form.save(commit=False)
+                instituicao.email = user.email
+                instituicao.save()
+                
+                # Criar Profile vinculando User e Instituição
+                profile = Profile.objects.create(
+                    user=user,
+                    tipo_usuario='INSTITUICAO'
+                )
+                
+                # ✅ ATRIBUIR ROLE 'COLETIVO'
+                assign_role(user, 'coletivo')
+                
+                # Limpar sessão
+                del request.session['usuario_base_id']
+                del request.session['tipo_usuario']
+                
+                messages.success(
+                    request,
+                    f'✅ Instituição "{instituicao.nome}" cadastrada com sucesso! '
+                    'Você recebeu a função de Coletivo. Faça login para continuar.'
+                )
+                
+                return redirect('login')
+                
+            except Exception as e:
+                messages.error(request, f'Erro ao salvar instituição: {str(e)}')
+        
+        else:
+            # Mostrar erros
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    
+    else:
+        form = EntidadeParceiraForm()
+    
+    context = {
+        'form': form,
+        'user_email': user.email
+    }
+    
+    return render(request, 'cadastro_instituicao.html', context)
+
+
+def criar_usuario_base(request, tipo_usuario):
+    """
+    Cria o User (username + email + password)
+    tipo_usuario vem dos kwargs da URL
+    """
+    tipos_validos = ['empresa', 'profissional', 'instituicao']
+    if tipo_usuario not in tipos_validos:
+        messages.error(request, 'Tipo de cadastro inválido.')
+        return redirect('cadastro')
+    
+    if request.method == 'POST':
+        form = UsuarioBaseForm(request.POST)
+        
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            
+            # Verificar se email já existe
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'Este e-mail já está cadastrado.')
+                return render(request, 'cadastro_independente.html', {
+                    'form': form,
+                    'tipo_usuario': tipo_usuario
+                })
+            
+            # Criar username único baseado no email
+            username = email.split('@')[0]
+            base_username = username
+            counter = 1
+            
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            
+            # Criar o User
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+            )
+            
+            # Salvar ID do usuário na sessão
+            request.session['usuario_base_id'] = user.id
+            request.session['tipo_usuario'] = tipo_usuario
+            
+            messages.success(request, 'Conta criada! Continue o cadastro.')
+            
+            # Redirecionar para cadastro específico
+            if tipo_usuario == 'empresa':
+                return redirect('cadastro_empresa')
+            elif tipo_usuario == 'profissional':
+                return redirect('cadastro_profissional')
+            elif tipo_usuario == 'instituicao':
+                return redirect('cadastrar_instituicao')
+        
+        else:
+            # Mostrar erros do formulário
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{error}')
+    
+    else:
+        form = UsuarioBaseForm()
+    
+    # Definir título baseado no tipo
+    titulos = {
+        'empresa': 'Cadastro de Empresa/Estúdio',
+        'profissional': 'Cadastro de Profissional',
+        'instituicao': 'Cadastro de Instituição'
+    }
+    
+    context = {
+        'form': form,
+        'tipo_usuario': tipo_usuario,
+        'titulo': titulos.get(tipo_usuario, 'Cadastro')
+    }
+    
+    return render(request, 'cadastro_independente.html', context)
