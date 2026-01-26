@@ -91,7 +91,7 @@
                     <td><span class="status-badge">{{ projeto.get_status_display }}</span></td>
                     <td>{{ projeto.equipe_projeto }}</td>
                     <td>
-                        <a href="{% url 'editar_projeto' projeto.pk %}" class="btn-action btn-visualizar">Gerenciar</a>
+                        <a href="{% url 'editar_projeto' projeto.pk %}" class="btn-action btn-visualizar">Editar</a>
                     </td>
                 </tr>
                 {% empty %}
