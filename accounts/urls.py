@@ -66,6 +66,11 @@ urlpatterns = [
      path("cadastro_teste/", views.register_view_teste, name="cadastro"),
      
       path('criar-vinculo-teste/', views.criar_vinculo_teste, name='criar_vinculo_teste'),
+          path(
+        'profissional/editar/<int:id>/',
+        views.editar_profissional,
+        name='editar_profissional'
+    ),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
