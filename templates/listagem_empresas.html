@@ -6,11 +6,15 @@
     <h1 class="dashboard-header">Gestão de Empresas & Projetos</h1>
 
     <form method="get" class="filter-wrapper">
-        <input type="text" name="q" class="filter-input" placeholder="Buscar por nome ou razão social" value="{{ query }}">
+        <input type="text" name="q" class="filter-input"
+               placeholder="Buscar por nome ou razão social"
+               value="{{ query }}">
         <select name="cidade" class="filter-select">
             <option value="">Todas as cidades</option>
             {% for c in cidades %}
-                <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>{{ c }}</option>
+                <option value="{{ c }}" {% if c == cidade_selecionada %}selected{% endif %}>
+                    {{ c }}
+                </option>
             {% endfor %}
         </select>
         <button type="submit" class="btn-search">Pesquisar</button>
@@ -22,63 +26,135 @@
         {% endfor %}
     {% endif %}
 
+    <!-- AÇÕES -->
     <div class="action-bar">
-        <a href="{% url 'cadastro_empresas' %}" class="action-link">+ Nova Empresa</a>
-        <a href="{% url 'projetos' %}" class="action-link">+ Novo Projeto</a>
+
+        {% if not ja_tem_empresa %}
+            <a href="{% url 'cadastro_empresa' %}" class="action-link">
+                ➕ Nova Empresa
+            </a>
+        {% else %}
+            <div class="alert alert-info">
+                ℹ️ Você já possui uma empresa cadastrada:
+                <strong>{{ empresa.nome_fantasia }}</strong>
+            </div>
+            <a href="{% url 'editar_empresa' empresa.id %}" class="action-link">
+                ✏️ Editar Minha Empresa
+            </a>
+        {% endif %}
+
+        <a href="{% url 'projetos' %}" class="action-link">
+            + Novo Projeto
+        </a>
     </div>
 
     <hr>
 
     {% if empresas %}
-    <button onclick="toggleDiv('conteudo_empresas')" class="btn-toggle-section">🏢 Ver Empresas</button>
-    <div id="conteudo_empresas" class="is-hidden">
-        <div class="business-grid">
-            {% for empresa in empresas %}
-            <div class="entity-card">
-                <h3 class="entity-name">{{ empresa.nome_fantasia }}</h3>
-                <div class="info-group"><h4 class="info-label">CNPJ</h4><p class="info-value">{{ empresa.cnpj }}</p></div>
-                <div class="info-group"><h4 class="info-label">Email</h4><p class="info-value">{{ empresa.email }}</p></div>
-                <div class="info-group"><h4 class="info-label">Cidade</h4><p class="info-value">{{ empresa.cidade }}</p></div>
-                <a href="{% url 'editar_empresas' empresa.id %}" class="btn-edit-entity">Editar Empresa</a>
+        <button onclick="toggleDiv('conteudo_empresas')" class="btn-toggle-section">
+            🏢 Ver Empresas
+        </button>
+
+        <div id="conteudo_empresas" class="is-hidden">
+            <div class="business-grid">
+                {% for empresa in empresas %}
+                    <div class="entity-card">
+                        <h3 class="entity-name">{{ empresa.nome_fantasia }}</h3>
+
+                        <div class="info-group">
+                            <h4 class="info-label">CNPJ</h4>
+                            <p class="info-value">{{ empresa.cnpj }}</p>
+                        </div>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Email</h4>
+                            <p class="info-value">{{ empresa.email }}</p>
+                        </div>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Cidade</h4>
+                            <p class="info-value">{{ empresa.cidade }}</p>
+                        </div>
+
+                        <a href="{% url 'editar_empresas' empresa.id %}"
+                           class="btn-edit-entity">
+                            Editar Empresa
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
     {% endif %}
 
     {% if responsaveis %}
-    <button onclick="toggleDiv('conteudo_responsaveis')" class="btn-toggle-section">👤 Ver Responsáveis</button>
-    <div id="conteudo_empresas" class="is-hidden">
-        <div class="business-grid">
-            {% for responsavel in responsaveis %}
-            <div class="entity-card">
-                <h3 class="entity-name">{{ responsavel.nome }}</h3>
-                <div class="info-group"><h4 class="info-label">Email</h4><p class="info-value">{{ responsavel.email }}</p></div>
-                <div class="info-group"><h4 class="info-label">Telefone</h4><p class="info-value">{{ responsavel.telefone }}</p></div>
-                {% if responsavel.empresa %}
-                <div class="info-group"><h4 class="info-label">Empresa</h4><p class="info-value">{{ responsavel.empresa.nome_fantasia }}</p></div>
-                {% endif %}
-                <a href="{% url 'editar_responsavel_empresa' responsavel.id %}" class="btn-edit-entity">Editar Responsável</a>
+        <button onclick="toggleDiv('conteudo_responsaveis')" class="btn-toggle-section">
+            👤 Ver Responsáveis
+        </button>
+
+        <div id="conteudo_responsaveis" class="is-hidden">
+            <div class="business-grid">
+                {% for responsavel in responsaveis %}
+                    <div class="entity-card">
+                        <h3 class="entity-name">{{ responsavel.nome }}</h3>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Email</h4>
+                            <p class="info-value">{{ responsavel.email }}</p>
+                        </div>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Telefone</h4>
+                            <p class="info-value">{{ responsavel.telefone }}</p>
+                        </div>
+
+                        {% if responsavel.empresa %}
+                            <div class="info-group">
+                                <h4 class="info-label">Empresa</h4>
+                                <p class="info-value">
+                                    {{ responsavel.empresa.nome_fantasia }}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        <a href="{% url 'editar_responsavel_empresa' responsavel.id %}"
+                           class="btn-edit-entity">
+                            Editar Responsável
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
     {% endif %}
 
     {% if projetos %}
-    <button onclick="toggleDiv('conteudo_projetos')" class="btn-toggle-section">🚀 Ver Projetos</button>
-    <div id="conteudo_empresas" class="is-hidden">
-        <div class="business-grid">
-            {% for projeto in projetos %}
-            <div class="entity-card">
-                <h3 class="entity-name">{{ projeto.titulo }}</h3>
-                <div class="info-group"><h4 class="info-label">Status</h4><p class="info-value">{{ projeto.get_status_display }}</p></div>
-                <div class="info-group"><h4 class="info-label">Equipe</h4><p class="info-value">{{ projeto.equipe_projeto }}</p></div>
-                <a href="{% url 'editar_projeto' projeto.id %}" class="btn-edit-entity">Editar Projeto</a>
+        <button onclick="toggleDiv('conteudo_projetos')" class="btn-toggle-section">
+            🚀 Ver Projetos
+        </button>
+
+        <div id="conteudo_projetos" class="is-hidden">
+            <div class="business-grid">
+                {% for projeto in projetos %}
+                    <div class="entity-card">
+                        <h3 class="entity-name">{{ projeto.titulo }}</h3>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Status</h4>
+                            <p class="info-value">{{ projeto.get_status_display }}</p>
+                        </div>
+
+                        <div class="info-group">
+                            <h4 class="info-label">Equipe</h4>
+                            <p class="info-value">{{ projeto.equipe_projeto }}</p>
+                        </div>
+
+                        <a href="{% url 'editar_projeto' projeto.id %}"
+                           class="btn-edit-entity">
+                            Editar Projeto
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
     {% endif %}
 </div>
 
@@ -86,9 +162,9 @@
 function toggleDiv(divId) {
     const elemento = document.getElementById(divId);
     if (elemento) {
-        // .toggle adiciona a classe se não existir, e remove se já existir
         elemento.classList.toggle('is-hidden');
     }
 }
 </script>
+
 {% endblock %}

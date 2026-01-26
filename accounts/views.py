@@ -111,11 +111,26 @@ def cadastro_empresa(request):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
+    # Verifica se o usuário já tem empresa
+    if Empresa.objects.filter(usuario=request.user).exists():
+        messages.warning(
+            request,
+            "Você já possui uma empresa cadastrada e não pode criar outra."
+        )
+        return redirect('minha_empresa')  # ou dashboard
+
+    if request.method == "POST":
+        form = EmpresaForm(request.POST)
+        if form.is_valid():
+            empresa = form.save(commit=False)
+            empresa.usuario = request.user
+            empresa.save()
+            messages.success(request, "Empresa cadastrada com sucesso!")
+            return redirect('minha_empresa')
     else:
         form = CadastroEmpresaForm()
-    
-    context = {'form': form}
-    return render(request, 'cadastro_empresa.html', context)
+
+    return render(request, 'empresas/criar_empresa.html', {'form': form})
 
 # isto esta duplicado
 @login_required(login_url="login")
@@ -217,7 +232,7 @@ def cadastro_profissional(request):
                     f' Cadastro realizado com sucesso! Bem-vindo(a), {profissional.nome_completo}! Você já pode fazer login.'
                 )
                 
-                return redirect('home/diretoria/')
+                return redirect('home_afiliado')
                 
             except Exception as e:
                 print(f" ERRO AO CADASTRAR: {e}")
@@ -515,13 +530,23 @@ def home_associado(request):
     perfil = Profile.objects.filter(user=request.user).first()
     minha_empresa = perfil.empresa if perfil else None
     meus_projetos = []
+    
+    # Verifica se já tem empresa
+    ja_tem_empresa = minha_empresa is not None
+    
     if minha_empresa:
         meus_projetos = Projeto.objects.filter(empresa=minha_empresa)
+    
+    # Se tentar criar outra empresa (pode vir de um POST)
+    if request.method == 'POST' and ja_tem_empresa:
+        messages.error(request, 'Você já possui uma empresa cadastrada! Não é possível criar outra.')
+        return redirect('home_associado')
     
     context = {
         'empresa': minha_empresa,
         'projetos': meus_projetos,
-        'permicoes': 'Associado'
+        'permicoes': 'Associado',
+        'ja_tem_empresa': ja_tem_empresa,  # ← Adiciona flag para o template
     }
     return render(request, 'home_associado.html', context)
 
@@ -1287,3 +1312,23 @@ def criar_vinculo_teste(request):
     
     messages.success(request, f'✅ Vínculo de teste criado com sucesso! Você agora trabalha na {empresa.nome_fantasia}')
     return redirect('home_afiliado')
+
+
+@login_required
+def editar_profissional(request, id):
+    profissional = get_object_or_404(Profissional, id=id)
+
+    if request.method == 'POST':
+        form = CadastroProfissionalForm(request.POST, instance=profissional)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Dados do profissional atualizados com sucesso!')
+            return redirect('home_afiliado')
+    else:
+        form = CadastroProfissionalForm(instance=profissional)
+
+    return render(
+        request,
+        'editar_profissional.html',
+        {'form': form, 'profissional': profissional}
+    )

@@ -15,20 +15,7 @@ class CustomUser(AbstractUser):
         return self.username
     
 
-class ArranjosProdutivo(models.Model):
-    nome = models.CharField('Nome', max_length=100)
-    descricao = models.TextField('Descrição', blank=True)
-    municipios_abrangidos = models.CharField('Municípios abrangidos', max_length=255)
-    coordenador = models.CharField('Coordenador', max_length=100, blank=True)
-    data_criacao = models.DateField('Data de criação')
-    
-    def __str__(self):
-        return self.nome
-    
-    class Meta:
-        verbose_name = 'Arranjo Produtivo'
-        verbose_name_plural = 'Arranjos Produtivos'
-        ordering = ['nome']
+
 
 
 class Empresa(models.Model):
@@ -71,13 +58,7 @@ class Empresa(models.Model):
     tipo_empresa = models.CharField('Tipo', max_length=20, choices=TIPO_CHOICES, blank=True)
     porte_empresa = models.CharField('Porte', max_length=10, choices=PORTE_CHOICES, blank = True)
     
-    arranjo_produtivo = models.ForeignKey(
-        ArranjosProdutivo, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True,
-        verbose_name='Arranjo produtivo'
-    )
+
     
     logo = models.ImageField('Logo', upload_to='empresas/logos/', blank=True, null=True)
     
@@ -89,6 +70,7 @@ class Empresa(models.Model):
     
     def __str__(self):
         return self.nome_fantasia
+
     
     class Meta:
         verbose_name = 'Empresa'

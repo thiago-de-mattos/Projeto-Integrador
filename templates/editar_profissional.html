@@ -1,0 +1,86 @@
+{% extends 'base_logado.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">✏️</div>
+    <h1>Editar Profissional</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error">
+        <strong>⚠️ Erros no formulário:</strong>
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-section">
+
+
+      <div class="form-section">
+        <h3>👤 Dados Pessoais</h3>
+
+        {% for field in form %}
+          {% if field.name in 'nome_completo,cpf,telefone,cidade_residencia,data_nascimento' %}
+            <div class="form-group {% if field.errors %}has-error{% endif %}">
+              {{ field.label_tag }}
+              {{ field }}
+
+              {% if field.errors %}
+                <div class="field-errors">
+                  {% for error in field.errors %}
+                    <span class="error-message">❌ {{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if field.help_text %}
+                <span class="helptext">{{ field.help_text }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="form-section">
+        <h3>💼 Dados Profissionais</h3>
+
+        {% for field in form %}
+          {% if field.name in 'tempo_experiencia,portfolio_url,linkedin,github,behance,biografia' %}
+            <div class="form-group {% if field.errors %}has-error{% endif %}">
+              {{ field.label_tag }}
+              {{ field }}
+
+              {% if field.errors %}
+                <div class="field-errors">
+                  {% for error in field.errors %}
+                    <span class="error-message">❌ {{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if field.help_text %}
+                <span class="helptext">{{ field.help_text }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <button type="submit">Salvar Alterações →</button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

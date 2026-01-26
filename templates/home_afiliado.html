@@ -10,63 +10,69 @@
     </div>
 
     {% if profissional %}
-        <div class="card-grid">
-            <div class="card-dashboard profile-card">
-                {% if profissional.foto_perfil %}
-                    <img src="{{ profissional.foto_perfil.url }}" alt="Foto de {{ profissional.nome_completo }}" class="profile-avatar">
-                {% else %}
-                    <div class="profile-avatar-placeholder">👤</div>
+    <div class="card-grid">
+        <div class="card-dashboard profile-card">
+            {% if profissional.foto_perfil %}
+            <img src="{{ profissional.foto_perfil.url }}" alt="Foto de {{ profissional.nome_completo }}"
+                class="profile-avatar">
+            {% else %}
+            <div class="profile-avatar-placeholder">👤</div>
+            {% endif %}
+
+            <h2 class="profile-name">{{ profissional.nome_completo }}</h2>
+            <p class="text-muted">{{ profissional.cidade_residencia }}</p>
+
+            {% if profissional.linkedin or profissional.portfolio_url %}
+            <div class="button-group mt-30">
+                {% if profissional.linkedin %}
+                <a href="{{ profissional.linkedin }}" target="_blank" class="btn-primary"
+                    style="padding: 8px 15px; font-size: 0.8rem;">LinkedIn</a>
                 {% endif %}
-                
-                <h2 class="profile-name">{{ profissional.nome_completo }}</h2>
-                <p class="text-muted">{{ profissional.cidade_residencia }}</p>
-                
-                {% if profissional.linkedin or profissional.portfolio_url %}
-                    <div class="button-group mt-30">
-                        {% if profissional.linkedin %}
-                            <a href="{{ profissional.linkedin }}" target="_blank" class="btn-primary" style="padding: 8px 15px; font-size: 0.8rem;">LinkedIn</a>
-                        {% endif %}
-                        {% if profissional.portfolio_url %}
-                            <a href="{{ profissional.portfolio_url }}" target="_blank" class="btn-primary btn-secondary" style="padding: 8px 15px; font-size: 0.8rem;">Portfólio</a>
-                        {% endif %}
-                    </div>
+                {% if profissional.portfolio_url %}
+                <a href="{{ profissional.portfolio_url }}" target="_blank" class="btn-primary btn-secondary"
+                    style="padding: 8px 15px; font-size: 0.8rem;">Portfólio</a>
                 {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card-dashboard">
+            <div class="section-header">
+                <h3>🏢 Vínculos Empresariais</h3>
+                <a href="{% url 'editar_profissional' profissional.id %}">
+                    ✏️ Editar Profissional
+                </a>
+
             </div>
 
-            <div class="card-dashboard">
-                <div class="section-header">
-                    <h3>🏢 Vínculos Empresariais</h3>
-                    <a href="{% url 'cadastro_profissional' %}" class="btn-action">Editar Perfil</a>
-                </div>
-                
-                {% if vinculos %}
-                    <ul class="vinculos-list">
-                    {% for vinculo in vinculos %}
-                        <li class="vinculo-item">
-                            <div class="vinculo-info">
-                                <h4 style="margin: 0;">{{ vinculo.empresa.nome_fantasia }}</h4>
-                                <span class="vinculo-cargo">{{ vinculo.cargo }} • {{ vinculo.get_tipo_vinculo_display }}</span>
-                            </div>
-                            <span class="vinculo-date text-muted">Desde {{ vinculo.data_inicio|date:"Y" }}</span>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="empty-state" style="padding: 1rem;">
-                        <p class="text-muted">Nenhum vínculo registrado.</p>
+            {% if vinculos %}
+            <ul class="vinculos-list">
+                {% for vinculo in vinculos %}
+                <li class="vinculo-item">
+                    <div class="vinculo-info">
+                        <h4 style="margin: 0;">{{ vinculo.empresa.nome_fantasia }}</h4>
+                        <span class="vinculo-cargo">{{ vinculo.cargo }} • {{ vinculo.get_tipo_vinculo_display }}</span>
                     </div>
-                {% endif %}
+                    <span class="vinculo-date text-muted">Desde {{ vinculo.data_inicio|date:"Y" }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty-state" style="padding: 1rem;">
+                <p class="text-muted">Nenhum vínculo registrado.</p>
             </div>
+            {% endif %}
         </div>
+    </div>
     {% else %}
-        <div class="card-dashboard empty-state">
-            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📝</span>
-            <h3>Seu perfil profissional ainda não foi criado.</h3>
-            <p class="text-muted">Apareça no mapa de talentos da ACJOGOS e conecte-se com estúdios.</p>
-            <div class="button-group mt-30">
-                <a href="{% url 'cadastro_profissional' %}" class="btn-primary">🚀 Criar Perfil Profissional</a>
-            </div>
+    <div class="card-dashboard empty-state">
+        <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📝</span>
+        <h3>Seu perfil profissional ainda não foi criado.</h3>
+        <p class="text-muted">Apareça no mapa de talentos da ACJOGOS e conecte-se com estúdios.</p>
+        <div class="button-group mt-30">
+            <a href="{% url 'cadastro_profissional' %}" class="btn-primary">🚀 Criar Perfil Profissional</a>
         </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
