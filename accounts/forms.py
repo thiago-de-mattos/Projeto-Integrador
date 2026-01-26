@@ -1,8 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto, Profile, Responsavel_Empresa, Profissional
+from .models import Empresa, Projeto, Profile, Responsavel_Empresa, Profissional,EntidadeParceira
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
@@ -198,23 +199,7 @@ class CadastroForm(UserCreationForm):
 class CadastroEmpresaForm(forms.ModelForm):
     """Formulário de cadastro de empresa"""
     
-    # Campos de acesso (User)
-    email = forms.EmailField(
-        label='Email de Acesso',
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'contato@suaempresa.com',
-            'class': 'form-control'
-        })
-    )
-    password = forms.CharField(
-        label='Senha',
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Mínimo 8 caracteres',
-            'class': 'form-control'
-        }),
-        min_length=8,
-        help_text='Use letras, números e caracteres especiais'
-    )
+
     
     class Meta:
         model = Empresa
@@ -293,26 +278,7 @@ class CadastroProfissionalForm(forms.ModelForm):
     # ═══════════════════════════════════════════════════════════
     # CAMPOS EXTRAS (não fazem parte do Model Profissional)
     # ═══════════════════════════════════════════════════════════
-    email = forms.EmailField(
-        label='Email *',
-        required=True,
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'seu@email.com',
-            'class': 'form-control'
-        }),
-        help_text='Este será seu email de login'
-    )
-    
-    password = forms.CharField(
-        label='Senha *',
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Mínimo 8 caracteres',
-            'class': 'form-control'
-        }),
-        min_length=8,
-        help_text='Use letras, números e caracteres especiais'
-    )
+
     
     # ═══════════════════════════════════════════════════════════
     # CAMPOS DO MODEL
@@ -484,3 +450,53 @@ class CadastroProfissionalForm(forms.ModelForm):
             raise forms.ValidationError('A senha deve conter pelo menos uma letra')
         
         return password
+    
+
+class EntidadeParceiraForm(forms.ModelForm):
+    class Meta:
+        model = EntidadeParceira
+        fields = [
+            'nome',
+            'tipo',
+            'cnpj',
+            'telefone',
+            'endereco',
+            'descricao',
+        ]
+
+class UsuarioBaseForm(forms.Form):
+    email = forms.EmailField(
+        label='E-mail',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'email@exemplo.com'
+        })
+    )
+
+    password = forms.CharField(
+        label='Senha',
+        widget=forms.PasswordInput
+    )
+
+    password_confirm = forms.CharField(
+        label='Confirmar Senha',
+        widget=forms.PasswordInput
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Este e-mail já está em uso.')
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError('As senhas não coincidem.')
+
+        if password:
+            validate_password(password)
+
+        return cleaned_data

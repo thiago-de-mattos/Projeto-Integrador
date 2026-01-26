@@ -1,0 +1,55 @@
+{% extends 'base_vitrine.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">🔐</div>
+    <h1>Criar Conta</h1>
+    <p>Informe seus dados de acesso para continuar o cadastro</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-error">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="form-section">
+        <div class="form-group">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.password_confirm.label_tag }}
+          {{ form.password_confirm }}
+          {{ form.password_confirm.errors }}
+        </div>
+      </div>
+
+      <button type="submit">
+        Continuar Cadastro →
+      </button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

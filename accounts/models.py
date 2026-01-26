@@ -571,3 +571,73 @@ class Responsavel_Empresa(models.Model):
         if self.complemento:
             partes.append(self.complemento)
         return ', '.join(partes) + f' - CEP: {self.cep}'
+
+
+from django.db import models
+
+
+class EntidadeParceira(models.Model):
+    TIPO_INSTITUICAO = [
+        ('universidade', 'Universidade'),
+        ('orgao_publico', 'Órgão Público'),
+        ('incubadora', 'Incubadora'),
+        ('empresa', 'Empresa'),
+        ('outro', 'Outro'),
+    ]
+
+    nome = models.CharField(
+        max_length=255,
+        verbose_name='Nome da Entidade'
+    )
+
+    tipo = models.CharField(
+        max_length=50,
+        choices=TIPO_INSTITUICAO,
+        verbose_name='Tipo de Instituição'
+    )
+
+    cnpj = models.CharField(
+        max_length=18,
+        unique=True,
+        verbose_name='CNPJ'
+    )
+
+    telefone = models.CharField(
+        max_length=20,
+        verbose_name='Telefone'
+    )
+
+    endereco = models.CharField(
+        max_length=255,
+        verbose_name='Endereço'
+    )
+
+    descricao = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Descrição / Observações'
+    )
+
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name='Ativo'
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Criado em'
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Atualizado em'
+    )
+
+    class Meta:
+        verbose_name = 'Entidade Parceira'
+        verbose_name_plural = 'Entidades Parceiras'
+        ordering = ['nome']
+
+    def __str__(self):
+        return self.nome
+

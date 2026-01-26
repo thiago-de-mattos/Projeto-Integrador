@@ -1,0 +1,93 @@
+{% extends 'base_vitrine.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="logo">🏛️</div>
+    <h1>Cadastro de Instituição</h1>
+    <p>
+      Coletivo / Institucional — Universidades, órgãos públicos, incubadoras e
+      entidades parceiras.
+    </p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-error">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="form-section">
+        <h3>Dados da Instituição</h3>
+
+        <div class="form-group">
+          {{ form.nome.label_tag }}
+          {{ form.nome }}
+          {{ form.nome.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.tipo.label_tag }}
+          {{ form.tipo }}
+          {{ form.tipo.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.cnpj.label_tag }}
+          {{ form.cnpj }}
+          {{ form.cnpj.errors }}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Contato</h3>
+
+
+        <div class="form-group">
+          {{ form.telefone.label_tag }}
+          {{ form.telefone }}
+          {{ form.telefone.errors }}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Endereço e Observações</h3>
+
+        <div class="form-group">
+          {{ form.endereco.label_tag }}
+          {{ form.endereco }}
+          {{ form.endereco.errors }}
+        </div>
+
+        <div class="form-group">
+          {{ form.descricao.label_tag }}
+          {{ form.descricao }}
+          {{ form.descricao.errors }}
+        </div>
+      </div>
+
+      <button type="submit">
+        Salvar Instituição →
+      </button>
+    </form>
+
+    <div class="form-footer">
+      <a href="{% url 'criar_usuario_base_instituicao' %}">
+        Criar usuário da instituição
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
