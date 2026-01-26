@@ -1026,7 +1026,7 @@ def login(request):
             user = None
 
         if user is not None:
-            login(request, user)
+            login_django(request, user)
             return redirect("home")  # ← Vai para a home antiga
         else:
             return render(request, "login.html", {
