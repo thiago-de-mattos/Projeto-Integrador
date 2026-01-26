@@ -43,11 +43,7 @@ urlpatterns = [
      path('empresas/', views.cadastro_empresa, name='cadastro_empresas'),
      path('empresas/listagem/', views.listagem_empresas, name="listagem_empresas"),
      
-     path('pagina/projeto',views.pagina_projeto , name= 'pagina_projeto'),
-
      path('projetos/', views.cadastro_projetos, name='projetos'),
-     path('projetos/vitrine/', views.vitrine_projetos, name="vitrine_projetos"),
-
      path('vitrine/', views.vitrine, name='vitrine'),
 
      path('estatisticas/', views.estatistica, name='estatistica'),
@@ -58,7 +54,6 @@ urlpatterns = [
      path('empresas_teste/', views.empresas_vitrine, name='empresas_vitrine'),
      # path('empresas_teste/<int:pk>/', views.empresa_detail, name='empresa_detail'),
      path('projetos_teste/', views.projetos_vitrine, name='projetos_vitrine'),
-     path('estatisticas_teste/', views.estatisticas_teste, name='estatisticas_teste'),
      path("login", views.login, name="login"),
      path("cadastro_teste/", views.register_view_teste, name="cadastro"),
      
@@ -68,6 +63,7 @@ urlpatterns = [
         views.editar_profissional,
         name='editar_profissional'
     ),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
