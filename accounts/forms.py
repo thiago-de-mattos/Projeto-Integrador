@@ -221,7 +221,7 @@ class CadastroEmpresaForm(forms.ModelForm):
         fields = [
             'nome_fantasia', 'razao_social', 'cnpj', 'telefone', 'site',
             'cep', 'endereco_completo', 'cidade','tipo_empresa', 'porte_empresa',
-            'data_fundacao', 'arranjo_produtivo'
+            'data_fundacao'
         ]
         widgets = {
             'nome_fantasia': forms.TextInput(attrs={
@@ -263,7 +263,7 @@ class CadastroEmpresaForm(forms.ModelForm):
                 'type': 'date',
                 'class': 'form-control'
             }),
-            'arranjo_produtivo': forms.Select(attrs={'class': 'form-control'}),
+            
         }
     
     def clean_cnpj(self):
