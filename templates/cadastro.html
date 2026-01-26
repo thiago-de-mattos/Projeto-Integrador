@@ -1,4 +1,4 @@
-{% extends 'base_logado.html' %}
+{% extends 'base_vitrine.html' %}
 
 {% block content %}
  
@@ -13,40 +13,29 @@
         <form method="post" action="{% url 'cadastro' %}">
             {% csrf_token %}
 
-            <label>Nome de usuário</label>
-            <input type="text" name="username" placeholder="seu_username" 
-                   value="{{ username|default:'' }}" required>
+            
 
-            <label>E-mail</label>
-            <input type="email" name="email" placeholder="seu@email.com" 
-                   value="{{ email|default:'' }}" required>
-
-            <label>Senha</label>
-            <input type="password" name="password" placeholder="••••••••" required>
-
-            <label>Confirmar senha</label>
-            <input type="password" name="password2" placeholder="••••••••" required>
-
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
-
-            <button type="submit">Criar conta →</button>
+            <div class="options">
+                <a href="{% url 'cadastro_empresas' %}" class="option-card">
+                    <div class="option-icon">🏢</div>
+                    <div class="option-title">Empresa/Estúdio</div>
+                    <div class="option-sub">Associado</div>
+                </a>
+                
+                <a href="{% url 'cadastro_profissional' %}" class="option-card">
+                    <div class="option-icon">👤</div>
+                    <div class="option-title">Profissional</div>
+                    <div class="option-sub">Afiliado</div>
+                </a>
+                <a href="{% url 'cadastrar_instituicao' %}" class="option-card">
+                    <div class="option-icon">👤</div>
+                    <div class="option-title">Coletivo</div>
+                    <div class="option-sub">Instituição</div>
+                </a>
+            </div>
+            
         </form>
 
-        <div class="options">
-            <a href="{% url 'cadastro_empresa' %}" class="option-card">
-                <div class="option-icon">🏢</div>
-                <div class="option-title">Empresa/Estúdio</div>
-                <div class="option-sub">Associado</div>
-            </a>
-            
-            <a href="{% url 'cadastro_profissional' %}" class="option-card">
-                <div class="option-icon">👤</div>
-                <div class="option-title">Profissional</div>
-                <div class="option-sub">Afiliado</div>
-            </a>
-        </div>
         </div>
     </div>
 </div>
