@@ -120,7 +120,7 @@ def cadastro_profissional(request):
     
     # ✅ REDIRECT CORRIGIDO - usa URL específica
     if not usuario_base_id or tipo_usuario != 'profissional':
-        messages.error(request, 'Complete primeiro o cadastro inicial.')
+        
         return redirect('criar_usuario_base_profissional')  # ← Nome correto da URL
     
     try:
@@ -1136,7 +1136,7 @@ def cadastrar_entidade_parceira(request):
     
     # ✅ REDIRECT CORRIGIDO - usa URL específica
     if not usuario_base_id or tipo_usuario != 'instituicao':
-        messages.error(request, 'Complete primeiro o cadastro inicial.')
+        
         return redirect('criar_usuario_base_instituicao')  # ← Nome correto da URL
     
     try:
