@@ -1,191 +1,60 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Empresa, Projeto, Profile, Responsavel_Empresa, Profissional,EntidadeParceira
+from .models import Empresa, Projeto, Profile, Responsavel_Empresa, Profissional, EntidadeParceira
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 
+# 🔐 IMPORT DO CRIPTOGRAFADOR
+from .criptografador import encrypt_cpf, decrypt_cpf, encrypt_cnpj, decrypt_cnpj
+
 User = get_user_model()
+
 
 class ResponsavelForm(forms.ModelForm):
     class Meta:
-        model =  Responsavel_Empresa
+        model = Responsavel_Empresa
         fields = [
-            'nome_completo',
-            'nome_social',
-            'cpf',
-            'email',
-            'telefone',
-            'nick_discord',
-            'cep',
-            'endereco',
-            'numero',
-            'complemento',
+            'nome_completo','nome_social','cpf','email','telefone',
+            'nick_discord','cep','endereco','numero','complemento',
         ]
-        
-        widgets = {
-            'nome_completo': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o nome completo',
-                'required': True
-            }),
-            'nome_social': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Nome social (opcional)'
-            }),
-            'cpf': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '000.000.000-00',
-                'maxlength': '14',
-                'required': True
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'email@exemplo.com',
-                'required': True
-            }),
-            'telefone': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '(00) 00000-0000',
-                'maxlength': '15',
-                'required': True
-            }),
-            'nick_discord': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'usuario#1234'
-            }),
-            'cep': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '00000-000',
-                'maxlength': '9',
-                'required': True
-            }),
-            'endereco': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Rua, Avenida, etc.',
-                'required': True
-            }),
-            'numero': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Nº',
-                'maxlength': '10',
-                'required': True
-            }),
-            'complemento': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Apto, Bloco, etc. (opcional)'
-            }),
-        }
-        
-        labels = {
-            'nome_completo': 'Nome Completo',
-            'nome_social': 'Nome Social (opcional)',
-            'cpf': 'CPF',
-            'email': 'E-mail de Contato',
-            'telefone': 'Telefone',
-            'nick_discord': 'Nick no Discord',
-            'cep': 'CEP',
-            'endereco': 'Endereço',
-            'numero': 'Número',
-            'complemento': 'Complemento',
-        }
-    
-    # def clean_cpf(self):
-    #     """Limpa e valida CPF"""
-    #     cpf = self.cleaned_data.get('cpf')
-    #     # Remove caracteres não numéricos
-    #     cpf_limpo = ''.join(filter(str.isdigit, cpf))
-        
-    #     if len(cpf_limpo) != 11:
-    #         raise forms.ValidationError('CPF deve conter 11 dígitos.')
-        
-    #     # Valida CPF básico (verifica se todos os dígitos são iguais)
-    #     if cpf_limpo == cpf_limpo[0] * 11:
-    #         raise forms.ValidationError('CPF inválido.')
-        
-    #     return cpf
-    
-    # def clean_cep(self):
-    #     """Limpa e valida CEP"""
-    #     cep = self.cleaned_data.get('cep')
-    #     cep_limpo = ''.join(filter(str.isdigit, cep))
-        
-    #     if len(cep_limpo) != 8:
-    #         raise forms.ValidationError('CEP deve conter 8 dígitos.')
-        
-    #     return cep
-    
-    # def clean_telefone(self):
-    #     """Limpa e valida telefone"""
-    #     telefone = self.cleaned_data.get('telefone')
-    #     telefone_limpo = ''.join(filter(str.isdigit, telefone))
-        
-    #     if len(telefone_limpo) < 10 or len(telefone_limpo) > 11:
-    #         raise forms.ValidationError('Telefone deve ter 10 ou 11 dígitos (DDD + número).')
-        
-    #     return telefone
-    
-    # def clean_email(self):
-    #     """Valida e-mail único (exceto para o próprio registro)"""
-    #     email = self.cleaned_data.get('email')
-        
-    #     # Verifica se já existe outro responsável com este e-mail
-    #     if self.instance.pk:
-    #         # Editando - exclui o próprio registro da verificação
-    #         if Responsavel_Empresa.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-    #             raise forms.ValidationError('Este e-mail já está cadastrado.')
-    #     else:
-    #         # Criando novo
-    #         if Responsavel_Empresa.objects.filter(email=email).exists():
-    #             raise forms.ValidationError('Este e-mail já está cadastrado.')
-        
-    #     return email
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get('cpf')
+
+        cpf_limpo = ''.join(filter(str.isdigit, cpf))
+        if len(cpf_limpo) != 11:
+            raise forms.ValidationError('CPF deve conter 11 dígitos.')
+
+        return cpf 
+
+
+def save(self, commit=True):
+    obj = super().save(commit=False)
+    obj.cpf = encrypt_cpf(obj.cpf)
+
+    if commit:
+        obj.save()
+    return obj
 
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
         model = Empresa
         fields = "__all__"
-        
-        widgets = {
-            'nome_fantasia': forms.TextInput(attrs={'placeholder': 'Digite o nome da empresa'}),
-            'razao_social': forms.TextInput(attrs={'placeholder': 'Digite a razão social'}),
-            'cnpj': forms.TextInput(attrs={'placeholder': 'Digite o CNPJ'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Digite o email da empresa'}),
-            'telefone': forms.TextInput(attrs={'placeholder': 'Digite o telefone'}),
-            'site': forms.TextInput(attrs={'placeholder': 'Digite o site'}),
-            'endereco_completo': forms.TextInput(attrs={'placeholder': 'Digite o endereço'}),
-            'cep': forms.TextInput(attrs={'placeholder': 'Digite o CEP'}),
-            'cidade': forms.TextInput(attrs={'placeholder': 'Digite a cidade'}),
-            'complemento': forms.TextInput(attrs={'placeholder': 'Digite o complemento'}),
-            'data_fundacao':forms.TextInput(attrs={'placeholder': 'Ex:dd/mm/aaaa'})
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Este loop adiciona automaticamente a classe 'form-input' a todos os campos
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-input'})
-        
-        
+
 class ProjetosForm(forms.ModelForm):
     class Meta:
         model = Projeto
-        # Liste apenas os campos que estão no seu formulário HTML
         fields = ['titulo', 'descricao', 'status', 'equipe_projeto', 'url_site']
-        
-        widgets = {
-            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do Projeto'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'status': forms.Select(attrs={'class': 'form-control'}),
-            'equipe_projeto': forms.TextInput(attrs={'class': 'form-control'}), # Mudei para TextInput para bater com o Model
-            'url_site': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
-        }
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["telefone_contato", "foto_perfil"]
+
 
 class CadastroForm(UserCreationForm):
     class Meta:
@@ -193,294 +62,88 @@ class CadastroForm(UserCreationForm):
         fields = ['username', 'password1', 'password2']
 
 
-
-
-# Pedro veja se isto esta correto e se vc vai aproveitar isso.  
 class CadastroEmpresaForm(forms.ModelForm):
-    """Formulário de cadastro de empresa"""
-    
-
-    
     class Meta:
         model = Empresa
         fields = [
-            'nome_fantasia', 'razao_social', 'cnpj', 'telefone', 'site',
-            'cep', 'endereco_completo', 'cidade','tipo_empresa', 'porte_empresa',
+            'nome_fantasia','razao_social','cnpj','telefone','site',
+            'cep','endereco_completo','cidade','tipo_empresa','porte_empresa',
             'data_fundacao'
         ]
-        widgets = {
-            'nome_fantasia': forms.TextInput(attrs={
-                'placeholder': 'Ex: Pixel Studios',
-                'class': 'form-control'
-            }),
-            'razao_social': forms.TextInput(attrs={
-                'placeholder': 'Ex: Pixel Studios LTDA',
-                'class': 'form-control'
-            }),
-            'cnpj': forms.TextInput(attrs={
-                'placeholder': '00.000.000/0000-00',
-                'class': 'form-control'
-            }),
-            'telefone': forms.TextInput(attrs={
-                'placeholder': '(21) 98888-8888',
-                'class': 'form-control'
-            }),
-            'site': forms.URLInput(attrs={
-                'placeholder': 'https://suaempresa.com',
-                'class': 'form-control'
-            }),
-            'cep': forms.TextInput(attrs={
-                'placeholder': '00000-000',
-                'class': 'form-control',
-                'id': 'cep'
-            }),
-            'endereco_completo': forms.TextInput(attrs={
-                'placeholder': 'Rua, número, complemento',
-                'class': 'form-control'
-            }),
-            'cidade': forms.TextInput(attrs={
-                'placeholder': 'Rio de Janeiro',
-                'class': 'form-control'
-            }),
-            'tipo_empresa': forms.Select(attrs={'class': 'form-control'}),
-            'porte_empresa': forms.Select(attrs={'class': 'form-control'}),
-            'data_fundacao': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'form-control'
-            }),
-            
-        }
-    
-    def clean_cnpj(self):
-        cnpj = self.cleaned_data.get('cnpj')
-        # Remove caracteres não numéricos
-        cnpj_limpo = ''.join(filter(str.isdigit, cnpj))
-        
-        if len(cnpj_limpo) != 14:
-            raise forms.ValidationError('CNPJ deve ter 14 dígitos')
-        
-        # Verifica se já existe
-        if Empresa.objects.filter(cnpj=cnpj).exists():
-            raise forms.ValidationError('Este CNPJ já está cadastrado')
-        
-        return cnpj
-    
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Este email já está cadastrado')
-        return email
 
+def clean_cnpj(self):
+    cnpj = self.cleaned_data.get('cnpj')
 
+    # valida formato antes
+    if not re.match(r'^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$', cnpj):
+        raise forms.ValidationError('CNPJ inválido. Use 00.000.000/0000-00')
+
+    cnpj_limpo = ''.join(filter(str.isdigit, cnpj))
+
+    if len(cnpj_limpo) != 14:
+        raise forms.ValidationError('CNPJ deve ter 14 dígitos')
+
+    cnpj_criptografado = encrypt_cnpj(cnpj_limpo)
+
+    if Empresa.objects.filter(cnpj=cnpj_criptografado).exists():
+        raise forms.ValidationError('Este CNPJ já está cadastrado')
+
+    return cnpj_criptografado
 class CadastroProfissionalForm(forms.ModelForm):
-    """Formulário de cadastro de profissional afiliado"""
-    
-    # ═══════════════════════════════════════════════════════════
-    # CAMPOS EXTRAS (não fazem parte do Model Profissional)
-    # ═══════════════════════════════════════════════════════════
-
-    
-    # ═══════════════════════════════════════════════════════════
-    # CAMPOS DO MODEL
-    # ═══════════════════════════════════════════════════════════
     class Meta:
         model = Profissional
         fields = [
-            'nome_completo', 
-            'cpf', 
-            'telefone', 
-            'cidade_residencia',
-            'data_nascimento',
-            'tempo_experiencia', 
-            'portfolio_url',
-            'linkedin', 
-            'github', 
-            'behance', 
-            'biografia'
+            'nome_completo','cpf','telefone','cidade_residencia',
+            'data_nascimento','tempo_experiencia','portfolio_url',
+            'linkedin','github','behance','biografia'
         ]
-        
-        widgets = {
-            'nome_completo': forms.TextInput(attrs={
-                'placeholder': 'Ex: João Silva',
-                'class': 'form-control'
-            }),
-            'cpf': forms.TextInput(attrs={
-                'placeholder': '000.000.000-00',
-                'class': 'form-control'
-            }),
-            'telefone': forms.TextInput(attrs={
-                'placeholder': '(21) 98888-8888',
-                'class': 'form-control'
-            }),
-            'cidade_residencia': forms.TextInput(attrs={
-                'placeholder': 'Rio de Janeiro',
-                'class': 'form-control'
-            }),
-            'data_nascimento': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'form-control'
-            }),
-            'tempo_experiencia': forms.NumberInput(attrs={
-                'placeholder': 'Ex: 5',
-                'min': '0',
-                'class': 'form-control'
-            }),
-            'portfolio_url': forms.URLInput(attrs={
-                'placeholder': 'https://seuportfolio.com (opcional)',
-                'class': 'form-control'
-            }),
-            'linkedin': forms.URLInput(attrs={
-                'placeholder': 'https://linkedin.com/in/seuperfil (opcional)',
-                'class': 'form-control'
-            }),
-            'github': forms.URLInput(attrs={
-                'placeholder': 'https://github.com/seuperfil (opcional)',
-                'class': 'form-control'
-            }),
-            'behance': forms.URLInput(attrs={
-                'placeholder': 'https://behance.net/seuperfil (opcional)',
-                'class': 'form-control'
-            }),
-            'biografia': forms.Textarea(attrs={
-                'placeholder': 'Conte um pouco sobre você (opcional)',
-                'rows': 3,
-                'class': 'form-control'
-            }),
-        }
-        
-        labels = {
-            'nome_completo': 'Nome Completo *',
-            'cpf': 'CPF *',
-            'telefone': 'Telefone *',
-            'cidade_residencia': 'Cidade *',
-            'data_nascimento': 'Data de Nascimento',
-            'tempo_experiencia': 'Experiência (anos) *',
-            'portfolio_url': 'Portfólio',
-            'linkedin': 'LinkedIn',
-            'github': 'GitHub',
-            'behance': 'Behance',
-            'biografia': 'Biografia',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        campos_opcionais = [
-            'data_nascimento',
-            'portfolio_url',
-            'linkedin',
-            'github',
-            'behance',
-            'biografia'
-        ]
-        
-        for campo in campos_opcionais:
-            if campo in self.fields:
-                self.fields[campo].required = False
-    
-    # ═══════════════════════════════════════════════════════════
-    # VALIDAÇÕES CUSTOMIZADAS
-    # ═══════════════════════════════════════════════════════════
     def clean_cpf(self):
         cpf = self.cleaned_data.get('cpf')
-        
-        if not cpf:
-            raise forms.ValidationError('CPF é obrigatório')
-        
-        # Remove caracteres não numéricos
+
         cpf_limpo = ''.join(filter(str.isdigit, cpf))
-        
         if len(cpf_limpo) != 11:
-            raise forms.ValidationError('CPF deve ter 11 dígitos (xxx.xxx.xxx-xx)')
-        
-        # Verifica se todos os dígitos são iguais (CPF inválido)
-        if cpf_limpo == cpf_limpo[0] * 11:
-            raise forms.ValidationError('CPF inválido')
-        
-        # Verifica se já existe
-        if Profissional.objects.filter(cpf=cpf).exists():
-            raise forms.ValidationError('Este CPF já está cadastrado no sistema')
-        
-        return cpf
-    
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        
-        if not email:
-            raise forms.ValidationError('Email é obrigatório')
-        
-        # Verifica se email já existe em User
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Este email já está cadastrado. Tente fazer login.')
-        
-        # Verifica se email já existe em Profissional
-        if Profissional.objects.filter(email=email).exists():
-            raise forms.ValidationError('Este email já está cadastrado. Tente fazer login.')
-        
-        return email
-    
-    def clean_telefone(self):
-        telefone = self.cleaned_data.get('telefone')
-        
-        if not telefone:
-            raise forms.ValidationError('Telefone é obrigatório')
-        
-        # Remove caracteres não numéricos
-        telefone_limpo = ''.join(filter(str.isdigit, telefone))
-        
-        if len(telefone_limpo) < 10 or len(telefone_limpo) > 11:
-            raise forms.ValidationError('Telefone inválido. Use o formato: (21) 98888-8888')
-        
-        return telefone
-    
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        
-        if not password:
-            raise forms.ValidationError('Senha é obrigatória')
-        
-        if len(password) < 8:
-            raise forms.ValidationError('A senha deve ter no mínimo 8 caracteres')
-        
-        # Validações de segurança
-        if not any(char.isdigit() for char in password):
-            raise forms.ValidationError('A senha deve conter pelo menos um número')
-        
-        if not any(char.isalpha() for char in password):
-            raise forms.ValidationError('A senha deve conter pelo menos uma letra')
-        
-        return password
-    
+            raise forms.ValidationError('CPF deve ter 11 dígitos')
+
+        return cpf  
+
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        obj.cpf = encrypt_cpf(obj.cpf)
+
+        if commit:
+            obj.save()
+        return obj
+
 
 class EntidadeParceiraForm(forms.ModelForm):
     class Meta:
         model = EntidadeParceira
-        fields = [
-            'nome',
-            'tipo',
-            'cnpj',
-            'telefone',
-            'endereco',
-            'descricao',
-        ]
+        fields = ['nome','tipo','cnpj','telefone','endereco','descricao']
+
+    def clean_cnpj(self):
+        cnpj = self.cleaned_data.get('cnpj')
+
+        cnpj_limpo = ''.join(filter(str.isdigit, cnpj))
+        if len(cnpj_limpo) != 14:
+            raise forms.ValidationError('CNPJ inválido')
+
+        return cnpj 
+
+
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        obj.cnpj = encrypt_cnpj(obj.cnpj)
+
+        if commit:
+            obj.save()
+        return obj
+
 
 class UsuarioBaseForm(forms.Form):
-    email = forms.EmailField(
-        label='E-mail',
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'email@exemplo.com'
-        })
-    )
-
-    password = forms.CharField(
-        label='Senha',
-        widget=forms.PasswordInput
-    )
-
-    password_confirm = forms.CharField(
-        label='Confirmar Senha',
-        widget=forms.PasswordInput
-    )
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(widget=forms.PasswordInput)
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
