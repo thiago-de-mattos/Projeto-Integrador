@@ -11,22 +11,34 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+<<<<<<< HEAD
 FERNET_KEY = b'DaDObQK5XrDRiAFB-au__3Kd-Jd_D01wQHRf90tzoz0='
+=======
+# Carrega variáveis de ambiente do arquivo .env
+load_dotenv(BASE_DIR / ".env")
+
+>>>>>>> bb846f0812e84673b52e6d0fc6af4b6dc0fd749c
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!@y&u*rt8@05#55yigjyl)i(m*7#vll$w8cqj7-^+#5_oowl8r'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# Lê do ambiente. Se não achar, usa uma chave insegura (fallback)
+SECRET_KEY = os.getenv("SECRET_KEY", "chave-insegura-fallback")
+# Lê do ambiente. Retorna 'True' se o valor for "True", senão False.
+DEBUG = os.getenv("DEBUG", "False") == "True"
+# Hosts permitidos
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+# O Render define a variável RENDER_EXTERNAL_HOSTNAME automaticamente
+render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
 
 
 # Application definition
@@ -44,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,11 +89,13 @@ WSGI_APPLICATION = 'integrator_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True, # Importante para Render
+    )
 }
+
 
 
 # Password validation
@@ -121,9 +136,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-
+# Compactação e cacheamento otimizado
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 #indicação do local dos niveis de usuario 
 
